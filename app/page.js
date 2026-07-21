@@ -4,13 +4,12 @@ import ProductCard from './components/ProductCard';
 const PRODUCTS = [
   {
     name: 'clipnote',
-    tagline: '링크를 예쁜 카드로 저장하고 공유하는 북마크',
-    desc: '저장한 링크에 제목이 자동으로 붙고, 어디서나 카드로 모아보고 공유합니다.',
-    href: null,
-    shot: null,
+    tagline: '붙여넣기 한 번, 클릭을 부르는 공유 카드',
+    desc: '밋밋한 링크 대신 제목·대표 이미지가 담긴 카드와 짧은 링크로 공유합니다.',
+    href: 'https://clipnote.co.kr',
+    shot: '/shots/clipnote.png',
     monogram: 'c',
     accent: '#6526d9',
-    status: '준비 중',
   },
   {
     name: 'takeaseat',
