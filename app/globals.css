@@ -1,0 +1,93 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand: #6526d9;
+  --color-brand-strong: #5018c0;
+  --color-ink: #1c1c1e;
+  --color-bg-soft: #f6f5fb;
+  --color-muted: #74747f;
+  --color-border: #e8e7f0;
+  --radius-card: 16px;
+
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Apple SD Gothic Neo",
+    "Pretendard", "Malgun Gothic", sans-serif;
+}
+
+* {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-bg-soft);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}
+
+/* ── scroll reveal ───────────────────────────── */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* ── ambient motion ──────────────────────────── */
+@keyframes float-slow {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(24px, -32px) scale(1.08); }
+}
+@keyframes float-slow-2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-30px, 26px) scale(1.12); }
+}
+@keyframes drift-gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+@keyframes shimmer {
+  0% { transform: translateX(-120%) skewX(-18deg); }
+  100% { transform: translateX(240%) skewX(-18deg); }
+}
+@keyframes bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.animate-blob-1 { animation: float-slow 14s ease-in-out infinite; }
+.animate-blob-2 { animation: float-slow-2 18s ease-in-out infinite; }
+.animate-bob { animation: bob 4s ease-in-out infinite; }
+
+.text-gradient {
+  background: linear-gradient(100deg, #6526d9, #9a6bff, #6526d9);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: drift-gradient 6s ease infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-blob-1,
+  .animate-blob-2,
+  .animate-bob,
+  .text-gradient { animation: none; }
+}
