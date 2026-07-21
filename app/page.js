@@ -1,5 +1,6 @@
 import Reveal from './components/Reveal';
 import ProductCard from './components/ProductCard';
+import LatestPosts from './components/LatestPosts';
 
 const PRODUCTS = [
   {
@@ -140,6 +141,32 @@ export default function Home() {
               <ProductCard product={p} />
             </Reveal>
           ))}
+        </div>
+      </section>
+
+      {/* ── latest blog posts ──────────────────── */}
+      <section className="border-t border-border bg-bg-soft">
+        <div className="mx-auto max-w-5xl px-5 py-16 sm:py-20">
+          <Reveal className="mb-8 flex items-end justify-between gap-4">
+            <div>
+              <h2 className="text-2xl font-black tracking-tight text-ink sm:text-3xl">
+                블로그 최신 글
+              </h2>
+              <p className="mt-2 text-sm text-muted">경제·부동산·IT 인사이트</p>
+            </div>
+            <a
+              href="https://blog.pikaworks.kr"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hidden shrink-0 items-center gap-1 text-sm font-semibold text-brand transition-colors hover:text-brand-strong sm:inline-flex"
+            >
+              전체 보기
+              <span aria-hidden>↗</span>
+            </a>
+          </Reveal>
+          <Reveal delay={80}>
+            <LatestPosts />
+          </Reveal>
         </div>
       </section>
 
