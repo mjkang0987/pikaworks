@@ -150,10 +150,10 @@ export default function Home() {
           </span>
           <div className="flex flex-col items-center gap-1 sm:items-end">
             <a
-              href="mailto:snowdrop1202@gmail.com"
+              href="mailto:pikaworks.help@gmail.com"
               className="text-sm font-medium text-muted transition-colors hover:text-brand"
             >
-              snowdrop1202@gmail.com
+              pikaworks.help@gmail.com
             </a>
             <span className="text-xs text-muted/80">
               © {new Date().getFullYear()} PIKAWORKS. All rights reserved.
