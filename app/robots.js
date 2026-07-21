@@ -7,6 +7,5 @@ export default function robots() {
       allow: '/',
     },
     sitemap: 'https://pikaworks.kr/sitemap.xml',
-    host: 'https://pikaworks.kr',
   };
 }
