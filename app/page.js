@@ -37,11 +37,12 @@ export default function Home() {
       {/* ── header ─────────────────────────────── */}
       <header className="sticky top-0 z-50 border-b border-white/10 bg-ink/90 backdrop-blur-md">
         <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-5">
-          <a href="#top" className="flex items-center gap-2">
-            <span className="text-[15px] font-black tracking-[0.14em] text-white">
-              PIKAWORKS
-            </span>
-            <span className="h-1.5 w-1.5 rounded-full bg-brand" />
+          <a href="#top" className="flex items-center">
+            <img
+              src="/logo.svg"
+              alt="PIKAWORKS"
+              className="h-5 w-auto transition-opacity hover:opacity-80"
+            />
           </a>
           <nav className="flex items-center gap-5 text-sm font-medium text-white/70">
             <a className="transition-colors hover:text-white" href="#products">
@@ -145,9 +146,8 @@ export default function Home() {
       {/* ── footer ─────────────────────────────── */}
       <footer className="border-t border-border bg-white">
         <div className="mx-auto flex max-w-5xl flex-col items-center gap-3 px-5 py-10 text-center sm:flex-row sm:justify-between sm:text-left">
-          <span className="text-sm font-black tracking-[0.14em] text-ink">
-            PIKAWORKS
-          </span>
+          <img src="/logo-dark.svg" alt="PIKAWORKS" className="h-5 w-auto" />
+
           <div className="flex flex-col items-center gap-1 sm:items-end">
             <a
               href="mailto:pikaworks.help@gmail.com"

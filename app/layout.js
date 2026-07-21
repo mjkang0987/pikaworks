@@ -5,6 +5,9 @@ export const metadata = {
   title: 'PIKAWORKS — 일상을 정리하는 작은 도구들',
   description:
     'PIKAWORKS는 일상을 정리하는 작은 도구들을 만듭니다. clipnote · takeaseat · blog.',
+  icons: {
+    icon: '/favicon.svg',
+  },
   openGraph: {
     title: 'PIKAWORKS',
     description: '일상을 정리하는 작은 도구들',
