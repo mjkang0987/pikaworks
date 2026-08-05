@@ -28,6 +28,11 @@ export const metadata = {
   alternates: {
     canonical: '/',
   },
+  verification: {
+    other: {
+      'naver-site-verification': '088e95e2791517e250257e4b5f6aed4b290b03d4',
+    },
+  },
   icons: {
     icon: '/favicon.svg',
   },
