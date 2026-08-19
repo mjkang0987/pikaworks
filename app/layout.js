@@ -101,6 +101,15 @@ const JSON_LD = {
 export default function RootLayout({ children }) {
   return (
     <html lang="ko">
+      <head>
+        {/* 스크립트가 켜져 있을 때만 스크롤 리빌 초기 숨김을 활성화한다.
+            (JS 비활성 환경에서는 이 스크립트가 실행되지 않아 전부 그대로 보인다) */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: "document.documentElement.classList.add('js')",
+          }}
+        />
+      </head>
       <body>
         {children}
         <script
