@@ -1,66 +1,14 @@
 import Reveal from './components/Reveal';
 import ProductCard from './components/ProductCard';
 import LatestPosts from './components/LatestPosts';
-
-const PRODUCTS = [
-  {
-    name: 'clipnote',
-    tagline: '붙여넣기 한 번, 클릭을 부르는 공유 카드',
-    desc: '밋밋한 링크 대신 제목·대표 이미지가 담긴 카드와 짧은 링크로 공유합니다.',
-    href: 'https://clipnote.co.kr',
-    shot: '/shots/clipnote.png',
-    monogram: 'c',
-    accent: '#6526d9',
-  },
-  {
-    name: 'takeaseat',
-    tagline: '예약·고객 관리 서비스',
-    desc: '예약 캘린더부터 고객·담당자·매출까지, 매장 운영에 필요한 기능을 한 곳에서.',
-    href: 'https://takeaseat.co.kr',
-    shot: '/shots/takeaseat.png',
-    monogram: 'T',
-    accent: '#ec4899',
-  },
-  {
-    name: 'blog',
-    tagline: '경제·부동산·IT 인사이트',
-    desc: '매일의 흐름을 읽고 정리한 글을 기록합니다.',
-    href: 'https://blog.pikaworks.kr',
-    shot: '/shots/blog.png',
-    monogram: 'B',
-    accent: '#0ea5e9',
-  },
-];
+import SiteHeader from './components/SiteHeader';
+import SiteFooter from './components/SiteFooter';
+import { PRODUCTS } from './data/products';
 
 export default function Home() {
   return (
     <div className="min-h-screen">
-      {/* ── header ─────────────────────────────── */}
-      <header className="sticky top-0 z-50 border-b border-white/10 bg-ink/90 backdrop-blur-md">
-        <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-5">
-          <a href="#top" className="flex items-center">
-            <img
-              src="/logo.svg"
-              alt="PIKAWORKS"
-              className="h-5 w-auto transition-opacity hover:opacity-80"
-            />
-          </a>
-          <nav className="flex items-center gap-5 text-sm font-medium text-white/70">
-            <a className="transition-colors hover:text-white" href="#products">
-              제품
-            </a>
-            <a
-              className="transition-colors hover:text-white"
-              href="https://blog.pikaworks.kr"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              블로그
-            </a>
-          </nav>
-        </div>
-        <span className="block h-0.5 w-full bg-gradient-to-r from-brand via-brand-strong to-brand" />
-      </header>
+      <SiteHeader />
 
       {/* ── hero ───────────────────────────────── */}
       <section
@@ -137,7 +85,7 @@ export default function Home() {
 
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {PRODUCTS.map((p, i) => (
-            <Reveal key={p.name} delay={i * 110}>
+            <Reveal key={p.slug} delay={i * 110}>
               <ProductCard product={p} />
             </Reveal>
           ))}
@@ -170,24 +118,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── footer ─────────────────────────────── */}
-      <footer className="border-t border-border bg-white">
-        <div className="mx-auto flex max-w-5xl flex-col items-center gap-3 px-5 py-10 text-center sm:flex-row sm:justify-between sm:text-left">
-          <img src="/logo-dark.svg" alt="PIKAWORKS" className="h-5 w-auto" />
-
-          <div className="flex flex-col items-center gap-1 sm:items-end">
-            <a
-              href="mailto:pikaworks.help@gmail.com"
-              className="text-sm font-medium text-muted transition-colors hover:text-brand"
-            >
-              pikaworks.help@gmail.com
-            </a>
-            <span className="text-xs text-muted/80">
-              © {new Date().getFullYear()} PIKAWORKS. All rights reserved.
-            </span>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

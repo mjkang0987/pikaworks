@@ -2,7 +2,7 @@ import './globals.css';
 
 const SITE_URL = 'https://pikaworks.kr';
 const DESCRIPTION =
-  'PIKAWORKS는 일상을 정리하는 작은 도구들을 만듭니다. 링크 북마크 clipnote, 예약·고객 관리 takeaseat, 경제·부동산·IT 블로그.';
+  'PIKAWORKS는 일상을 정리하는 작은 도구들을 만듭니다. 링크 공유 카드 ClipNote, 예약·고객 관리 Take a Seat, 경제·부동산·IT 블로그.';
 
 export const metadata = {
   metadataBase: new URL(SITE_URL),
@@ -14,9 +14,11 @@ export const metadata = {
   keywords: [
     'PIKAWORKS',
     '피카웍스',
-    'clipnote',
+    'ClipNote',
     '클립노트',
+    'Take a Seat',
     'takeaseat',
+    '테이크어시트',
     '예약 관리',
     '북마크',
     '링크 공유',

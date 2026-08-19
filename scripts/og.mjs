@@ -23,7 +23,7 @@ const html = `<!doctype html><html><head><meta charset="utf8"><style>
   <div class="wrap">
     <div class="logo">${logo}</div>
     <div class="tagline">일상을 정리하는<br><span class="accent">작은 도구들</span></div>
-    <div class="sub">clipnote <span class="dot">·</span> takeaseat <span class="dot">·</span> blog</div>
+    <div class="sub">ClipNote <span class="dot">·</span> Take a Seat <span class="dot">·</span> blog</div>
   </div>
 </body></html>`;
 

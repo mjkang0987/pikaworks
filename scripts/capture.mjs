@@ -1,6 +1,8 @@
 import { chromium } from 'playwright';
 
+// name = public/shots/<name>.png 파일명 (제품 slug와 동일하게 유지)
 const shots = [
+  { name: 'clipnote', url: 'https://clipnote.co.kr' },
   { name: 'takeaseat', url: 'https://takeaseat.co.kr' },
   { name: 'blog', url: 'https://blog.pikaworks.kr' },
 ];
