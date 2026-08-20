@@ -28,8 +28,19 @@ body {
   font-family: var(--font-sans);
 }
 
+/* ── no-JS fallback ──────────────────────────── */
+/* <html class="js">는 layout의 인라인 스크립트가 붙인다.
+   스크립트가 꺼져 있으면 클래스가 없으므로, JS에 의존하는
+   초기 숨김 상태를 아예 적용하지 않아 콘텐츠가 그대로 보인다. */
+.js .no-js-only {
+  display: none !important;
+}
+html:not(.js) .js-only {
+  display: none !important;
+}
+
 /* ── scroll reveal ───────────────────────────── */
-.reveal {
+.js .reveal {
   opacity: 0;
   transform: translateY(28px);
   transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
@@ -37,12 +48,12 @@ body {
   transition-delay: var(--reveal-delay, 0ms);
   will-change: opacity, transform;
 }
-.reveal.is-visible {
+.js .reveal.is-visible {
   opacity: 1;
   transform: none;
 }
 @media (prefers-reduced-motion: reduce) {
-  .reveal {
+  .js .reveal {
     opacity: 1;
     transform: none;
     transition: none;

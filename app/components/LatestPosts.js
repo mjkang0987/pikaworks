@@ -14,6 +14,20 @@ function formatDate(iso) {
   ).padStart(2, '0')}`;
 }
 
+function BlogLink({ className = '' }) {
+  return (
+    <a
+      href={BLOG_URL}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={`inline-flex items-center gap-1 text-sm font-semibold text-brand transition-colors hover:text-brand-strong ${className}`}
+    >
+      블로그에서 최신 글 보기
+      <span aria-hidden>↗</span>
+    </a>
+  );
+}
+
 export default function LatestPosts() {
   // 'loading' | 'ok' | 'error'
   const [state, setState] = useState('loading');
@@ -60,29 +74,24 @@ export default function LatestPosts() {
 
   // fetch 실패 → 섹션 대신 블로그 바로가기만
   if (state === 'error') {
-    return (
-      <a
-        href={BLOG_URL}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="inline-flex items-center gap-1 text-sm font-semibold text-brand transition-colors hover:text-brand-strong"
-      >
-        블로그에서 최신 글 보기
-        <span aria-hidden>↗</span>
-      </a>
-    );
+    return <BlogLink />;
   }
 
   if (state === 'loading') {
+    // 정적 HTML로 나가는 상태. 스크립트가 꺼져 있으면 피드를 가져올 수 없으므로
+    // 스켈레톤 대신 블로그 바로가기를 보여준다.
     return (
-      <ul className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-        {[0, 1, 2].map((i) => (
-          <li
-            key={i}
-            className="h-[92px] animate-pulse rounded-[var(--radius-card)] border border-border bg-white"
-          />
-        ))}
-      </ul>
+      <>
+        <BlogLink className="no-js-only" />
+        <ul className="js-only grid grid-cols-1 gap-3 sm:grid-cols-3">
+          {[0, 1, 2].map((i) => (
+            <li
+              key={i}
+              className="h-[92px] animate-pulse rounded-[var(--radius-card)] border border-border bg-white"
+            />
+          ))}
+        </ul>
+      </>
     );
   }
 

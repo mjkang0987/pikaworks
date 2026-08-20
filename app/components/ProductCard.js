@@ -1,9 +1,10 @@
 'use client';
 
+import Link from 'next/link';
 import { useRef } from 'react';
 
 export default function ProductCard({ product }) {
-  const { name, tagline, desc, href, shot, accent, monogram, status } = product;
+  const { slug, name, tagline, desc, shot, accent, monogram, status } = product;
   const cardRef = useRef(null);
 
   function onMove(e) {
@@ -22,15 +23,9 @@ export default function ProductCard({ product }) {
     el.style.setProperty('--ry', '0deg');
   }
 
-  const live = Boolean(href);
-  const Wrap = live ? 'a' : 'div';
-  const wrapProps = live
-    ? { href, target: '_blank', rel: 'noopener noreferrer' }
-    : {};
-
   return (
-    <Wrap
-      {...wrapProps}
+    <Link
+      href={`/products/${slug}`}
       ref={cardRef}
       onMouseMove={onMove}
       onMouseLeave={onLeave}
@@ -87,26 +82,24 @@ export default function ProductCard({ product }) {
         <p className="text-sm font-medium text-ink/80">{tagline}</p>
         <p className="text-sm leading-relaxed text-muted">{desc}</p>
         <span className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-brand">
-          {live ? '바로가기' : '곧 공개'}
-          {live && (
-            <svg
-              width="15"
-              height="15"
-              viewBox="0 0 24 24"
-              fill="none"
-              className="transition-transform duration-300 group-hover:translate-x-1"
-            >
-              <path
-                d="M5 12h14M13 6l6 6-6 6"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          )}
+          자세히 보기
+          <svg
+            width="15"
+            height="15"
+            viewBox="0 0 24 24"
+            fill="none"
+            className="transition-transform duration-300 group-hover:translate-x-1"
+          >
+            <path
+              d="M5 12h14M13 6l6 6-6 6"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
         </span>
       </div>
-    </Wrap>
+    </Link>
   );
 }
