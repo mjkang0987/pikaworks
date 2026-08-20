@@ -181,26 +181,44 @@ export default async function ProductPage({ params }) {
       {gallery?.length > 0 && (
         <section className="border-t border-border bg-bg-soft">
           <div className="mx-auto max-w-5xl px-5 py-16 sm:py-20">
-            <Reveal className="mb-10 text-center">
+            <Reveal className="mb-12 text-center">
               <h2 className="text-2xl font-black tracking-tight text-ink sm:text-3xl">
                 화면 미리보기
               </h2>
-              <p className="mt-3 text-sm text-muted">실제 서비스 화면입니다.</p>
+              <p className="mt-3 text-sm text-muted">
+                실제 서비스 화면과, 그 화면에서 무엇을 하는지 함께 정리했습니다.
+              </p>
             </Reveal>
-            <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+
+            <ul className="flex flex-col gap-14 sm:gap-20">
               {gallery.map((g, i) => (
-                <Reveal as="li" key={g.src} delay={(i % 2) * 90}>
-                  <figure className="h-full overflow-hidden rounded-[var(--radius-card)] border border-border bg-white shadow-[0_1px_2px_rgba(28,28,30,0.04)]">
-                    <img
-                      src={g.src}
-                      alt={g.caption}
-                      loading="lazy"
-                      className="w-full border-b border-border"
-                    />
-                    <figcaption className="break-keep px-5 py-4 text-sm leading-relaxed text-muted">
-                      {g.caption}
-                    </figcaption>
-                  </figure>
+                <Reveal as="li" key={g.src}>
+                  <div className="grid grid-cols-1 items-center gap-6 sm:grid-cols-5 sm:gap-10">
+                    <figure
+                      className={`sm:col-span-3 ${i % 2 === 1 ? 'sm:order-2' : ''}`}
+                    >
+                      <img
+                        src={g.src}
+                        alt={`${name} ${g.title} 화면`}
+                        loading="lazy"
+                        className="w-full rounded-[var(--radius-card)] border border-border bg-white shadow-[0_18px_50px_-28px_rgba(28,28,30,0.45)]"
+                      />
+                    </figure>
+                    <div className="sm:col-span-2">
+                      <span
+                        className="text-xs font-bold tracking-[0.12em]"
+                        style={{ color: accent }}
+                      >
+                        {String(i + 1).padStart(2, '0')}
+                      </span>
+                      <h3 className="mt-2 text-lg font-bold tracking-tight text-ink">
+                        {g.title}
+                      </h3>
+                      <p className="mt-3 break-keep text-sm leading-relaxed text-muted">
+                        {g.desc}
+                      </p>
+                    </div>
+                  </div>
                 </Reveal>
               ))}
             </ul>

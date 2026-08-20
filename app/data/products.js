@@ -63,10 +63,26 @@ export const PRODUCTS = [
       },
     ],
     gallery: [
-      { src: '/shots/clipnote/create.png', caption: '링크를 붙여넣고 제목·태그만 확인하면 끝납니다.' },
-      { src: '/shots/clipnote/clips.png', caption: '«내 클립»에서 태그별로 모아 보고 다시 찾습니다.' },
-      { src: '/shots/clipnote/how.png', caption: '로그인 전후에 무엇이 달라지는지 서비스가 직접 안내합니다.' },
-      { src: '/shots/clipnote/faq.png', caption: '자주 묻는 질문도 서비스 안에서 바로 확인할 수 있습니다.' },
+      {
+        src: '/shots/clipnote/create.png',
+        title: '클립 만들기',
+        desc: 'URL 칸에 주소를 붙여넣으면 제목과 대표 이미지를 자동으로 불러옵니다. 제목은 비워두면 알아서 채워지고, 태그는 쉼표로 최대 6개까지 답니다. 아래 두 버튼으로 원본을 그대로 복사하거나 이 브라우저에 저장합니다.',
+      },
+      {
+        src: '/shots/clipnote/clips.png',
+        title: '내 클립',
+        desc: '저장한 클립이 날짜별로 쌓입니다. 위쪽 태그 칩을 누르면 같은 태그만 모아 볼 수 있고, 각 클립은 그 자리에서 편집·삭제하거나 원본으로 바로 이동합니다. 로그인 전에는 이 브라우저에만 남고, 로그인하면 계정에 쌓여 어느 기기에서나 같은 목록을 봅니다.',
+      },
+      {
+        src: '/shots/clipnote/how.png',
+        title: '동작 안내',
+        desc: '링크를 붙여넣고 짧은 주소를 만들기까지의 네 단계를 서비스 안에서 안내합니다. 로그인했을 때와 안 했을 때 무엇이 달라지는지도 나란히 비교해 보여 줍니다.',
+      },
+      {
+        src: '/shots/clipnote/faq.png',
+        title: '자주 묻는 질문',
+        desc: '«링크 복사»와 «원본 복사»의 차이, 태그 사용법, 네이버 카페·인스타그램 링크 지원 여부처럼 실제로 자주 막히는 지점을 서비스 안에서 바로 확인할 수 있습니다.',
+      },
     ],
     steps: [
       '공유할 링크를 붙여넣습니다. 제목·설명·대표 이미지는 자동으로 채워집니다.',
@@ -164,15 +180,51 @@ export const PRODUCTS = [
       },
     ],
     gallery: [
-      { src: '/shots/takeaseat/calendar-week.png', caption: '주별 보기 — 담당자별 예약을 시간표로 한눈에.' },
-      { src: '/shots/takeaseat/calendar-day.png', caption: '일별 타임라인 — 오늘 하루가 시간 순서대로.' },
-      { src: '/shots/takeaseat/calendar-month.png', caption: '월별 보기 — 이번 달 예약 흐름을 한 화면에.' },
-      { src: '/shots/takeaseat/revenue.png', caption: '매출 — 기간별 추이와 담당자별 실적을 자동 집계.' },
-      { src: '/shots/takeaseat/customers.png', caption: '고객 명단 — 최근 서비스·적립금·방문 이력을 한 줄에.' },
-      { src: '/shots/takeaseat/point.png', caption: '적립금 관리 — 적립·충전 내역과 정책 설정.' },
-      { src: '/shots/takeaseat/service.png', caption: '서비스 관리 — 카테고리별 시술과 소요 시간·가격.' },
-      { src: '/shots/takeaseat/assignee.png', caption: '담당자 관리 — 근무 일정과 재직 상태.' },
-      { src: '/shots/takeaseat/store.png', caption: '매장 관리 — 영업시간과 정기 휴무 설정.' },
+      {
+        src: '/shots/takeaseat/calendar-week.png',
+        title: '주별 예약 캘린더',
+        desc: '한 주치 예약이 시간표 위에 그대로 놓입니다. 시술 종류별로 색이 구분되고 결제가 끝난 예약은 «결제완료»로 표시돼, 이번 주가 얼마나 찼고 정산이 어디까지 됐는지 한 화면에서 보입니다. 빈 칸을 누르면 그 시간으로 예약 등록이 바로 열립니다.',
+      },
+      {
+        src: '/shots/takeaseat/calendar-day.png',
+        title: '일별 타임라인',
+        desc: '오늘 하루를 시간 순서로 봅니다. 시술 소요 시간만큼 블록 길이가 잡히기 때문에 다음 예약까지 얼마나 비는지, 문의가 왔을 때 어디에 끼워 넣을 수 있는지 바로 판단됩니다.',
+      },
+      {
+        src: '/shots/takeaseat/calendar-month.png',
+        title: '월별 보기',
+        desc: '한 달 흐름을 확인합니다. 날짜마다 예약이 쌓인 정도가 보여 바쁜 주와 한가한 주를 미리 알 수 있고, 담당자 필터로 특정 담당자의 일정만 추려 볼 수 있습니다.',
+      },
+      {
+        src: '/shots/takeaseat/revenue.png',
+        title: '매출',
+        desc: '기간을 고르면 총 매출·예약 건수·신규 고객 수·재방문 고객 수·결제완료 금액이 카드로 집계되고, 아래에 기간별 매출 추이가 그래프로 그려집니다. 담당자별 실적으로 나눠 보거나 일별 목록을 내려받을 수도 있어 마감 정산을 따로 하지 않아도 됩니다.',
+      },
+      {
+        src: '/shots/takeaseat/customers.png',
+        title: '고객 명단',
+        desc: '고객마다 최근 받은 서비스, 적립금 잔액, 예약·취소·완료·노쇼 횟수가 한 줄로 정리됩니다. 이름·연락처·메모로 검색되기 때문에 전화가 왔을 때 지난 이력을 바로 꺼내 볼 수 있습니다.',
+      },
+      {
+        src: '/shots/takeaseat/point.png',
+        title: '적립금 관리',
+        desc: '고객 적립금과 선불 충전 내역을 한곳에서 조회하고, 필요하면 수동으로 적립하거나 차감합니다. «적립 설정»에서 결제 금액의 몇 퍼센트를 적립할지, 충전할 때 얼마를 더 얹어 줄지 규칙으로 정해두면 이후에는 자동으로 쌓입니다.',
+      },
+      {
+        src: '/shots/takeaseat/service.png',
+        title: '서비스 관리',
+        desc: '카테고리별로 시술을 등록하고 소요 시간과 가격을 정합니다. 여기서 정한 소요 시간이 캘린더 블록의 길이가 되고, 가격이 그대로 매출 집계로 이어집니다.',
+      },
+      {
+        src: '/shots/takeaseat/assignee.png',
+        title: '담당자 관리',
+        desc: '담당자별 근무 요일과 시간을 설정하고 재직·휴직·퇴직 상태로 나눠 관리합니다. 등록한 근무 일정은 예약을 배정할 때 기준이 됩니다.',
+      },
+      {
+        src: '/shots/takeaseat/store.png',
+        title: '매장 관리',
+        desc: '영업시간과 정기 휴무를 설정합니다. 매주 쉬는 요일을 지정해두면 고객 예약 페이지에서 그 날짜는 예약을 받지 않습니다.',
+      },
     ],
     steps: [
       '가입 없이 게스트로 바로 시작합니다.',
