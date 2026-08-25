@@ -283,9 +283,11 @@ function slideBody(d, t, index) {
       ${chips ? `<div class="chips">${chips}</div>` : ''}
     </div>
     <div class="foot">
-      ${markSvg(t, 62)}
-      <div class="brand">${esc(t.name)}</div>
-      <div class="domain">${esc(t.domain)}</div>
+      <img class="ft-pika" src="${t.pikaUrl}" alt="pikaworks">
+      <div class="ft-app">
+        ${markSvg(t, 62)}
+        <div class="brand">${esc(t.name)}</div>
+      </div>
     </div>
   </section>`;
 }
@@ -445,10 +447,13 @@ function css(t, fontUrl) {
     font-size:24px; font-weight:700; padding:13px 24px; border-radius:999px;
   }
 
+  /* 커버·마감의 서명과 같은 자리·같은 크기로 둔다. 다섯 장을 넘길 때
+     왼쪽 아래가 흔들리지 않아야 한 묶음으로 읽힌다. */
   .foot { display:flex; align-items:center; gap:20px; }
+  .ft-pika { display:block; width:210px; height:auto; opacity:.9; }
+  .ft-app { margin-left:auto; display:flex; align-items:center; gap:20px; }
 
   .brand { font-size:35px; font-weight:800; letter-spacing:-.03em; }
-  .domain { margin-left:auto; font-size:29px; font-weight:500; color:${t.muted}; letter-spacing:-.02em; }
 
   /* ── 마감 ── 앱당 한 장 고정. 서비스가 주인공이고 pikaworks 는 서명이다 */
   .outro { background:${t.bg}; color:${t.fg}; text-align:center; }
@@ -568,7 +573,7 @@ for (let i = 0; i < slides.length; i += 1) {
     }
     // 배지처럼 내용에 맞춰 커지는 요소는 자기 자신은 절대 안 넘친다.
     // 넘침이 부모 행에서 일어나므로 컨테이너도 같이 재야 한다.
-    for (const el of document.querySelectorAll('.cv-top, .cv-fs, .cv-hs, .chips, .foot, .cards')) {
+    for (const el of document.querySelectorAll('.cv-top, .cv-fs, .cv-hs, .chips, .foot, .ft-app, .cards')) {
       if (el.scrollWidth > el.clientWidth + 1) {
         bad.push(`${el.className} 가로 넘침 (${el.scrollWidth} > ${el.clientWidth})`);
       }
