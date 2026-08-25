@@ -1,0 +1,85 @@
+name: 인스타그램 토큰 갱신
+
+# 장기 토큰은 60일이고, 발급 24시간 후 ~ 만료 전 구간에서만 갱신할 수 있다.
+# 한 번 만료되면 갱신이 불가능하고 OAuth 를 처음부터 다시 타야 하므로
+# 매일 돌려서 여유를 크게 둔다. 갱신할 때마다 만료가 다시 60일로 밀린다.
+on:
+  schedule:
+    - cron: '0 18 * * *'   # 매일 03:00 KST
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 갱신
+        env:
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_PAT_SECRETS }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          REPO: ${{ github.repository }}
+        run: |
+          python3 - <<'PY'
+          import json, os, subprocess, urllib.parse, urllib.request, urllib.error
+
+          TOKEN = os.environ.get('IG_ACCESS_TOKEN', '')
+          PAT   = os.environ.get('GH_TOKEN', '')
+          HOOK  = os.environ.get('SLACK_WEBHOOK_URL', '')
+
+          def notify(text, level='info'):
+              icon = {'info': 'ℹ️', 'warn': '⚠️', 'error': '🚨'}[level]
+              line = f'{icon} {text}'
+              print(line, flush=True)
+              with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as f:
+                  f.write(line + '\n')
+              if not HOOK:
+                  return
+              body = json.dumps({'text': f'{icon} *[pikaworks SNS]* {text}'}).encode()
+              req = urllib.request.Request(
+                  HOOK, data=body, headers={'Content-Type': 'application/json'}, method='POST')
+              try:
+                  urllib.request.urlopen(req, timeout=20).read()
+              except Exception:
+                  pass
+
+          if not TOKEN:
+              notify('IG_ACCESS_TOKEN 이 비어 있어 갱신을 건너뜁니다.', 'error')
+              raise SystemExit(1)
+
+          if not PAT:
+              # 갱신은 새 토큰을 돌려준다. 저장할 수 없으면 호출해봐야 버려지므로
+              # 아예 호출하지 않고 사람에게 넘긴다.
+              notify('GH_PAT_SECRETS 가 없어 토큰을 자동 저장할 수 없습니다. '
+                     'Secrets: write 권한의 fine-grained PAT 를 GH_PAT_SECRETS 로 등록하거나, '
+                     'IG_ACCESS_TOKEN 을 수동으로 갱신하세요. '
+                     '토큰이 만료되면 OAuth 를 처음부터 다시 타야 합니다.', 'warn')
+              raise SystemExit(0)
+
+          params = urllib.parse.urlencode(
+              {'grant_type': 'ig_refresh_token', 'access_token': TOKEN})
+          try:
+              with urllib.request.urlopen(
+                      f'https://graph.instagram.com/refresh_access_token?{params}',
+                      timeout=60) as r:
+                  data = json.loads(r.read())
+          except urllib.error.HTTPError as e:
+              body = e.read().decode('utf-8', 'replace').replace(TOKEN, '[TOKEN]')
+              notify(f'토큰 갱신 실패 (HTTP {e.code}) — {body[:300]}', 'error')
+              raise SystemExit(1)
+
+          new_token = data.get('access_token', '')
+          days = int(data.get('expires_in', 0)) // 86400
+          if not new_token:
+              notify('갱신 응답에 access_token 이 없습니다.', 'error')
+              raise SystemExit(1)
+
+          # gh 가 값을 암호화해 저장한다. 토큰은 어디에도 출력하지 않는다.
+          subprocess.run(
+              ['gh', 'secret', 'set', 'IG_ACCESS_TOKEN', '--repo', os.environ['REPO'],
+               '--body', new_token],
+              check=True)
+          notify(f'토큰 갱신 완료 — 만료까지 {days}일')
+          PY
