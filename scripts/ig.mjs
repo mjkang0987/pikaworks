@@ -39,7 +39,7 @@ const THEME = {
     chipInk: '#5b3fe0',
     chipBorder: '#ddd2fa',
     onAccent: '#ffffff',
-    mark: '<path d="M7 4h10a1 1 0 0 1 1 1v15l-6-4-6 4V5a1 1 0 0 1 1-1z"/>',
+    logo: 'assets/logos/clipnote.png',
   },
   // 블랙 배경 + 흰색/보라. --aside-bg 가 TAS 가 실제로 쓰는 다크 면이다.
   // --brand-color(#6526d9)는 어두워서 다크 위 글자로는 안 읽힌다. 면에만 쓰고,
@@ -60,7 +60,7 @@ const THEME = {
     chipInk: '#f5f5f7',
     chipBorder: 'rgba(255,255,255,.14)',
     onAccent: '#ffffff',
-    mark: '<path d="M7 4h10v7H7z"/><path d="M6 12h12v2H6z"/><path d="M8 14h1.6v6H8zM14.4 14H16v6h-1.6z"/>',
+    logo: 'assets/logos/takeaseat.png',
   },
 };
 
@@ -144,7 +144,7 @@ function slideCover(d, t) {
   return `<section class="s cover">
     <div class="cv-top">
       <div class="cv-brand">
-        <div class="mark lg">${markSvg(t, 44)}</div>
+        ${markSvg(t, 74)}
         <span>${esc(t.name)}</span>
       </div>
       ${d.kicker ? `<div class="cv-k">${esc(d.kicker)}</div>` : ''}
@@ -162,7 +162,7 @@ function slideOutro(t, other) {
   // 위 절반은 그 앱, 아래 절반은 pikaworks — 나머지 한 제품을 같이 알린다.
   return `<section class="s outro">
     <div class="ot-app">
-      <div class="ot-mark">${markSvg(t, 62)}</div>
+      <div class="ot-mark">${markSvg(t, 118)}</div>
       <div class="ot-name">${esc(t.name)}</div>
       <div class="ot-tag">${esc(t.tagline)}</div>
       <div class="ot-cta">${esc(t.domain)}</div>
@@ -222,15 +222,17 @@ function slideBody(d, t, index) {
       ${chips ? `<div class="chips">${chips}</div>` : ''}
     </div>
     <div class="foot">
-      <div class="mark">${markSvg(t, 34)}</div>
+      ${markSvg(t, 62)}
       <div class="brand">${esc(t.name)}</div>
       <div class="domain">${esc(t.domain)}</div>
     </div>
   </section>`;
 }
 
+// 서비스 저장소에서 가져온 앱 아이콘을 그대로 쓴다 (assets/logos/SOURCE.md).
+// 자체 라운드 컨테이너가 이미 있으므로 배경을 덧대지 않는다.
 const markSvg = (t, size) =>
-  `<svg viewBox="0 0 24 24" width="${size}" height="${size}" fill="#fff">${t.mark}</svg>`;
+  `<img class="logo" src="${t.logoUrl}" width="${size}" height="${size}" alt="">`;
 
 // ── 페이지 ────────────────────────────────────────────────────────
 
@@ -258,11 +260,7 @@ function css(t, fontUrl) {
   .cover { background:${t.bg}; color:${t.fg}; }
   .cv-top { display:flex; align-items:center; gap:20px; }
   .cv-brand { display:flex; align-items:center; gap:18px; font-size:33px; font-weight:800; letter-spacing:-.03em; }
-  .cv-brand .mark.lg {
-    width:74px; height:74px; border-radius:21px;
-    background:${t.accent};
-    display:flex; align-items:center; justify-content:center;
-  }
+  .logo { display:block; border-radius:22%; }
   .cv-k {
     margin-left:auto; background:${t.soft}; color:${t.accentInk};
     border:2px solid ${t.chipBorder};
@@ -334,10 +332,7 @@ function css(t, fontUrl) {
   }
 
   .foot { display:flex; align-items:center; gap:20px; }
-  .mark {
-    width:62px; height:62px; border-radius:18px; background:${t.accent};
-    display:flex; align-items:center; justify-content:center;
-  }
+
   .brand { font-size:35px; font-weight:800; letter-spacing:-.03em; }
   .domain { margin-left:auto; font-size:29px; font-weight:500; color:${t.muted}; letter-spacing:-.02em; }
 
@@ -347,10 +342,7 @@ function css(t, fontUrl) {
     flex:1.15; display:flex; flex-direction:column;
     align-items:center; justify-content:center;
   }
-  .ot-mark {
-    width:118px; height:118px; border-radius:32px; background:${t.accent};
-    display:flex; align-items:center; justify-content:center; margin-bottom:32px;
-  }
+  .ot-mark { margin-bottom:32px; }
   .ot-name { font-size:60px; font-weight:800; letter-spacing:-.04em; }
   .ot-tag { margin-top:18px; font-size:34px; font-weight:500; color:${t.muted}; letter-spacing:-.025em; }
   .ot-cta {
@@ -421,6 +413,14 @@ if (!existsSync(fontPath)) {
   process.exit(2);
 }
 const fontUrl = `data:font/woff2;base64,${readFileSync(fontPath).toString('base64')}`;
+
+for (const th of Object.values(THEME)) {
+  if (!existsSync(th.logo)) {
+    console.error(`${th.logo} 가 없습니다. assets/logos/SOURCE.md 참고.`);
+    process.exit(2);
+  }
+  th.logoUrl = `data:image/png;base64,${readFileSync(th.logo).toString('base64')}`;
+}
 
 const { t, html: slides } = buildSlides(design, input.service);
 
