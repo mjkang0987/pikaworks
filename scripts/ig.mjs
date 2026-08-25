@@ -17,6 +17,15 @@ import { basename, join } from 'path';
 
 const SIZE = 1080;
 const COVER_TITLE_PX = 178;
+// 커버 마지막 줄(강조 줄)을 어떻게 강조할지.
+//   text    글자색만 바꾼다
+//   block   키컬러 면을 깔고 글자는 흰색
+//   marker  키컬러 형광펜 바 + 흰 글자
+// 색 하나로 강조와 가독성을 동시에 만족시킬 수 없어서 나눠 둔 선택지다.
+// 밝게 하면 강조가 죽고 진하게 하면 안 읽힌다. block·marker 는 강조를
+// 면으로 옮겨 글자를 흰색으로 유지한다.
+// COVER_ACCENT 환경변수로 갈아끼워 비교할 수 있다.
+const COVER_ACCENT = process.env.COVER_ACCENT || 'text';
 const SITE = 'https://pikaworks.kr';
 const MAX_SLIDES = 10;      // 인스타 캐러셀 상한
 
@@ -134,8 +143,14 @@ function slideCover(d, t) {
   title.forEach((l, i) => check('cover.title', l, `커버 title[${i}]`));
   check('cover.kicker', d.kicker, '커버 kicker');
 
-  const heading = title.map((line, i) =>
-    `<div class="cv-h ${i === title.length - 1 ? 'accent' : ''}">${esc(line)}</div>`).join('');
+  const heading = title.map((line, i) => {
+    const last = i === title.length - 1;
+    if (!last) return `<div class="cv-h">${esc(line)}</div>`;
+    // 마지막 줄이 강조 줄이다. 색으로만 강조하면 밝게 할수록 강조가 약해지고
+    // 진하게 할수록 안 읽힌다. 면으로 옮기면 두 역할이 분리된다.
+    if (COVER_ACCENT === 'text') return `<div class="cv-h accent">${esc(line)}</div>`;
+    return `<div class="cv-h"><span class="hl ${COVER_ACCENT}">${esc(line)}</span></div>`;
+  }).join('');
 
   const feats = (d.features || []).slice(0, 3).map((f, i) => {
     check('cover.features', f, `커버 features[${i}]`);
@@ -272,6 +287,15 @@ function css(t, fontUrl) {
   .cv-hs { display:flex; flex-direction:column; }
   .cv-h { font-size:${COVER_TITLE_PX}px; font-weight:800; line-height:1.16; letter-spacing:-.05em; white-space:nowrap; }
   .cv-h.accent { color:${t.accentInk}; }
+  .hl { display:inline-block; }
+  .hl.block {
+    background:${t.accent}; color:#fff;
+    padding:.04em .16em .1em; margin-left:-.16em; border-radius:.1em;
+  }
+  .hl.marker {
+    background:linear-gradient(transparent 58%, ${t.accent} 58%, ${t.accent} 96%, transparent 96%);
+    padding:0 .06em; margin-left:-.06em;
+  }
   .cv-fs { display:flex; flex-wrap:wrap; gap:12px; align-items:center; }
   .cv-f {
     background:${t.soft}; color:${t.chipInk};
