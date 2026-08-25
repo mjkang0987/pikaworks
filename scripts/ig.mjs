@@ -203,7 +203,10 @@ function slideCover(d, t) {
       <div class="cv-hs">${heading}</div>
       ${feats ? `<div class="cv-fs">${feats}</div>` : ''}
     </div>
-    <div class="cv-swipe">밀어서 보기 <span>→</span></div>
+    <div class="cv-foot">
+      <img class="cv-pika" src="${t.pikaUrl}" alt="pikaworks">
+      <div class="cv-swipe">밀어서 보기 <span>→</span></div>
+    </div>
   </section>`;
 }
 
@@ -341,7 +344,10 @@ function css(t, fontUrl) {
     font-size:31px; font-weight:700; letter-spacing:-.03em;
     padding:13px 22px; border-radius:999px;
   }
+  .cv-foot { display:flex; align-items:center; gap:20px; }
+  .cv-pika { display:block; width:210px; height:auto; opacity:.9; }
   .cv-swipe {
+    margin-left:auto;
     font-size:30px; font-weight:600; color:${t.muted};
     letter-spacing:-.02em; display:flex; align-items:center; gap:12px;
   }
