@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(./**)",
+      "Write(./pipeline/ideas/**)",
+      "Edit(./pipeline/ideas/**)",
+      "Write(./pipeline/history.md)",
+      "Edit(./pipeline/history.md)",
+      "Write(./public/ig/**)",
+      "Bash(node scripts/ig.mjs:*)",
+      "Bash(python3 scripts/publish.py:*)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git add:*)"
+    ],
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(./**/.env)",
+      "Read(./**/.env.*)",
+      "Bash(GITHUB_ACTIONS=*)",
+      "Bash(env GITHUB_ACTIONS=*)"
+    ]
+  }
+}
