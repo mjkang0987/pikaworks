@@ -16,7 +16,7 @@ import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
 import { basename, join } from 'path';
 
 const SIZE = 1080;
-const COVER_TITLE_PX = 138;
+const COVER_TITLE_PX = 178;
 const SITE = 'https://pikaworks.kr';
 const MAX_SLIDES = 10;      // 인스타 캐러셀 상한
 
@@ -106,7 +106,7 @@ function icon(name, size = 36, width = 2 ) {
 // 넘친 글자는 잘리지 않고 레이아웃을 밀어낸다. 렌더 전에 막는다.
 
 const LIMITS = {
-  'cover.title': 13,
+  'cover.title': 9,
   'cover.kicker': 22,
   'cover.features': 12,
   'slide.title': 14,
@@ -130,7 +130,7 @@ function check(kind, value, where) {
 // ── 슬라이드 ──────────────────────────────────────────────────────
 
 function slideCover(d, t) {
-  const title = (Array.isArray(d.title) ? d.title : [d.title]).slice(0, 2);
+  const title = (Array.isArray(d.title) ? d.title : [d.title]).slice(0, 4);
   title.forEach((l, i) => check('cover.title', l, `커버 title[${i}]`));
   check('cover.kicker', d.kicker, '커버 kicker');
 
@@ -268,16 +268,16 @@ function css(t, fontUrl) {
     font-size:29px; font-weight:700; letter-spacing:-.02em;
     padding:15px 28px; border-radius:999px; white-space:nowrap;
   }
-  .cv-mid { flex:1; display:flex; flex-direction:column; justify-content:center; gap:52px; }
+  .cv-mid { flex:1; display:flex; flex-direction:column; justify-content:center; gap:44px; }
   .cv-hs { display:flex; flex-direction:column; }
   .cv-h { font-size:${COVER_TITLE_PX}px; font-weight:800; line-height:1.16; letter-spacing:-.05em; white-space:nowrap; }
   .cv-h.accent { color:${t.accentInk}; }
-  .cv-fs { display:flex; flex-direction:column; gap:14px; align-items:flex-start; }
+  .cv-fs { display:flex; flex-wrap:wrap; gap:12px; align-items:center; }
   .cv-f {
-    align-self:flex-start; background:${t.soft}; color:${t.chipInk};
+    background:${t.soft}; color:${t.chipInk};
     border:2px solid ${t.chipBorder};
-    font-size:38px; font-weight:700; letter-spacing:-.03em;
-    padding:16px 28px; border-radius:18px;
+    font-size:31px; font-weight:700; letter-spacing:-.03em;
+    padding:13px 22px; border-radius:999px;
   }
   .cv-swipe {
     font-size:30px; font-weight:600; color:${t.muted};
