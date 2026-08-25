@@ -15,36 +15,81 @@ import { chromium } from 'playwright';
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
 import { basename, join } from 'path';
 
-const SIZE = 1080;          // CSS px. deviceScaleFactor 2 → 2160×2160
+const SIZE = 1080;
+const COVER_TITLE_PX = 178;
+// 커버 마지막 줄(강조 줄)을 어떻게 강조할지.
+//   text    글자색만 바꾼다
+//   block   키컬러 면을 깔고 글자는 흰색
+//   marker  키컬러 형광펜 바 + 흰 글자
+// 색 하나로 강조와 가독성을 동시에 만족시킬 수 없어서 나눠 둔 선택지다.
+// 밝게 하면 강조가 죽고 진하게 하면 안 읽힌다. block·marker 는 강조를
+// 면으로 옮겨 글자를 흰색으로 유지한다.
+// COVER_ACCENT 환경변수로 갈아끼워 비교할 수 있다.
+const COVER_ACCENT_OVERRIDE = process.env.COVER_ACCENT;   // 비교용
 const SITE = 'https://pikaworks.kr';
 const MAX_SLIDES = 10;      // 인스타 캐러셀 상한
 
-// 두 앱이 공유하는 값. 여기는 서비스별로 바뀌지 않는다.
-const BASE = {
-  bg: '#ffffff',
-  ink: '#18181b',
-  muted: '#71717a',
-  border: '#e4e4e7',
-  faint: '#a1a1aa',
+// 색은 각 서비스 저장소에서 가져온다. 여기 값을 바꾸려면 먼저 저장소를 확인할 것.
+//   ClipNote   clipnote  app/globals.css
+//   Take a Seat  tas  client/styles/globalStyle.ts
+// 마감 슬라이드 하단의 pikaworks 서명. 파비콘(검정 타일)이 아니라 정식 가로형
+// 로고를 쓴다. 글자까지 로고에 포함돼 있어 따로 텍스트를 붙이지 않는다.
+// 배경에 따라 글자색이 다른 두 파일이 이미 준비돼 있다.
+const PIKA_LOGO = {
+  dark: 'public/logo.svg',        // 글자 흰색 — Take a Seat
+  light: 'public/logo-dark.svg',  // 글자 #1c1c1e — ClipNote
 };
 
-// 서비스 정체성. accent 는 app/data/products.js 의 값과 맞춘다.
 const THEME = {
+  // 흰 배경 + 보라 키컬러. globals.css 의 라이트 테마 그대로다.
   clipnote: {
     name: 'ClipNote',
     domain: 'clipnote.co.kr',
-    accent: '#6526d9',
-    soft: '#f1ebfd',
-    softInk: '#4c1d95',
-    mark: '<path d="M7 4h10a1 1 0 0 1 1 1v15l-6-4-6 4V5a1 1 0 0 1 1-1z"/>',
+    tagline: '밋밋한 링크를 카드 한 장으로',
+    bg: '#ffffff',          // --bg
+    fg: '#18181b',          // --fg
+    muted: '#71717a',       // --fg-muted
+    border: '#e4e4e7',      // --border
+    accent: '#7c5cfc',      // --brand
+    accentInk: '#7c5cfc',   // 밝은 배경이라 글자에도 그대로 쓴다
+    soft: '#efebff',        // --brand-soft
+    softInk: '#5b3fe0',     // --brand-strong
+    chipInk: '#5b3fe0',
+    chipBorder: '#ddd2fa',
+    strong: '#5b3fe0',      // --brand-strong
+    coverAccent: 'text',    // 흰 배경이라 보라 글자가 그대로 잘 읽힌다
+    badgeStyle: 'soft',
+    onAccent: '#ffffff',
+    logo: 'assets/logos/clipnote.png',
+    pikaLogo: 'light',
+    appStore: true,   // products.js 의 ios 링크(앱 ID 6792600343)로 출시 확인
   },
+  // 블랙 배경 + 흰색/보라. --aside-bg 가 TAS 가 실제로 쓰는 다크 면이다.
+  // --brand-color(#6526d9)는 어두워서 다크 위 글자로는 안 읽힌다. 면에만 쓰고,
+  // 글자 강조는 #9a6bff 를 쓴다 — pikaworks OG 이미지(scripts/og.mjs)가
+  // 같은 #1c1c1e 배경에서 이미 쓰고 있는 밝은 보라다.
   takeaseat: {
     name: 'Take a Seat',
     domain: 'takeaseat.co.kr',
-    accent: '#ec4899',
-    soft: '#fdeaf4',
-    softInk: '#9d174d',
-    mark: '<path d="M7 4h10v7H7z"/><path d="M6 12h12v2H6z"/><path d="M8 14h1.6v6H8zM14.4 14H16v6h-1.6z"/>',
+    tagline: '예약부터 단골 관리까지',
+    bg: '#1c1c1e',                        // --aside-bg
+    fg: '#f5f5f7',                        // --aside-text
+    muted: 'rgba(245,245,247,.58)',
+    border: 'rgba(255,255,255,.12)',      // --aside-divider
+    accent: '#6526d9',                    // --brand-color
+    accentInk: '#ba9dee',   // #6526d9 + 흰색 55%. #1c1c1e 위 7.41:1 (AAA)
+    soft: 'rgba(255,255,255,.07)',        // --aside-hover 계열
+    softInk: '#c9b4ff',
+    chipInk: '#f5f5f7',
+    chipBorder: 'rgba(255,255,255,.14)',
+    strong: '#6526d9',      // --brand-color 원본. 흰 글자 7.41:1
+    coverAccent: 'marker',  // 다크에선 글자색만으로 강조와 가독성을 동시에 못 잡는다
+    badgeStyle: 'solid',
+    onAccent: '#ffffff',
+    logo: 'assets/logos/takeaseat.png',
+    pikaLogo: 'dark',
+    appStore: false,   // 웹 전용. App Store 문구를 쓰면 안 된다
+    icons: 'assets/icons/takeaseat.json',   // 서비스 사이드바가 실제로 쓰는 글리프
   },
 };
 
@@ -68,17 +113,22 @@ const ICONS = {
   tag: '<path d="M3 3h8l10 10-8 8L3 11z"/><circle cx="7.5" cy="7.5" r="1.5"/>',
 };
 
-// pikaworks 모기업 마크. public/favicon.svg 와 같은 글리프·같은 노랑이다.
-const BOLT = '<svg viewBox="0 0 64 64" width="34" height="34" fill="#FFD60A">'
-  + '<path d="M37 7 L17 35 H29 L26 57 L48 28 H35 L40 7 Z"/></svg>';
+// App Store 배지는 애플 공식 에셋을 그대로 쓴다 (assets/logos/SOURCE.md).
+// 애플은 배지를 재현하거나 변형하는 것을 금지하고 공식 파일 사용을 요구한다.
+const APP_STORE_BADGE = 'assets/logos/app-store-badge.svg';
 
 const esc = (s) =>
   String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
-function icon(name, size = 36, width = 2 ) {
-  const path = ICONS[name];
+// 서비스 저장소에서 가져온 아이콘이 있으면 그걸 먼저 쓴다 (assets/logos/SOURCE.md).
+// 직접 그린 공용 세트는 대응하는 실제 아이콘이 없을 때만 쓴다.
+function icon(name, t, size = 36, width = 2) {
+  const path = (t && t.iconSet && t.iconSet[name]) || ICONS[name];
   if (!path) {
-    throw new Error(`알 수 없는 아이콘: ${name}\n가능: ${Object.keys(ICONS).join(', ')}`);
+    const own = t && t.iconSet ? Object.keys(t.iconSet) : [];
+    throw new Error(
+      `알 수 없는 아이콘: ${name}\n  ${t ? t.name : ''} 실제 아이콘: ${own.join(', ')}` +
+      `\n  공용: ${Object.keys(ICONS).join(', ')}`);
   }
   return `<svg viewBox="0 0 24 24" width="${size}" height="${size}" fill="none"
     stroke="currentColor" stroke-width="${width}" stroke-linecap="round"
@@ -88,10 +138,14 @@ function icon(name, size = 36, width = 2 ) {
 // ── 길이 검사 ─────────────────────────────────────────────────────
 // 넘친 글자는 잘리지 않고 레이아웃을 밀어낸다. 렌더 전에 막는다.
 
+// 실측값 (Pretendard 800, 공백 없는 빽빽한 한글 기준):
+//   제목 178px → 줄당 6자, 3줄까지. 4줄은 세로가 안 나온다
+//   kicker 29px → 23자, features 31px → 30자
+// 아래는 거기서 여유를 둔 값이다. 넘치면 렌더가 실패하므로 카피 단계에서 걸린다.
 const LIMITS = {
-  'cover.title': 13,
-  'cover.kicker': 22,
-  'cover.features': 12,
+  'cover.title': 6,
+  'cover.kicker': 12,
+  'cover.features': 10,
   'slide.title': 14,
   'slide.subtitle': 32,
   'item.title': 12,
@@ -101,11 +155,16 @@ const LIMITS = {
   chip: 8,
 };
 
+// 공백은 한글 글자 폭의 절반도 안 되므로 세지 않는다. 세면 "카드 한 장으로"(8자)
+// 처럼 실제로는 들어가는 카피가 반려된다. 아래 상한은 전부 공백 제외 기준이다.
+const countable = (v) => String(v).replace(/\s/g, '').length;
+
 function check(kind, value, where) {
   const max = LIMITS[kind];
-  if (value && String(value).length > max) {
+  const n = value ? countable(value) : 0;
+  if (n > max) {
     throw new Error(
-      `${where}: "${value}" 가 ${String(value).length}자입니다. ${kind} 는 ${max}자까지.`);
+      `${where}: "${value}" 가 공백 제외 ${n}자입니다. ${kind} 는 ${max}자까지.`);
   }
   return value;
 }
@@ -113,12 +172,19 @@ function check(kind, value, where) {
 // ── 슬라이드 ──────────────────────────────────────────────────────
 
 function slideCover(d, t) {
-  const title = (Array.isArray(d.title) ? d.title : [d.title]).slice(0, 2);
+  const title = (Array.isArray(d.title) ? d.title : [d.title]).slice(0, 3);
   title.forEach((l, i) => check('cover.title', l, `커버 title[${i}]`));
   check('cover.kicker', d.kicker, '커버 kicker');
 
-  const heading = title.map((line, i) =>
-    `<div class="cv-h ${i === title.length - 1 ? 'accent' : ''}">${esc(line)}</div>`).join('');
+  const heading = title.map((line, i) => {
+    const last = i === title.length - 1;
+    if (!last) return `<div class="cv-h">${esc(line)}</div>`;
+    // 마지막 줄이 강조 줄이다. 색으로만 강조하면 밝게 할수록 강조가 약해지고
+    // 진하게 할수록 안 읽힌다. 면으로 옮기면 두 역할이 분리된다.
+    const mode = COVER_ACCENT_OVERRIDE || t.coverAccent;
+    if (mode === 'text') return `<div class="cv-h accent">${esc(line)}</div>`;
+    return `<div class="cv-h"><span class="hl ${mode}">${esc(line)}</span></div>`;
+  }).join('');
 
   const feats = (d.features || []).slice(0, 3).map((f, i) => {
     check('cover.features', f, `커버 features[${i}]`);
@@ -128,31 +194,36 @@ function slideCover(d, t) {
   return `<section class="s cover">
     <div class="cv-top">
       <div class="cv-brand">
-        <div class="mark lg">${markSvg(t, 44)}</div>
+        ${markSvg(t, 74)}
         <span>${esc(t.name)}</span>
       </div>
-      ${d.kicker ? `<div class="cv-k">${esc(d.kicker)}</div>` : ''}
+      ${d.kicker ? `<div class="cv-k ${t.badgeStyle}">${esc(d.kicker)}</div>` : ''}
     </div>
     <div class="cv-mid">
-      ${heading}
+      <div class="cv-hs">${heading}</div>
       ${feats ? `<div class="cv-fs">${feats}</div>` : ''}
     </div>
-    <div class="cv-swipe">밀어서 보기 <span>→</span></div>
+    <div class="cv-foot">
+      <img class="cv-pika" src="${t.pikaUrl}" alt="pikaworks">
+      <div class="cv-swipe">밀어서 보기 <span>→</span></div>
+    </div>
   </section>`;
 }
 
-function slideOutro(d, t) {
-  check('outro.headline', d.headline, '마감 headline');
-  check('outro.sub', d.sub, '마감 sub');
+function slideOutro(t) {
+  // 건마다 다르지 않고 앱당 한 장 고정이다.
+  // 인스타는 캡션의 URL 이 클릭되지 않는다. 유일하게 눌리는 곳이 프로필 링크라
+  // 거기로 보내는 문장을 CTA 로 쓴다. 도메인은 보조로만 적는다.
   return `<section class="s outro">
-    <div class="ot-mid">
-      <div class="ot-mark">${markSvg(t, 62)}</div>
+    <div class="ot-app">
+      <div class="ot-mark">${markSvg(t, 150)}</div>
       <div class="ot-name">${esc(t.name)}</div>
-      ${d.headline ? `<div class="ot-h">${esc(d.headline)}</div>` : ''}
-      ${d.sub ? `<div class="ot-s">${esc(d.sub)}</div>` : ''}
-      <div class="ot-cta">${esc(t.domain)}</div>
+      <div class="ot-tag">${esc(t.tagline)}</div>
+      <div class="ot-cta">프로필 링크를 확인해주세요</div>
+      <div class="ot-dom">https://${esc(t.domain)}</div>
+      ${t.appStore ? `<img class="ot-app-store" src="${APP_STORE_URL}" alt="Download on the App Store">` : ''}
     </div>
-    <div class="ot-by">${BOLT}<span>pikaworks</span></div>
+    <img class="ot-by" src="${t.pikaUrl}" alt="pikaworks">
   </section>`;
 }
 
@@ -161,9 +232,15 @@ function slideBody(d, t, index) {
   title.forEach((l, i) => check('slide.title', l, `슬라이드 ${index} title[${i}]`));
   check('slide.subtitle', d.subtitle, `슬라이드 ${index} subtitle`);
 
-  const heading = title.map((line, i) =>
-    `<div class="h1 ${i === title.length - 1 && title.length > 1 ? 'accent' : ''}">${esc(line)}</div>`)
-    .join('');
+  // 강조는 커버와 같은 방식을 쓴다. 다섯 장이 같은 규칙으로 강조해야
+  // 한 묶음으로 읽힌다 — 커버만 형광펜이고 내용은 글자색이면 따로 논다.
+  const heading = title.map((line, i) => {
+    const last = i === title.length - 1 && title.length > 1;
+    if (!last) return `<div class="h1">${esc(line)}</div>`;
+    const mode = COVER_ACCENT_OVERRIDE || t.coverAccent;
+    if (mode === 'text') return `<div class="h1 accent">${esc(line)}</div>`;
+    return `<div class="h1"><span class="hl ${mode}">${esc(line)}</span></div>`;
+  }).join('');
 
   let body;
   if (d.template === 'list') {
@@ -171,7 +248,7 @@ function slideBody(d, t, index) {
       check('item.title', it.title, `슬라이드 ${index} items[${i}].title`);
       check('item.text', it.text, `슬라이드 ${index} items[${i}].text`);
       return `<div class="card">
-        <div class="ic">${icon(it.icon || 'check')}</div>
+        <div class="ic">${icon(it.icon || 'check', t)}</div>
         <div class="ct">
           ${it.title ? `<div class="ct-t">${esc(it.title)}</div>` : ''}
           <div class="ct-d">${esc(it.text)}</div>
@@ -179,6 +256,17 @@ function slideBody(d, t, index) {
       </div>`;
     }).join('');
     body = `<div class="cards">${rows}</div>`;
+  } else if (d.template === 'shot') {
+    // 실제 서비스 화면을 그대로 보여준다. 흐리게 깔지 않는 이유는
+    // 흐리면 화면이 정보가 아니라 배경 질감이 되어 넣는 뜻이 사라지기 때문이다.
+    // PC 창을 크게 놓고 폰을 오른쪽 아래에 겹친다.
+    body = `<div class="shot">
+      <div class="sh-pc">
+        <div class="sh-bar"><i></i><i></i><i></i></div>
+        <img src="${shotUrl(d.pc, index, 'pc')}" alt="">
+      </div>
+      <div class="sh-mo"><img src="${shotUrl(d.mobile, index, 'mobile')}" alt=""></div>
+    </div>`;
   } else if (d.template === 'panel') {
     body = `<div class="panel">${d.html || ''}</div>`;
   } else if (d.template === 'statement') {
@@ -201,15 +289,32 @@ function slideBody(d, t, index) {
       ${chips ? `<div class="chips">${chips}</div>` : ''}
     </div>
     <div class="foot">
-      <div class="mark">${markSvg(t, 34)}</div>
-      <div class="brand">${esc(t.name)}</div>
-      <div class="domain">${esc(t.domain)}</div>
+      <img class="ft-pika" src="${t.pikaUrl}" alt="pikaworks">
+      <div class="ft-app">
+        ${markSvg(t, 34)}
+        <div class="brand">${esc(t.name)}</div>
+      </div>
     </div>
   </section>`;
 }
 
+// 스크린샷은 파일 경로로 받아 data URI 로 박는다. 외부 참조가 남으면
+// 렌더 시점 네트워크에 의존하게 되고, 그러면 재현이 깨진다.
+// 촬영 절차와 개인정보 근거는 assets/shots/SOURCE.md 를 본다.
+function shotUrl(path, index, which) {
+  if (!path) {
+    throw new Error(`슬라이드 ${index}: shot 템플릿에 ${which} 경로가 없습니다.`);
+  }
+  if (!existsSync(path)) {
+    throw new Error(`슬라이드 ${index}: ${path} 가 없습니다. assets/shots/SOURCE.md 참고.`);
+  }
+  return `data:image/png;base64,${readFileSync(path).toString('base64')}`;
+}
+
+// 서비스 저장소에서 가져온 앱 아이콘을 그대로 쓴다 (assets/logos/SOURCE.md).
+// 자체 라운드 컨테이너가 이미 있으므로 배경을 덧대지 않는다.
 const markSvg = (t, size) =>
-  `<svg viewBox="0 0 24 24" width="${size}" height="${size}" fill="#fff">${t.mark}</svg>`;
+  `<img class="logo" src="${t.logoUrl}" width="${size}" height="${size}" alt="">`;
 
 // ── 페이지 ────────────────────────────────────────────────────────
 
@@ -223,41 +328,59 @@ function css(t, fontUrl) {
   * { margin:0; padding:0; box-sizing:border-box; }
   body {
     width:${SIZE}px; height:${SIZE}px; overflow:hidden;
-    background:${BASE.bg}; color:${BASE.ink};
+    background:${t.bg}; color:${t.fg};
     font-family:'Pretendard', sans-serif;
     -webkit-font-smoothing:antialiased;
   }
   .s {
     width:${SIZE}px; height:${SIZE}px;
     display:flex; flex-direction:column;
-    padding:92px 84px 78px;
+    padding:74px 64px 64px;
   }
 
   /* ── 커버 ── 타이틀과 기능을 크게. 피드에서 이 한 장이 승부다 */
-  .cover { background:${t.accent}; color:#fff; }
+  .cover { background:${t.bg}; color:${t.fg}; }
   .cv-top { display:flex; align-items:center; gap:20px; }
-  .cv-brand { display:flex; align-items:center; gap:18px; font-size:33px; font-weight:800; letter-spacing:-.03em; }
-  .cv-brand .mark.lg {
-    width:74px; height:74px; border-radius:21px;
-    background:rgba(255,255,255,.18);
-    display:flex; align-items:center; justify-content:center;
-  }
+  .cv-brand { flex:none; display:flex; align-items:center; gap:18px; font-size:38px; font-weight:800; letter-spacing:-.03em; }
+  .logo { display:block; border-radius:22%; }
   .cv-k {
-    margin-left:auto; background:rgba(255,255,255,.2);
-    font-size:25px; font-weight:700; letter-spacing:-.02em;
-    padding:16px 28px; border-radius:999px; white-space:nowrap;
+    flex:none; margin-left:auto; font-size:29px; letter-spacing:-.02em;
+    border-radius:999px; white-space:nowrap;
   }
-  .cv-mid { flex:1; display:flex; flex-direction:column; justify-content:center; gap:54px; }
-  .cv-h { font-size:104px; font-weight:800; line-height:1.18; letter-spacing:-.045em; }
-  .cv-h.accent { color:rgba(255,255,255,.62); }
-  .cv-fs { display:flex; flex-direction:column; gap:14px; align-items:flex-start; }
+  /* 다크에선 흰 면이 17:1 로 튄다. 라이트에선 흰 면이 안 보이니 연보라를 쓴다 */
+  /* 흰 면은 17.01:1 로 제목(15.63:1)보다 밝아 후킹에서 시선을 뺏었다.
+     키컬러 면은 2.29:1 로 가라앉으면서 흰 글자를 7.41:1 로 받고,
+     형광펜 바와 같은 색이라 보라가 한 덩어리로 읽힌다. */
+  .cv-k.solid { background:${t.strong}; color:#fff; font-weight:800; padding:16px 30px; }
+  .cv-k.soft {
+    background:${t.soft}; color:${t.accentInk};
+    border:2px solid ${t.chipBorder}; font-weight:700; padding:14px 28px;
+  }
+  .cv-mid { flex:1; display:flex; flex-direction:column; justify-content:center; gap:44px; }
+  .cv-hs { display:flex; flex-direction:column; }
+  .cv-h { font-size:${COVER_TITLE_PX}px; font-weight:800; line-height:1.16; letter-spacing:-.05em; white-space:nowrap; }
+  .cv-h.accent { color:${t.accentInk}; }
+  .hl { display:inline-block; }
+  .hl.block {
+    background:${t.strong}; color:#fff;
+    padding:.04em .16em .1em; margin-left:-.16em; border-radius:.1em;
+  }
+  .hl.marker {
+    background:linear-gradient(transparent 58%, ${t.strong} 58%, ${t.strong} 96%, transparent 96%);
+    padding:0 .06em; margin-left:-.06em;
+  }
+  .cv-fs { display:flex; flex-wrap:wrap; gap:12px; align-items:center; }
   .cv-f {
-    align-self:flex-start; background:rgba(255,255,255,.16);
-    font-size:34px; font-weight:700; letter-spacing:-.025em;
-    padding:20px 34px; border-radius:18px;
+    background:${t.soft}; color:${t.chipInk};
+    border:2px solid ${t.chipBorder};
+    font-size:31px; font-weight:700; letter-spacing:-.03em;
+    padding:13px 22px; border-radius:999px;
   }
+  .cv-foot { display:flex; align-items:center; gap:20px; }
+  .cv-pika { display:block; width:210px; height:auto; opacity:.9; }
   .cv-swipe {
-    font-size:27px; font-weight:600; color:rgba(255,255,255,.72);
+    margin-left:auto;
+    font-size:30px; font-weight:600; color:${t.muted};
     letter-spacing:-.02em; display:flex; align-items:center; gap:12px;
   }
   .cv-swipe span { font-size:31px; }
@@ -265,10 +388,10 @@ function css(t, fontUrl) {
   /* ── 내용 ── 모든 내용 슬라이드가 같은 골격을 쓴다 */
   .head { min-height:186px; }
   .h1 { font-size:64px; font-weight:800; line-height:1.26; letter-spacing:-.04em; }
-  .accent { color:${t.accent}; }
+  .accent { color:${t.accentInk}; }
   .sub {
     margin-top:22px; font-size:30px; font-weight:500;
-    color:${BASE.muted}; letter-spacing:-.02em; line-height:1.45;
+    color:${t.muted}; letter-spacing:-.02em; line-height:1.45;
   }
   .main { flex:1; display:flex; flex-direction:column; justify-content:center; min-height:0; padding:30px 0; }
 
@@ -279,12 +402,33 @@ function css(t, fontUrl) {
   }
   .ic {
     flex:none; width:74px; height:74px; border-radius:20px;
-    background:#fff; color:${t.accent};
+    background:${t.accent}; color:${t.onAccent};
     display:flex; align-items:center; justify-content:center;
   }
   .ct-t { font-size:36px; font-weight:800; letter-spacing:-.03em; line-height:1.3; }
-  .ct-d { margin-top:8px; font-size:27px; font-weight:600; color:${t.softInk}; opacity:.72; letter-spacing:-.02em; line-height:1.35; }
+  .ct-d { margin-top:8px; font-size:27px; font-weight:600; color:${t.softInk}; opacity:.82; letter-spacing:-.02em; line-height:1.35; }
   .ct-d:only-child { margin-top:0; font-size:33px; font-weight:700; opacity:.92; }
+
+  /* ── 서비스 화면 ── PC 창을 주인공으로 두고 폰을 오른쪽 아래에 겹친다.
+     프레임은 얇게. 목업 장식이 화면보다 눈에 띄면 안 된다. */
+  .shot { position:relative; width:100%; height:100%; }
+  .sh-pc {
+    position:absolute; left:0; top:0; width:812px;
+    border:2px solid ${t.border}; border-radius:18px; overflow:hidden;
+    background:${t.soft}; box-shadow:0 26px 60px rgba(0,0,0,.28);
+  }
+  .sh-bar {
+    height:34px; display:flex; align-items:center; gap:9px; padding:0 16px;
+    background:${t.soft}; border-bottom:2px solid ${t.border};
+  }
+  .sh-bar i { width:11px; height:11px; border-radius:50%; background:${t.border}; }
+  .sh-pc img { display:block; width:100%; height:auto; }
+  .sh-mo {
+    position:absolute; right:0; bottom:0; width:212px;
+    border:9px solid ${t.fg}; border-radius:34px; overflow:hidden;
+    background:${t.fg}; box-shadow:0 22px 46px rgba(0,0,0,.36);
+  }
+  .sh-mo img { display:block; width:100%; height:auto; border-radius:26px; }
 
   .panel { background:${t.soft}; border-radius:30px; padding:42px; }
   .stmt {
@@ -295,60 +439,59 @@ function css(t, fontUrl) {
   .grid5 { grid-template-columns:repeat(5,1fr); }
   .grid4 { grid-template-columns:repeat(4,1fr); }
   .cell {
-    background:#fff; border-radius:16px; padding:24px 8px; text-align:center;
+    background:${t.bg}; border-radius:16px; padding:24px 8px; text-align:center;
     font-size:31px; font-weight:800; letter-spacing:-.02em;
   }
-  .cell small { display:block; font-size:22px; font-weight:600; color:${BASE.muted}; margin-bottom:7px; }
+  .cell small { display:block; font-size:22px; font-weight:600; color:${t.muted}; margin-bottom:7px; }
   .cell-on { background:${t.accent}; color:#fff; }
   .cell-on small { color:rgba(255,255,255,.75); }
-  .cell-off { background:transparent; border:2px dashed ${BASE.border}; color:#c9c9d1; }
+  .cell-off { background:transparent; border:2px dashed ${t.border}; color:${t.muted}; }
 
   .chips { margin-top:26px; display:flex; gap:14px; justify-content:center; }
   .chip {
-    background:${t.soft}; color:${t.accent};
+    background:${t.soft}; color:${t.accentInk};
     font-size:24px; font-weight:700; padding:13px 24px; border-radius:999px;
   }
 
+  /* 커버·마감의 서명과 같은 자리·같은 크기로 둔다. 다섯 장을 넘길 때
+     왼쪽 아래가 흔들리지 않아야 한 묶음으로 읽힌다. */
   .foot { display:flex; align-items:center; gap:20px; }
-  .mark {
-    width:62px; height:62px; border-radius:18px; background:${t.accent};
-    display:flex; align-items:center; justify-content:center;
-  }
-  .brand { font-size:35px; font-weight:800; letter-spacing:-.03em; }
-  .domain { margin-left:auto; font-size:29px; font-weight:500; color:${BASE.faint}; letter-spacing:-.02em; }
+  .ft-pika { display:block; width:210px; height:auto; opacity:.9; }
+  /* pikaworks 서명은 210px 폭 = 29.5px 높이(viewBox 698.3×98)로 렌더된다.
+     오른쪽 서비스 쪽을 거기에 맞춘다 — 아이콘 62px 은 두 배가 넘어서
+     좌우가 따로 놀았다. */
+  .ft-app { margin-left:auto; display:flex; align-items:center; gap:14px; }
 
-  /* ── 마감 ── 커버와 짝을 이룬다 */
-  .outro { background:${t.accent}; color:#fff; text-align:center; }
-  .ot-mid {
+  .brand { font-size:30px; font-weight:800; letter-spacing:-.03em; }
+
+  /* ── 마감 ── 앱당 한 장 고정. 서비스가 주인공이고 pikaworks 는 서명이다 */
+  .outro { background:${t.bg}; color:${t.fg}; text-align:center; }
+  .ot-app {
     flex:1; display:flex; flex-direction:column;
     align-items:center; justify-content:center;
   }
-  .ot-by {
-    display:flex; align-items:center; justify-content:center; gap:13px;
-    font-size:29px; font-weight:700; letter-spacing:-.02em;
-    color:rgba(255,255,255,.66);
-  }
-  .ot-mark {
-    width:132px; height:132px; border-radius:36px;
-    background:rgba(255,255,255,.18);
-    display:flex; align-items:center; justify-content:center;
-    margin-bottom:38px;
-  }
-  .ot-name { font-size:52px; font-weight:800; letter-spacing:-.035em; }
-  .ot-h { margin-top:46px; font-size:66px; font-weight:800; line-height:1.28; letter-spacing:-.04em; }
-  .ot-s { margin-top:22px; font-size:31px; font-weight:500; color:rgba(255,255,255,.72); letter-spacing:-.02em; }
+  .ot-mark { margin-bottom:40px; }
+  .ot-name { font-size:78px; font-weight:800; letter-spacing:-.04em; }
+  .ot-tag { margin-top:20px; font-size:40px; font-weight:500; color:${t.muted}; letter-spacing:-.03em; }
   .ot-cta {
-    margin-top:56px; background:#fff; color:${t.accent};
-    font-size:36px; font-weight:800; letter-spacing:-.03em;
-    padding:26px 54px; border-radius:999px;
-  }`;
+    margin-top:56px; background:${t.accent}; color:${t.onAccent};
+    font-size:38px; font-weight:800; letter-spacing:-.03em;
+    padding:28px 56px; border-radius:999px;
+  }
+  .ot-dom { margin-top:24px; font-size:32px; font-weight:600; color:${t.muted}; letter-spacing:-.02em; }
+  /* 애플 공식 배지. 비율을 바꾸거나 다시 그리지 않는다 */
+  .ot-app-store { margin-top:32px; display:block; width:300px; height:auto; }
+  /* pikaworks 서명. 흐린 색이면 서명이 아니라 잔여물처럼 보여서 본문색을 쓴다.
+     라이트 테마에선 흰색이 안 되므로 각 테마의 전경색(fg)을 따른다. */
+  /* 커버 하단의 서명과 같은 위치·크기로 맞춘다 (.cv-pika 와 동일) */
+  .ot-by { display:block; width:210px; height:auto; opacity:.9; }
+`;
 }
 
 function buildSlides(design, service) {
   const t = THEME[service];
   if (!t) throw new Error(`알 수 없는 service: ${service} (clipnote | takeaseat)`);
   if (!design.cover) throw new Error('design.cover 가 필요합니다 (캐러셀 첫 장)');
-  if (!design.outro) throw new Error('design.outro 가 필요합니다 (캐러셀 마지막 장)');
 
   const middles = design.slides || [];
   if (!middles.length) throw new Error('design.slides 가 비어 있습니다 (내용 슬라이드 최소 1장)');
@@ -356,7 +499,7 @@ function buildSlides(design, service) {
   const html = [
     slideCover(design.cover, t),
     ...middles.map((s, i) => slideBody(s, t, i + 1)),
-    slideOutro(design.outro, t),
+    slideOutro(t, service === 'clipnote' ? 'Take a Seat' : 'ClipNote'),
   ];
   if (html.length > MAX_SLIDES) {
     throw new Error(`슬라이드가 ${html.length}장입니다. 인스타 캐러셀은 ${MAX_SLIDES}장까지.`);
@@ -393,6 +536,21 @@ if (!existsSync(fontPath)) {
 }
 const fontUrl = `data:font/woff2;base64,${readFileSync(fontPath).toString('base64')}`;
 
+for (const th of Object.values(THEME)) {
+  if (!existsSync(th.logo)) {
+    console.error(`${th.logo} 가 없습니다. assets/logos/SOURCE.md 참고.`);
+    process.exit(2);
+  }
+  th.logoUrl = `data:image/png;base64,${readFileSync(th.logo).toString('base64')}`;
+  th.iconSet = th.icons && existsSync(th.icons)
+    ? JSON.parse(readFileSync(th.icons, 'utf8')) : null;
+  th.pikaUrl = `data:image/svg+xml;base64,${
+    Buffer.from(readFileSync(PIKA_LOGO[th.pikaLogo], 'utf8')).toString('base64')}`;
+}
+
+const APP_STORE_URL = `data:image/svg+xml;base64,${
+  Buffer.from(readFileSync(APP_STORE_BADGE, 'utf8')).toString('base64')}`;
+
 const { t, html: slides } = buildSlides(design, input.service);
 
 // CHROMIUM_PATH 는 playwright 가 받아둔 브라우저를 못 찾는 환경(컨테이너 등)용 탈출구다.
@@ -411,6 +569,41 @@ for (let i = 0; i < slides.length; i += 1) {
      <style>${css(t, fontUrl)}</style></head><body>${slides[i]}</body></html>`,
     { waitUntil: 'load' });
   await page.evaluate(() => document.fonts.ready);
+
+  // 넘친 글자는 잘리지 않고 레이아웃을 밀어낸다. 글자수 상한만으로는
+  // 폰트 크기를 바꿀 때마다 어긋나므로 실제 렌더 폭을 잰다.
+  const overflow = await page.evaluate(() => {
+    const bad = [];
+    // 글자 자체가 넘치는 경우
+    for (const el of document.querySelectorAll('.cv-h, .h1, .ct-t, .ct-d, .cv-f, .cv-k, .ot-name, .ot-h')) {
+      if (el.scrollWidth > el.clientWidth + 1) {
+        bad.push(`${el.className}: "${el.textContent.trim()}" (${el.scrollWidth} > ${el.clientWidth})`);
+      }
+    }
+    // 배지처럼 내용에 맞춰 커지는 요소는 자기 자신은 절대 안 넘친다.
+    // 넘침이 부모 행에서 일어나므로 컨테이너도 같이 재야 한다.
+    for (const el of document.querySelectorAll('.cv-top, .cv-fs, .cv-hs, .chips, .foot, .ft-app, .cards')) {
+      if (el.scrollWidth > el.clientWidth + 1) {
+        bad.push(`${el.className} 가로 넘침 (${el.scrollWidth} > ${el.clientWidth})`);
+      }
+    }
+    // flex:1 로 늘어나는 칸은 안에서 찌그러질 뿐 body 를 늘리지 않는다
+    for (const el of document.querySelectorAll('.cv-mid, .main, .ot-app, .shot')) {
+      if (el.scrollHeight > el.clientHeight + 1) {
+        bad.push(`${el.className} 세로 눌림 (${el.scrollHeight} > ${el.clientHeight})`);
+      }
+    }
+    if (document.body.scrollHeight > document.body.clientHeight + 1) {
+      bad.push(`세로 넘침 (${document.body.scrollHeight} > ${document.body.clientHeight})`);
+    }
+    return bad;
+  });
+  if (overflow.length) {
+    await browser.close();
+    console.error(`슬라이드 ${i + 1} 에서 글자가 넘칩니다:\n  ${overflow.join('\n  ')}`);
+    process.exit(1);
+  }
+
   await page.screenshot({ path: file });
   written.push(file);
 }
@@ -423,8 +616,10 @@ if (isIdea && outDirFlag < 0) {
   input.image_path = written;
   input.image_urls = written.map((_, i) => `${SITE}/ig/${id}-${i + 1}.png`);
   input.image_url = input.image_urls[0];   // 단일 발행 경로와의 호환용
-  // design_done 까지만 올린다. image_ok 는 사람이 눈으로 보고 직접 쓴다.
-  if (['proposed', 'approved', 'design_done', 'image_ok', 'scheduled'].includes(input.status)) {
+  // design_done 까지만 **올린다**. 내리지는 않는다.
+  // image_ok·scheduled 를 design_done 으로 되돌리면 사람이 한 검수가 지워진다.
+  // 실제로 검수 직후 재렌더 한 번에 image_ok 가 날아갔다.
+  if (['proposed', 'approved', 'design_done'].includes(input.status)) {
     input.status = 'design_done';
   }
   writeFileSync(inputPath, `${JSON.stringify(input, null, 2)}\n`, 'utf8');
