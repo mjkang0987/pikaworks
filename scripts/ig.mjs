@@ -32,8 +32,13 @@ const MAX_SLIDES = 10;      // 인스타 캐러셀 상한
 // 색은 각 서비스 저장소에서 가져온다. 여기 값을 바꾸려면 먼저 저장소를 확인할 것.
 //   ClipNote   clipnote  app/globals.css
 //   Take a Seat  tas  client/styles/globalStyle.ts
-// 마감 슬라이드 하단에만 쓰는 모기업 마크. public/favicon.svg 와 같은 파일이다.
-const PIKA = { logo: 'public/favicon.svg' };
+// 마감 슬라이드 하단의 pikaworks 서명. 파비콘(검정 타일)이 아니라 정식 가로형
+// 로고를 쓴다. 글자까지 로고에 포함돼 있어 따로 텍스트를 붙이지 않는다.
+// 배경에 따라 글자색이 다른 두 파일이 이미 준비돼 있다.
+const PIKA_LOGO = {
+  dark: 'public/logo.svg',        // 글자 흰색 — Take a Seat
+  light: 'public/logo-dark.svg',  // 글자 #1c1c1e — ClipNote
+};
 
 const THEME = {
   // 흰 배경 + 보라 키컬러. globals.css 의 라이트 테마 그대로다.
@@ -56,6 +61,7 @@ const THEME = {
     badgeStyle: 'soft',
     onAccent: '#ffffff',
     logo: 'assets/logos/clipnote.png',
+    pikaLogo: 'light',
   },
   // 블랙 배경 + 흰색/보라. --aside-bg 가 TAS 가 실제로 쓰는 다크 면이다.
   // --brand-color(#6526d9)는 어두워서 다크 위 글자로는 안 읽힌다. 면에만 쓰고,
@@ -80,6 +86,7 @@ const THEME = {
     badgeStyle: 'solid',
     onAccent: '#ffffff',
     logo: 'assets/logos/takeaseat.png',
+    pikaLogo: 'dark',
     icons: 'assets/icons/takeaseat.json',   // 서비스 사이드바가 실제로 쓰는 글리프
   },
 };
@@ -103,10 +110,6 @@ const ICONS = {
   ticket: '<path d="M3 9a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2 2 2 0 0 0 0 6 2 2 0 0 1-2 2H5a2 2 0 0 1-2-2 2 2 0 0 0 0-6z"/><path d="M12 7v10"/>',
   tag: '<path d="M3 3h8l10 10-8 8L3 11z"/><circle cx="7.5" cy="7.5" r="1.5"/>',
 };
-
-// pikaworks 모기업 마크. public/favicon.svg 와 같은 글리프·같은 노랑이다.
-const BOLT = '<svg viewBox="0 0 64 64" width="34" height="34" fill="#FFD60A">'
-  + '<path d="M37 7 L17 35 H29 L26 57 L48 28 H35 L40 7 Z"/></svg>';
 
 const esc = (s) =>
   String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -210,7 +213,7 @@ function slideOutro(t) {
       <div class="ot-cta">프로필 링크에서 바로 열려요</div>
       <div class="ot-dom">${esc(t.domain)}</div>
     </div>
-    <div class="ot-by">${markSvg(PIKA, 62)}<span>pikaworks</span></div>
+    <img class="ot-by" src="${t.pikaUrl}" alt="pikaworks">
   </section>`;
 }
 
@@ -406,11 +409,7 @@ function css(t, fontUrl) {
   .ot-dom { margin-top:24px; font-size:32px; font-weight:600; color:${t.muted}; letter-spacing:-.02em; }
   /* pikaworks 서명. 흐린 색이면 서명이 아니라 잔여물처럼 보여서 본문색을 쓴다.
      라이트 테마에선 흰색이 안 되므로 각 테마의 전경색(fg)을 따른다. */
-  .ot-by {
-    display:flex; align-items:center; justify-content:center; gap:22px;
-    font-size:46px; font-weight:800; letter-spacing:-.03em; color:${t.fg};
-  }
-  .ot-by .logo { border-radius:24%; }
+  .ot-by { display:block; width:330px; height:auto; margin:0 auto; }
 `;
 }
 
@@ -470,10 +469,8 @@ for (const th of Object.values(THEME)) {
   th.logoUrl = `data:image/png;base64,${readFileSync(th.logo).toString('base64')}`;
   th.iconSet = th.icons && existsSync(th.icons)
     ? JSON.parse(readFileSync(th.icons, 'utf8')) : null;
-}
-{
-  const svg = readFileSync(PIKA.logo, 'utf8');
-  PIKA.logoUrl = `data:image/svg+xml;base64,${Buffer.from(svg).toString('base64')}`;
+  th.pikaUrl = `data:image/svg+xml;base64,${
+    Buffer.from(readFileSync(PIKA_LOGO[th.pikaLogo], 'utf8')).toString('base64')}`;
 }
 
 const { t, html: slides } = buildSlides(design, input.service);
