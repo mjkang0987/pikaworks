@@ -424,7 +424,8 @@ function css(t, fontUrl) {
   .ot-app-store { margin-top:32px; display:block; width:300px; height:auto; }
   /* pikaworks 서명. 흐린 색이면 서명이 아니라 잔여물처럼 보여서 본문색을 쓴다.
      라이트 테마에선 흰색이 안 되므로 각 테마의 전경색(fg)을 따른다. */
-  .ot-by { display:block; width:330px; height:auto; margin:0 auto; }
+  /* 커버 하단의 서명과 같은 위치·크기로 맞춘다 (.cv-pika 와 동일) */
+  .ot-by { display:block; width:210px; height:auto; opacity:.9; }
 `;
 }
 
