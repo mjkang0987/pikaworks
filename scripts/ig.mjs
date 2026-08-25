@@ -213,7 +213,7 @@ function slideOutro(t) {
       <div class="ot-name">${esc(t.name)}</div>
       <div class="ot-tag">${esc(t.tagline)}</div>
       <div class="ot-cta">프로필 링크를 확인해주세요</div>
-      <div class="ot-dom">${esc(t.domain)}</div>
+      <div class="ot-dom">https://${esc(t.domain)}</div>
       ${t.outroNote ? `<div class="ot-note">${esc(t.outroNote)}</div>` : ''}
     </div>
     <img class="ot-by" src="${t.pikaUrl}" alt="pikaworks">
