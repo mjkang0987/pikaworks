@@ -11,3 +11,13 @@
 
 복사 시점: 2026-08-25
 서비스 로고가 바뀌면 여기도 다시 복사한다.
+
+## 아이콘
+
+| 파일 | 출처 |
+|---|---|
+| `../icons/takeaseat.json` | `mjkang0987/tas` → `client/components/layout/AsideMenuIcon.tsx` |
+
+`viewBox 0 0 24 24` · stroke 기반 · `currentColor` · `stroke-width 1.8` 로
+서비스 사이드바가 실제로 쓰는 것과 같은 글리프다. 직접 그리지 말 것.
+서비스 아이콘이 바뀌면 다시 추출한다.

@@ -35,17 +35,17 @@
         "subtitle": "누가 얼마 남았는지 바로 보여요",
         "items": [
           {
-            "icon": "coin",
+            "icon": "point",
             "title": "적립금",
             "text": "결제 금액에서 자동으로"
           },
           {
-            "icon": "ticket",
+            "icon": "coupon",
             "title": "쿠폰",
             "text": "정액·정률, 유효기간까지"
           },
           {
-            "icon": "check",
+            "icon": "membership",
             "title": "회원권",
             "text": "쓸 때마다 잔여 횟수 차감"
           }
@@ -60,12 +60,12 @@
         "subtitle": "쌓이고 빠진 내역이 고객마다 따로 남아요",
         "items": [
           {
-            "icon": "users",
+            "icon": "history",
             "title": "고객별 기록",
             "text": "언제 얼마가 쌓였는지 그대로"
           },
           {
-            "icon": "sparkle",
+            "icon": "settings",
             "title": "수동 조정",
             "text": "필요할 때 적립하거나 차감"
           }

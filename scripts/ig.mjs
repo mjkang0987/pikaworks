@@ -77,6 +77,7 @@ const THEME = {
     badgeStyle: 'solid',
     onAccent: '#ffffff',
     logo: 'assets/logos/takeaseat.png',
+    icons: 'assets/icons/takeaseat.json',   // 서비스 사이드바가 실제로 쓰는 글리프
   },
 };
 
@@ -107,10 +108,15 @@ const BOLT = '<svg viewBox="0 0 64 64" width="34" height="34" fill="#FFD60A">'
 const esc = (s) =>
   String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
-function icon(name, size = 36, width = 2 ) {
-  const path = ICONS[name];
+// 서비스 저장소에서 가져온 아이콘이 있으면 그걸 먼저 쓴다 (assets/logos/SOURCE.md).
+// 직접 그린 공용 세트는 대응하는 실제 아이콘이 없을 때만 쓴다.
+function icon(name, t, size = 36, width = 2) {
+  const path = (t && t.iconSet && t.iconSet[name]) || ICONS[name];
   if (!path) {
-    throw new Error(`알 수 없는 아이콘: ${name}\n가능: ${Object.keys(ICONS).join(', ')}`);
+    const own = t && t.iconSet ? Object.keys(t.iconSet) : [];
+    throw new Error(
+      `알 수 없는 아이콘: ${name}\n  ${t ? t.name : ''} 실제 아이콘: ${own.join(', ')}` +
+      `\n  공용: ${Object.keys(ICONS).join(', ')}`);
   }
   return `<svg viewBox="0 0 24 24" width="${size}" height="${size}" fill="none"
     stroke="currentColor" stroke-width="${width}" stroke-linecap="round"
@@ -224,7 +230,7 @@ function slideBody(d, t, index) {
       check('item.title', it.title, `슬라이드 ${index} items[${i}].title`);
       check('item.text', it.text, `슬라이드 ${index} items[${i}].text`);
       return `<div class="card">
-        <div class="ic">${icon(it.icon || 'check')}</div>
+        <div class="ic">${icon(it.icon || 'check', t)}</div>
         <div class="ct">
           ${it.title ? `<div class="ct-t">${esc(it.title)}</div>` : ''}
           <div class="ct-d">${esc(it.text)}</div>
@@ -468,6 +474,8 @@ for (const th of Object.values(THEME)) {
     process.exit(2);
   }
   th.logoUrl = `data:image/png;base64,${readFileSync(th.logo).toString('base64')}`;
+  th.iconSet = th.icons && existsSync(th.icons)
+    ? JSON.parse(readFileSync(th.icons, 'utf8')) : null;
 }
 
 const { t, html: slides } = buildSlides(design, input.service);
