@@ -232,9 +232,15 @@ function slideBody(d, t, index) {
   title.forEach((l, i) => check('slide.title', l, `슬라이드 ${index} title[${i}]`));
   check('slide.subtitle', d.subtitle, `슬라이드 ${index} subtitle`);
 
-  const heading = title.map((line, i) =>
-    `<div class="h1 ${i === title.length - 1 && title.length > 1 ? 'accent' : ''}">${esc(line)}</div>`)
-    .join('');
+  // 강조는 커버와 같은 방식을 쓴다. 다섯 장이 같은 규칙으로 강조해야
+  // 한 묶음으로 읽힌다 — 커버만 형광펜이고 내용은 글자색이면 따로 논다.
+  const heading = title.map((line, i) => {
+    const last = i === title.length - 1 && title.length > 1;
+    if (!last) return `<div class="h1">${esc(line)}</div>`;
+    const mode = COVER_ACCENT_OVERRIDE || t.coverAccent;
+    if (mode === 'text') return `<div class="h1 accent">${esc(line)}</div>`;
+    return `<div class="h1"><span class="hl ${mode}">${esc(line)}</span></div>`;
+  }).join('');
 
   let body;
   if (d.template === 'list') {
@@ -285,7 +291,7 @@ function slideBody(d, t, index) {
     <div class="foot">
       <img class="ft-pika" src="${t.pikaUrl}" alt="pikaworks">
       <div class="ft-app">
-        ${markSvg(t, 62)}
+        ${markSvg(t, 34)}
         <div class="brand">${esc(t.name)}</div>
       </div>
     </div>
@@ -451,9 +457,12 @@ function css(t, fontUrl) {
      왼쪽 아래가 흔들리지 않아야 한 묶음으로 읽힌다. */
   .foot { display:flex; align-items:center; gap:20px; }
   .ft-pika { display:block; width:210px; height:auto; opacity:.9; }
-  .ft-app { margin-left:auto; display:flex; align-items:center; gap:20px; }
+  /* pikaworks 서명은 210px 폭 = 29.5px 높이(viewBox 698.3×98)로 렌더된다.
+     오른쪽 서비스 쪽을 거기에 맞춘다 — 아이콘 62px 은 두 배가 넘어서
+     좌우가 따로 놀았다. */
+  .ft-app { margin-left:auto; display:flex; align-items:center; gap:14px; }
 
-  .brand { font-size:35px; font-weight:800; letter-spacing:-.03em; }
+  .brand { font-size:30px; font-weight:800; letter-spacing:-.03em; }
 
   /* ── 마감 ── 앱당 한 장 고정. 서비스가 주인공이고 pikaworks 는 서명이다 */
   .outro { background:${t.bg}; color:${t.fg}; text-align:center; }
