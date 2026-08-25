@@ -107,6 +107,12 @@ public/ig/*.png                 발행용 이미지 → https://pikaworks.kr/ig/
 기기가 꺼져 있어도 도는 CI 라 실제로는 잘 발생하지 않지만, 큐를 손으로
 되돌렸을 때의 안전장치다.
 
+**리허설** — `--mode verify` 는 컨테이너 생성 → FINISHED 확인까지만 하고 발행하지 않는다.
+토큰이 살아 있는지, Meta 가 `image_url` 을 실제로 가져갈 수 있는지, 캡션이 통과하는지를
+게시물 없이 확인한다. 미사용 컨테이너는 24시간 뒤 만료되고 상태 파일도 건드리지 않는다.
+`ig-post.yml` 을 `workflow_dispatch` 로 돌릴 때 `mode` 로 고른다 — `dry_run` / `verify` / `publish`.
+크론으로 돌 때는 항상 `publish` 다.
+
 **2단계 발행** — 미디어 컨테이너 생성 → FINISHED 대기 → 게시. 컨테이너는 만들어졌는데
 게시가 실패하는 중간 상태가 있으므로 실패 시 `container_id` 를 남긴다.
 

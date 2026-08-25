@@ -231,6 +231,75 @@ def mode_preview(today, dry):
     return 0
 
 
+def mode_verify(today, dry, wanted_id):
+    """컨테이너 생성 → FINISHED 확인까지만 하고 발행하지 않는다.
+
+    토큰이 살아 있는지, Meta 가 image_url 을 실제로 가져갈 수 있는지,
+    캡션이 통과하는지를 게시물 없이 확인한다. 미사용 컨테이너는 24시간 뒤
+    자동으로 만료되므로 뒷정리가 필요 없다.
+
+    상태 파일은 건드리지 않는다 — 이 모드는 아무것도 기록하지 않는다.
+    """
+    summary(f'### 발행 리허설 {today:%Y-%m-%d} KST')
+
+    ideas = load_ideas()
+    if wanted_id:
+        match = [(p, i) for p, i in ideas if i.get('id') == wanted_id]
+        if not match:
+            notify(f'`{wanted_id}` 를 찾을 수 없습니다.', 'error')
+            return 1
+        path, target = match[0]
+    else:
+        # id 를 안 주면 오늘 발행됐을 건을 그대로 고른다
+        due = [(p, i) for p, i in ideas
+               if i.get('status') == 'scheduled' and not i.get('published_at')
+               and as_date(i.get('scheduled_at')) and as_date(i['scheduled_at']) <= today]
+        if not due:
+            notify('오늘 배정된 건이 없습니다. --id <아이디> 로 확인할 건을 직접 지정하세요.', 'warn')
+            return 0
+        path, target = min(due, key=lambda t: as_date(t[1]['scheduled_at']))
+
+    summary(f"대상: `{target['id']}` ({target['service']}) — {target.get('angle', '')}")
+    summary(f"이미지: {target['image_url']}")
+    summary(f"캡션 {len(target['caption'])}자")
+
+    if dry:
+        summary('[dry-run] 인스타그램 API 를 호출하지 않고 종료. '
+                '실제 확인은 --dry-run 없이 CI 에서 돌려야 합니다.')
+        return 0
+
+    try:
+        container = call('POST', f'{IG_USER_ID}/media', {
+            'image_url': target['image_url'],
+            'caption': target['caption'],
+            'access_token': TOKEN,
+        })
+        cid = container['id']
+        summary(f'컨테이너 생성됨: `{cid}`')
+
+        for _ in range(24):
+            state = call('GET', cid, {'fields': 'status_code', 'access_token': TOKEN})
+            code = state.get('status_code')
+            if code == 'FINISHED':
+                break
+            if code in ('ERROR', 'EXPIRED'):
+                raise IGError(f'컨테이너 상태 {code}', cid)
+            time.sleep(5)
+        else:
+            raise IGError('컨테이너가 2분 안에 FINISHED 가 되지 않음', cid)
+    except IGError as e:
+        notify(f"리허설 실패 — {e}\ncontainer_id: `{e.container_id}`\n"
+               f'토큰·이미지 URL·캡션 중 하나에 문제가 있습니다. '
+               f'게시물은 올라가지 않았습니다.', 'error')
+        return 1
+
+    notify(f"리허설 성공 — `{target['id']}` 는 발행 가능합니다.\n"
+           f'토큰 유효, 이미지 URL 접근 가능, 캡션 통과. '
+           f'컨테이너 `{cid}` 는 발행하지 않았고 24시간 뒤 만료됩니다.\n'
+           f'상태 파일은 바꾸지 않았습니다.')
+    return 0
+
+
 def mode_publish(today, dry):
     summary(f'### 발행 {today:%Y-%m-%d} KST — 오늘 슬롯: {slot_label(today)}')
 
@@ -333,13 +402,17 @@ def _guard(dry):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument('--mode', choices=('publish', 'preview'), default='publish')
+    ap.add_argument('--mode', choices=('publish', 'preview', 'verify'), default='publish')
     ap.add_argument('--dry-run', action='store_true')
     ap.add_argument('--date', help='오늘 날짜를 덮어쓴다 (테스트용, YYYY-MM-DD)')
+    ap.add_argument('--id', dest='wanted_id',
+                    help='verify 모드에서 확인할 아이디어 id (생략하면 오늘 배정된 건)')
     args = ap.parse_args()
 
     _guard(args.dry_run)
     today = as_date(args.date) if args.date else datetime.now(KST).date()
+    if args.mode == 'verify':
+        return mode_verify(today, args.dry_run, args.wanted_id)
     run = mode_preview if args.mode == 'preview' else mode_publish
     return run(today, args.dry_run)
 
