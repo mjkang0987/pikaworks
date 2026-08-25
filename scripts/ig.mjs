@@ -15,7 +15,8 @@ import { chromium } from 'playwright';
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
 import { basename, join } from 'path';
 
-const SIZE = 1080;          // CSS px. deviceScaleFactor 2 → 2160×2160
+const SIZE = 1080;
+const COVER_TITLE_PX = 138;
 const SITE = 'https://pikaworks.kr';
 const MAX_SLIDES = 10;      // 인스타 캐러셀 상한
 
@@ -253,33 +254,33 @@ function css(t, fontUrl) {
   .s {
     width:${SIZE}px; height:${SIZE}px;
     display:flex; flex-direction:column;
-    padding:92px 84px 78px;
+    padding:74px 64px 64px;
   }
 
   /* ── 커버 ── 타이틀과 기능을 크게. 피드에서 이 한 장이 승부다 */
   .cover { background:${t.bg}; color:${t.fg}; }
   .cv-top { display:flex; align-items:center; gap:20px; }
-  .cv-brand { display:flex; align-items:center; gap:18px; font-size:33px; font-weight:800; letter-spacing:-.03em; }
+  .cv-brand { display:flex; align-items:center; gap:18px; font-size:38px; font-weight:800; letter-spacing:-.03em; }
   .logo { display:block; border-radius:22%; }
   .cv-k {
     margin-left:auto; background:${t.soft}; color:${t.accentInk};
     border:2px solid ${t.chipBorder};
-    font-size:25px; font-weight:700; letter-spacing:-.02em;
-    padding:14px 26px; border-radius:999px; white-space:nowrap;
+    font-size:29px; font-weight:700; letter-spacing:-.02em;
+    padding:15px 28px; border-radius:999px; white-space:nowrap;
   }
-  .cv-mid { flex:1; display:flex; flex-direction:column; justify-content:center; gap:54px; }
+  .cv-mid { flex:1; display:flex; flex-direction:column; justify-content:center; gap:52px; }
   .cv-hs { display:flex; flex-direction:column; }
-  .cv-h { font-size:104px; font-weight:800; line-height:1.18; letter-spacing:-.045em; }
+  .cv-h { font-size:${COVER_TITLE_PX}px; font-weight:800; line-height:1.16; letter-spacing:-.05em; white-space:nowrap; }
   .cv-h.accent { color:${t.accentInk}; }
   .cv-fs { display:flex; flex-direction:column; gap:14px; align-items:flex-start; }
   .cv-f {
     align-self:flex-start; background:${t.soft}; color:${t.chipInk};
     border:2px solid ${t.chipBorder};
-    font-size:34px; font-weight:700; letter-spacing:-.025em;
-    padding:18px 32px; border-radius:18px;
+    font-size:38px; font-weight:700; letter-spacing:-.03em;
+    padding:16px 28px; border-radius:18px;
   }
   .cv-swipe {
-    font-size:27px; font-weight:600; color:${t.muted};
+    font-size:30px; font-weight:600; color:${t.muted};
     letter-spacing:-.02em; display:flex; align-items:center; gap:12px;
   }
   .cv-swipe span { font-size:31px; }
@@ -440,6 +441,27 @@ for (let i = 0; i < slides.length; i += 1) {
      <style>${css(t, fontUrl)}</style></head><body>${slides[i]}</body></html>`,
     { waitUntil: 'load' });
   await page.evaluate(() => document.fonts.ready);
+
+  // 넘친 글자는 잘리지 않고 레이아웃을 밀어낸다. 글자수 상한만으로는
+  // 폰트 크기를 바꿀 때마다 어긋나므로 실제 렌더 폭을 잰다.
+  const overflow = await page.evaluate(() => {
+    const bad = [];
+    for (const el of document.querySelectorAll('.cv-h, .h1, .ct-t, .ct-d, .cv-f, .cv-k, .ot-name, .ot-h')) {
+      if (el.scrollWidth > el.clientWidth + 1) {
+        bad.push(`${el.className}: "${el.textContent.trim()}" (${el.scrollWidth} > ${el.clientWidth})`);
+      }
+    }
+    if (document.body.scrollHeight > document.body.clientHeight + 1) {
+      bad.push(`세로 넘침 (${document.body.scrollHeight} > ${document.body.clientHeight})`);
+    }
+    return bad;
+  });
+  if (overflow.length) {
+    await browser.close();
+    console.error(`슬라이드 ${i + 1} 에서 글자가 넘칩니다:\n  ${overflow.join('\n  ')}`);
+    process.exit(1);
+  }
+
   await page.screenshot({ path: file });
   written.push(file);
 }
