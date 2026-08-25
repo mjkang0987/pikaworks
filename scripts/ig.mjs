@@ -616,8 +616,10 @@ if (isIdea && outDirFlag < 0) {
   input.image_path = written;
   input.image_urls = written.map((_, i) => `${SITE}/ig/${id}-${i + 1}.png`);
   input.image_url = input.image_urls[0];   // 단일 발행 경로와의 호환용
-  // design_done 까지만 올린다. image_ok 는 사람이 눈으로 보고 직접 쓴다.
-  if (['proposed', 'approved', 'design_done', 'image_ok', 'scheduled'].includes(input.status)) {
+  // design_done 까지만 **올린다**. 내리지는 않는다.
+  // image_ok·scheduled 를 design_done 으로 되돌리면 사람이 한 검수가 지워진다.
+  // 실제로 검수 직후 재렌더 한 번에 image_ok 가 날아갔다.
+  if (['proposed', 'approved', 'design_done'].includes(input.status)) {
     input.status = 'design_done';
   }
   writeFileSync(inputPath, `${JSON.stringify(input, null, 2)}\n`, 'utf8');
