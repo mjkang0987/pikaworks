@@ -25,7 +25,7 @@ const COVER_TITLE_PX = 178;
 // 밝게 하면 강조가 죽고 진하게 하면 안 읽힌다. block·marker 는 강조를
 // 면으로 옮겨 글자를 흰색으로 유지한다.
 // COVER_ACCENT 환경변수로 갈아끼워 비교할 수 있다.
-const COVER_ACCENT = process.env.COVER_ACCENT || 'text';
+const COVER_ACCENT_OVERRIDE = process.env.COVER_ACCENT;   // 비교용
 const SITE = 'https://pikaworks.kr';
 const MAX_SLIDES = 10;      // 인스타 캐러셀 상한
 
@@ -48,6 +48,9 @@ const THEME = {
     softInk: '#5b3fe0',     // --brand-strong
     chipInk: '#5b3fe0',
     chipBorder: '#ddd2fa',
+    strong: '#5b3fe0',      // --brand-strong
+    coverAccent: 'text',    // 흰 배경이라 보라 글자가 그대로 잘 읽힌다
+    badgeStyle: 'soft',
     onAccent: '#ffffff',
     logo: 'assets/logos/clipnote.png',
   },
@@ -69,6 +72,9 @@ const THEME = {
     softInk: '#c9b4ff',
     chipInk: '#f5f5f7',
     chipBorder: 'rgba(255,255,255,.14)',
+    strong: '#6526d9',      // --brand-color 원본. 흰 글자 7.41:1
+    coverAccent: 'marker',  // 다크에선 글자색만으로 강조와 가독성을 동시에 못 잡는다
+    badgeStyle: 'solid',
     onAccent: '#ffffff',
     logo: 'assets/logos/takeaseat.png',
   },
@@ -148,8 +154,9 @@ function slideCover(d, t) {
     if (!last) return `<div class="cv-h">${esc(line)}</div>`;
     // 마지막 줄이 강조 줄이다. 색으로만 강조하면 밝게 할수록 강조가 약해지고
     // 진하게 할수록 안 읽힌다. 면으로 옮기면 두 역할이 분리된다.
-    if (COVER_ACCENT === 'text') return `<div class="cv-h accent">${esc(line)}</div>`;
-    return `<div class="cv-h"><span class="hl ${COVER_ACCENT}">${esc(line)}</span></div>`;
+    const mode = COVER_ACCENT_OVERRIDE || t.coverAccent;
+    if (mode === 'text') return `<div class="cv-h accent">${esc(line)}</div>`;
+    return `<div class="cv-h"><span class="hl ${mode}">${esc(line)}</span></div>`;
   }).join('');
 
   const feats = (d.features || []).slice(0, 3).map((f, i) => {
@@ -163,7 +170,7 @@ function slideCover(d, t) {
         ${markSvg(t, 74)}
         <span>${esc(t.name)}</span>
       </div>
-      ${d.kicker ? `<div class="cv-k">${esc(d.kicker)}</div>` : ''}
+      ${d.kicker ? `<div class="cv-k ${t.badgeStyle}">${esc(d.kicker)}</div>` : ''}
     </div>
     <div class="cv-mid">
       <div class="cv-hs">${heading}</div>
@@ -278,10 +285,14 @@ function css(t, fontUrl) {
   .cv-brand { display:flex; align-items:center; gap:18px; font-size:38px; font-weight:800; letter-spacing:-.03em; }
   .logo { display:block; border-radius:22%; }
   .cv-k {
-    margin-left:auto; background:${t.soft}; color:${t.accentInk};
-    border:2px solid ${t.chipBorder};
-    font-size:29px; font-weight:700; letter-spacing:-.02em;
-    padding:15px 28px; border-radius:999px; white-space:nowrap;
+    margin-left:auto; font-size:29px; letter-spacing:-.02em;
+    border-radius:999px; white-space:nowrap;
+  }
+  /* 다크에선 흰 면이 17:1 로 튄다. 라이트에선 흰 면이 안 보이니 연보라를 쓴다 */
+  .cv-k.solid { background:#fff; color:${t.strong}; font-weight:800; padding:16px 30px; }
+  .cv-k.soft {
+    background:${t.soft}; color:${t.accentInk};
+    border:2px solid ${t.chipBorder}; font-weight:700; padding:14px 28px;
   }
   .cv-mid { flex:1; display:flex; flex-direction:column; justify-content:center; gap:44px; }
   .cv-hs { display:flex; flex-direction:column; }
@@ -289,11 +300,11 @@ function css(t, fontUrl) {
   .cv-h.accent { color:${t.accentInk}; }
   .hl { display:inline-block; }
   .hl.block {
-    background:${t.accent}; color:#fff;
+    background:${t.strong}; color:#fff;
     padding:.04em .16em .1em; margin-left:-.16em; border-radius:.1em;
   }
   .hl.marker {
-    background:linear-gradient(transparent 58%, ${t.accent} 58%, ${t.accent} 96%, transparent 96%);
+    background:linear-gradient(transparent 58%, ${t.strong} 58%, ${t.strong} 96%, transparent 96%);
     padding:0 .06em; margin-left:-.06em;
   }
   .cv-fs { display:flex; flex-wrap:wrap; gap:12px; align-items:center; }
