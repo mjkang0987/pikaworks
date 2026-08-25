@@ -210,7 +210,7 @@ function slideOutro(t) {
       <div class="ot-cta">프로필 링크에서 바로 열려요</div>
       <div class="ot-dom">${esc(t.domain)}</div>
     </div>
-    <div class="ot-by">${markSvg(PIKA, 46)}<span>pikaworks</span></div>
+    <div class="ot-by">${markSvg(PIKA, 62)}<span>pikaworks</span></div>
   </section>`;
 }
 
@@ -404,10 +404,13 @@ function css(t, fontUrl) {
     padding:28px 56px; border-radius:999px;
   }
   .ot-dom { margin-top:24px; font-size:32px; font-weight:600; color:${t.muted}; letter-spacing:-.02em; }
+  /* pikaworks 서명. 흐린 색이면 서명이 아니라 잔여물처럼 보여서 본문색을 쓴다.
+     라이트 테마에선 흰색이 안 되므로 각 테마의 전경색(fg)을 따른다. */
   .ot-by {
-    display:flex; align-items:center; justify-content:center; gap:16px;
-    font-size:36px; font-weight:800; letter-spacing:-.03em; color:${t.muted};
+    display:flex; align-items:center; justify-content:center; gap:22px;
+    font-size:46px; font-weight:800; letter-spacing:-.03em; color:${t.fg};
   }
+  .ot-by .logo { border-radius:24%; }
 `;
 }
 
