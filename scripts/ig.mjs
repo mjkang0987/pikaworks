@@ -62,6 +62,7 @@ const THEME = {
     onAccent: '#ffffff',
     logo: 'assets/logos/clipnote.png',
     pikaLogo: 'light',
+    outroNote: 'iOS 앱  ·  App Store 출시',   // products.js 의 ios 링크로 확인
   },
   // 블랙 배경 + 흰색/보라. --aside-bg 가 TAS 가 실제로 쓰는 다크 면이다.
   // --brand-color(#6526d9)는 어두워서 다크 위 글자로는 안 읽힌다. 면에만 쓰고,
@@ -87,6 +88,7 @@ const THEME = {
     onAccent: '#ffffff',
     logo: 'assets/logos/takeaseat.png',
     pikaLogo: 'dark',
+    outroNote: null,   // 웹 전용. App Store 문구를 쓰면 안 된다
     icons: 'assets/icons/takeaseat.json',   // 서비스 사이드바가 실제로 쓰는 글리프
   },
 };
@@ -210,8 +212,9 @@ function slideOutro(t) {
       <div class="ot-mark">${markSvg(t, 150)}</div>
       <div class="ot-name">${esc(t.name)}</div>
       <div class="ot-tag">${esc(t.tagline)}</div>
-      <div class="ot-cta">프로필 링크에서 바로 열려요</div>
+      <div class="ot-cta">프로필 링크를 확인해주세요</div>
       <div class="ot-dom">${esc(t.domain)}</div>
+      ${t.outroNote ? `<div class="ot-note">${esc(t.outroNote)}</div>` : ''}
     </div>
     <img class="ot-by" src="${t.pikaUrl}" alt="pikaworks">
   </section>`;
@@ -407,6 +410,12 @@ function css(t, fontUrl) {
     padding:28px 56px; border-radius:999px;
   }
   .ot-dom { margin-top:24px; font-size:32px; font-weight:600; color:${t.muted}; letter-spacing:-.02em; }
+  .ot-note {
+    margin-top:26px; background:${t.soft}; color:${t.chipInk};
+    border:2px solid ${t.chipBorder};
+    font-size:27px; font-weight:700; letter-spacing:-.02em;
+    padding:14px 28px; border-radius:999px;
+  }
   /* pikaworks 서명. 흐린 색이면 서명이 아니라 잔여물처럼 보여서 본문색을 쓴다.
      라이트 테마에선 흰색이 안 되므로 각 테마의 전경색(fg)을 따른다. */
   .ot-by { display:block; width:330px; height:auto; margin:0 auto; }
