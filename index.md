@@ -9,7 +9,7 @@
 
 | # | 하는 일 | 주체 | 끝났을 때 status |
 |---|---|---|---|
-| 1 | 아이디어 생성 (history.md 먼저 읽고 중복 회피) | `sns-marketer` 스킬 | `proposed` |
+| 1 | 아이디어 5개 제안 (발행완료 + 발행예정 전부와 중복 회피) | `sns-marketer` 스킬 | `proposed` |
 | 2 | 아이디어 검수 | **사람** | `approved` |
 | 3 | 이미지 제작 | `sns-designer` 스킬 → `scripts/ig.mjs` | `design_done` |
 | 4 | 이미지 검수 | **사람** | `image_ok` |
@@ -17,6 +17,12 @@
 | 6 | 발행 | **GitHub Actions + publish.py** | `published` / `failed` |
 
 그 밖의 값: `stale` (배정일이 2일 이상 지나 발행하지 않고 넘긴 건).
+
+1단계는 매번 **5개**를 보고서로 낸다. 중복 판단 대상은 `pipeline/history.md` 와
+`pipeline/ideas/*.json` **전부**다 — 아직 안 올라갔을 뿐 이미 만들어진 콘텐츠도 중복이다.
+제품 사실은 이 리포가 아니라 **서비스 저장소 main 을 클론해서** 확인한다
+(`mjkang0987/tas`, `mjkang0987/clipnote`, `mjkang0987/clipnote-ios`).
+이 리포의 `app/data/products.js` 는 마케팅 사이트가 든 사본이라 뒤처질 수 있다.
 
 ### 불변 규칙
 
