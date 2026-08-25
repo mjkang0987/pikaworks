@@ -318,6 +318,12 @@ def mode_publish(today, dry):
         if (today - due).days >= STALE_AFTER_DAYS:
             stale.append((path, idea, due))
             continue
+        # 배정일이 지난 건은 자기 서비스의 슬롯에서만 올린다. 이게 없으면
+        # 어제 발행이 실패했을 때 오늘(다른 서비스 슬롯)에 끼어들어
+        # 월·금 ClipNote / 화·목 TakeASeat 캐던스가 깨진다.
+        # 배정일이 정확히 오늘인 건은 /sns-queue 가 캐던스대로 잡아둔 것이므로 그대로 통과시킨다.
+        if due < today and CADENCE.get(today.weekday()) != idea.get('service'):
+            continue
         if target is None or due < as_date(target.get('scheduled_at')):
             target, target_path = idea, path
 
