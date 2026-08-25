@@ -120,10 +120,14 @@ function icon(name, size = 36, width = 2 ) {
 // ── 길이 검사 ─────────────────────────────────────────────────────
 // 넘친 글자는 잘리지 않고 레이아웃을 밀어낸다. 렌더 전에 막는다.
 
+// 실측값 (Pretendard 800, 공백 없는 빽빽한 한글 기준):
+//   제목 178px → 줄당 6자, 3줄까지. 4줄은 세로가 안 나온다
+//   kicker 29px → 23자, features 31px → 30자
+// 아래는 거기서 여유를 둔 값이다. 넘치면 렌더가 실패하므로 카피 단계에서 걸린다.
 const LIMITS = {
-  'cover.title': 9,
-  'cover.kicker': 22,
-  'cover.features': 12,
+  'cover.title': 6,
+  'cover.kicker': 12,
+  'cover.features': 10,
   'slide.title': 14,
   'slide.subtitle': 32,
   'item.title': 12,
@@ -133,11 +137,16 @@ const LIMITS = {
   chip: 8,
 };
 
+// 공백은 한글 글자 폭의 절반도 안 되므로 세지 않는다. 세면 "카드 한 장으로"(8자)
+// 처럼 실제로는 들어가는 카피가 반려된다. 아래 상한은 전부 공백 제외 기준이다.
+const countable = (v) => String(v).replace(/\s/g, '').length;
+
 function check(kind, value, where) {
   const max = LIMITS[kind];
-  if (value && String(value).length > max) {
+  const n = value ? countable(value) : 0;
+  if (n > max) {
     throw new Error(
-      `${where}: "${value}" 가 ${String(value).length}자입니다. ${kind} 는 ${max}자까지.`);
+      `${where}: "${value}" 가 공백 제외 ${n}자입니다. ${kind} 는 ${max}자까지.`);
   }
   return value;
 }
@@ -145,7 +154,7 @@ function check(kind, value, where) {
 // ── 슬라이드 ──────────────────────────────────────────────────────
 
 function slideCover(d, t) {
-  const title = (Array.isArray(d.title) ? d.title : [d.title]).slice(0, 4);
+  const title = (Array.isArray(d.title) ? d.title : [d.title]).slice(0, 3);
   title.forEach((l, i) => check('cover.title', l, `커버 title[${i}]`));
   check('cover.kicker', d.kicker, '커버 kicker');
 
@@ -282,10 +291,10 @@ function css(t, fontUrl) {
   /* ── 커버 ── 타이틀과 기능을 크게. 피드에서 이 한 장이 승부다 */
   .cover { background:${t.bg}; color:${t.fg}; }
   .cv-top { display:flex; align-items:center; gap:20px; }
-  .cv-brand { display:flex; align-items:center; gap:18px; font-size:38px; font-weight:800; letter-spacing:-.03em; }
+  .cv-brand { flex:none; display:flex; align-items:center; gap:18px; font-size:38px; font-weight:800; letter-spacing:-.03em; }
   .logo { display:block; border-radius:22%; }
   .cv-k {
-    margin-left:auto; font-size:29px; letter-spacing:-.02em;
+    flex:none; margin-left:auto; font-size:29px; letter-spacing:-.02em;
     border-radius:999px; white-space:nowrap;
   }
   /* 다크에선 흰 면이 17:1 로 튄다. 라이트에선 흰 면이 안 보이니 연보라를 쓴다 */
@@ -484,9 +493,23 @@ for (let i = 0; i < slides.length; i += 1) {
   // 폰트 크기를 바꿀 때마다 어긋나므로 실제 렌더 폭을 잰다.
   const overflow = await page.evaluate(() => {
     const bad = [];
+    // 글자 자체가 넘치는 경우
     for (const el of document.querySelectorAll('.cv-h, .h1, .ct-t, .ct-d, .cv-f, .cv-k, .ot-name, .ot-h')) {
       if (el.scrollWidth > el.clientWidth + 1) {
         bad.push(`${el.className}: "${el.textContent.trim()}" (${el.scrollWidth} > ${el.clientWidth})`);
+      }
+    }
+    // 배지처럼 내용에 맞춰 커지는 요소는 자기 자신은 절대 안 넘친다.
+    // 넘침이 부모 행에서 일어나므로 컨테이너도 같이 재야 한다.
+    for (const el of document.querySelectorAll('.cv-top, .cv-fs, .cv-hs, .chips, .foot, .cards')) {
+      if (el.scrollWidth > el.clientWidth + 1) {
+        bad.push(`${el.className} 가로 넘침 (${el.scrollWidth} > ${el.clientWidth})`);
+      }
+    }
+    // flex:1 로 늘어나는 칸은 안에서 찌그러질 뿐 body 를 늘리지 않는다
+    for (const el of document.querySelectorAll('.cv-mid, .main, .ot-app')) {
+      if (el.scrollHeight > el.clientHeight + 1) {
+        bad.push(`${el.className} 세로 눌림 (${el.scrollHeight} > ${el.clientHeight})`);
       }
     }
     if (document.body.scrollHeight > document.body.clientHeight + 1) {
