@@ -26,6 +26,7 @@ const COVER_TITLE_PX = 178;
 // 면으로 옮겨 글자를 흰색으로 유지한다.
 // COVER_ACCENT 환경변수로 갈아끼워 비교할 수 있다.
 const COVER_ACCENT_OVERRIDE = process.env.COVER_ACCENT;   // 비교용
+const BADGE_OVERRIDE = process.env.BADGE_BG;             // 비교용 '면|글자'
 const SITE = 'https://pikaworks.kr';
 const MAX_SLIDES = 10;      // 인스타 캐러셀 상한
 
@@ -260,6 +261,7 @@ const markSvg = (t, size) =>
 // ── 페이지 ────────────────────────────────────────────────────────
 
 function css(t, fontUrl) {
+  const [SOLID_BG, SOLID_INK] = (BADGE_OVERRIDE || '#ffffff|' + t.strong).split('|');
   return `
   @font-face {
     font-family: 'Pretendard';
@@ -289,7 +291,7 @@ function css(t, fontUrl) {
     border-radius:999px; white-space:nowrap;
   }
   /* 다크에선 흰 면이 17:1 로 튄다. 라이트에선 흰 면이 안 보이니 연보라를 쓴다 */
-  .cv-k.solid { background:#fff; color:${t.strong}; font-weight:800; padding:16px 30px; }
+  .cv-k.solid { background:${SOLID_BG}; color:${SOLID_INK}; font-weight:800; padding:16px 30px; }
   .cv-k.soft {
     background:${t.soft}; color:${t.accentInk};
     border:2px solid ${t.chipBorder}; font-weight:700; padding:14px 28px;
