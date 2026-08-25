@@ -57,7 +57,7 @@ const ICONS = {
   calendar: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
   clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
   users: '<path d="M16 20v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 20v-2a4 4 0 0 0-3-3.9"/>',
-  coin: '<circle cx="12" cy="12" r="9"/><path d="M12 7v10M9.5 9.5h4a1.8 1.8 0 0 1 0 3.6h-3a1.8 1.8 0 0 0 0 3.6h4"/>',
+  coin: '<circle cx="12" cy="12" r="8.5"/><path d="M8.5 9l3.5 4 3.5-4M9.5 13h5M9.5 15.5h5M12 13v3"/>',
   chart: '<path d="M3 21h18"/><path d="M6 17v-5M11 17V7M16 17v-8M21 17v-3"/>',
   bell: '<path d="M18 8a6 6 0 1 0-12 0c0 7-3 8-3 8h18s-3-1-3-8"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/>',
   check: '<path d="M20 6L9 17l-5-5"/>',
@@ -68,10 +68,14 @@ const ICONS = {
   tag: '<path d="M3 3h8l10 10-8 8L3 11z"/><circle cx="7.5" cy="7.5" r="1.5"/>',
 };
 
+// pikaworks 모기업 마크. public/favicon.svg 와 같은 글리프·같은 노랑이다.
+const BOLT = '<svg viewBox="0 0 64 64" width="34" height="34" fill="#FFD60A">'
+  + '<path d="M37 7 L17 35 H29 L26 57 L48 28 H35 L40 7 Z"/></svg>';
+
 const esc = (s) =>
   String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
-function icon(name, size = 30, width = 2.1) {
+function icon(name, size = 36, width = 2 ) {
   const path = ICONS[name];
   if (!path) {
     throw new Error(`알 수 없는 아이콘: ${name}\n가능: ${Object.keys(ICONS).join(', ')}`);
@@ -129,8 +133,10 @@ function slideCover(d, t) {
       </div>
       ${d.kicker ? `<div class="cv-k">${esc(d.kicker)}</div>` : ''}
     </div>
-    <div class="cv-mid">${heading}</div>
-    ${feats ? `<div class="cv-fs">${feats}</div>` : ''}
+    <div class="cv-mid">
+      ${heading}
+      ${feats ? `<div class="cv-fs">${feats}</div>` : ''}
+    </div>
     <div class="cv-swipe">밀어서 보기 <span>→</span></div>
   </section>`;
 }
@@ -139,11 +145,14 @@ function slideOutro(d, t) {
   check('outro.headline', d.headline, '마감 headline');
   check('outro.sub', d.sub, '마감 sub');
   return `<section class="s outro">
-    <div class="ot-mark">${markSvg(t, 62)}</div>
-    <div class="ot-name">${esc(t.name)}</div>
-    ${d.headline ? `<div class="ot-h">${esc(d.headline)}</div>` : ''}
-    ${d.sub ? `<div class="ot-s">${esc(d.sub)}</div>` : ''}
-    <div class="ot-cta">${esc(t.domain)}</div>
+    <div class="ot-mid">
+      <div class="ot-mark">${markSvg(t, 62)}</div>
+      <div class="ot-name">${esc(t.name)}</div>
+      ${d.headline ? `<div class="ot-h">${esc(d.headline)}</div>` : ''}
+      ${d.sub ? `<div class="ot-s">${esc(d.sub)}</div>` : ''}
+      <div class="ot-cta">${esc(t.domain)}</div>
+    </div>
+    <div class="ot-by">${BOLT}<span>pikaworks</span></div>
   </section>`;
 }
 
@@ -238,10 +247,10 @@ function css(t, fontUrl) {
     font-size:25px; font-weight:700; letter-spacing:-.02em;
     padding:16px 28px; border-radius:999px; white-space:nowrap;
   }
-  .cv-mid { flex:1; display:flex; flex-direction:column; justify-content:center; }
+  .cv-mid { flex:1; display:flex; flex-direction:column; justify-content:center; gap:54px; }
   .cv-h { font-size:104px; font-weight:800; line-height:1.18; letter-spacing:-.045em; }
   .cv-h.accent { color:rgba(255,255,255,.62); }
-  .cv-fs { display:flex; flex-direction:column; gap:14px; margin-bottom:44px; }
+  .cv-fs { display:flex; flex-direction:column; gap:14px; align-items:flex-start; }
   .cv-f {
     align-self:flex-start; background:rgba(255,255,255,.16);
     font-size:34px; font-weight:700; letter-spacing:-.025em;
@@ -309,9 +318,15 @@ function css(t, fontUrl) {
   .domain { margin-left:auto; font-size:29px; font-weight:500; color:${BASE.faint}; letter-spacing:-.02em; }
 
   /* ── 마감 ── 커버와 짝을 이룬다 */
-  .outro {
-    background:${t.accent}; color:#fff;
-    align-items:center; justify-content:center; text-align:center; gap:0;
+  .outro { background:${t.accent}; color:#fff; text-align:center; }
+  .ot-mid {
+    flex:1; display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+  }
+  .ot-by {
+    display:flex; align-items:center; justify-content:center; gap:13px;
+    font-size:29px; font-weight:700; letter-spacing:-.02em;
+    color:rgba(255,255,255,.66);
   }
   .ot-mark {
     width:132px; height:132px; border-radius:36px;

@@ -1,14 +1,19 @@
 {
   "id": "takeaseat-2",
   "service": "takeaseat",
-  "status": "approved",
+  "status": "design_done",
   "angle": "적립금·회원권·쿠폰을 앱에서 — 단골 관리",
   "caption": "단골 손님 관리, 수첩에 적고 계신가요 📒\n\n적립금이랑 회원권, 쿠폰을 앱에서 관리해요.\n누가 얼마 남았는지 한 화면에.\n\n적립 정책을 정해두면 알아서 쌓이고\n필요할 때 수동으로 적립하거나 차감할 수도 있어요 ✨\n\n쌓이고 빠진 이력이 고객마다 따로 남으니\n\"저번에 적립 안 됐는데요\" 소리 들을 일이 없어요.\n\n👉 takeaseat.co.kr\n\n#테이크어시트 #TakeASeat #적립금 #회원권 #쿠폰 #고객관리\n#단골관리 #예약관리 #소상공인 #자영업 #미용실 #1인샵\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯\n\nStill tracking regulars in a notebook? 📒\n\nPoints, memberships, and coupons — all in the app.\nSee who has what left, on one screen.\n\nSet a policy and points add up on their own.\nAdd or deduct by hand whenever you need to ✨\n\nEvery change is logged per customer,\nso \"I didn't get my points last time\" stops being a conversation.\n\n👉 takeaseat.co.kr\n\n#TakeASeat #booking #smallbusiness #pikaworks",
-  "image_path": "public/ig/tas2.png",
-  "image_url": "https://pikaworks.kr/ig/tas2.png",
+  "image_path": [
+    "public/ig/takeaseat-2-1.png",
+    "public/ig/takeaseat-2-2.png",
+    "public/ig/takeaseat-2-3.png",
+    "public/ig/takeaseat-2-4.png"
+  ],
+  "image_url": "https://pikaworks.kr/ig/takeaseat-2-1.png",
   "design": {
     "cover": {
-      "kicker": "단골 관리",
+      "kicker": "적립·쿠폰·회원권",
       "title": [
         "단골 관리, 아직",
         "수첩인가요"
@@ -76,5 +81,11 @@
   "media_id": null,
   "permalink": null,
   "container_id": null,
-  "note": "캐러셀로 재제작 (2026-08-25)"
+  "note": "캐러셀로 재제작 (2026-08-25)",
+  "image_urls": [
+    "https://pikaworks.kr/ig/takeaseat-2-1.png",
+    "https://pikaworks.kr/ig/takeaseat-2-2.png",
+    "https://pikaworks.kr/ig/takeaseat-2-3.png",
+    "https://pikaworks.kr/ig/takeaseat-2-4.png"
+  ]
 }

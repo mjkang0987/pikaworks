@@ -1,11 +1,16 @@
 {
   "id": "clipnote-3",
   "service": "clipnote",
-  "status": "approved",
+  "status": "design_done",
   "angle": "이런 분께 추천 — 사용자 유형 체크리스트 + 4개 언어",
   "caption": "이런 분들께 클립노트 추천드려요 📌\n\n・카톡에 링크 보낼 때마다 밋밋해서 아쉬웠던 분\n・읽을 거 저장해놓고 나중에 못 찾는 분\n・블로그・카페 운영하면서 참고 링크 정리하는 분\n\n그리고 한국어・영어・일본어・중국어, 4개 언어를 지원해요 🌏\n\n복잡한 가입 없이, 링크만 붙여넣으면\n제목・이미지 알아서 긁어와 카드로 완성.\n\n이제 링크 하나도 예쁘게 보내보세요 🍀\n\n👉 App Store에서 다운로드하거나 clipnote.co.kr\n\n#클립노트 #링크공유 #링크카드 #북마크 #생산성툴 #자취생꿀템 #다국어지원 #앱스토어\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯\n\nClipNote is for you if —\n\n・You wish links looked better when you send them\n・You save articles to read later and then can't find them\n・You run a blog or community and keep track of reference links\n\nAvailable in Korean, English, Japanese, and Chinese 🌏\n\nNo sign-up needed — just paste a link, and we pull the title and image into a card automatically.\n\nMake every link worth sending 🍀\n\n👉 Download on the App Store or visit clipnote.co.kr\n\n#ClipNote #LinkSharing #Bookmarks #pikaworks",
-  "image_path": "public/ig/post3.png",
-  "image_url": "https://pikaworks.kr/ig/post3.png",
+  "image_path": [
+    "public/ig/clipnote-3-1.png",
+    "public/ig/clipnote-3-2.png",
+    "public/ig/clipnote-3-3.png",
+    "public/ig/clipnote-3-4.png"
+  ],
+  "image_url": "https://pikaworks.kr/ig/clipnote-3-1.png",
   "design": {
     "cover": {
       "kicker": "이런 분께 추천",
@@ -72,7 +77,7 @@
     ],
     "outro": {
       "headline": "지금 무료로 써보세요",
-      "sub": "App Store · clipnote.co.kr"
+      "sub": "가입 없이 바로 써볼 수 있어요"
     }
   },
   "scheduled_at": null,
@@ -80,5 +85,11 @@
   "media_id": null,
   "permalink": null,
   "container_id": null,
-  "note": "캐러셀로 재제작 (2026-08-25)"
+  "note": "캐러셀로 재제작 (2026-08-25)",
+  "image_urls": [
+    "https://pikaworks.kr/ig/clipnote-3-1.png",
+    "https://pikaworks.kr/ig/clipnote-3-2.png",
+    "https://pikaworks.kr/ig/clipnote-3-3.png",
+    "https://pikaworks.kr/ig/clipnote-3-4.png"
+  ]
 }

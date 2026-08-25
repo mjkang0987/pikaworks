@@ -1,11 +1,16 @@
 {
   "id": "clipnote-1",
   "service": "clipnote",
-  "status": "approved",
+  "status": "design_done",
   "angle": "밋밋한 링크를 제목·대표 이미지 카드로 — 핵심 가치 소개",
   "caption": "카톡으로, 카페 글로 링크 보낼 때마다\n제목도 안 뜨고 회색 네모만 덩그러니 뜬 적 있으신가요 🥲\n\n밋밋한 링크를 카드 한 장으로.\n제목・대표 이미지가 담긴 카드와 짧은 링크를 한 번에 —\n카카오톡・SNS에서 깔끔하게 보여요.\n\n원본 대표 이미지가 있으면 그대로 배경으로 쓰고,\n없으면 제목에 맞춰 만든 그라디언트로 채워져요.\n\n📱 App Store에 정식 출시했어요 — \"ClipNote by pikaworks\" 검색\n👉 웹으로 바로 쓰려면 clipnote.co.kr\n\n#클립노트 #ClipNote #링크정리 #링크공유 #미리보기카드 #생산성앱 #꿀팁 #링크관리 #앱스토어 #스타트업\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯\n\nEver sent a link on KakaoTalk or in a group chat and gotten a plain gray box with no title? 🥲\n\nTurn plain links into one clean card.\nA card with the title and image, plus a short link — all in one.\nLooks clean wherever you share it.\n\nIf the page has a real image, we use it as the background.\nIf not, we generate a gradient that matches the title.\n\n📱 Now live on the App Store — search \"ClipNote by pikaworks\"\n👉 Or use it right in your browser at clipnote.co.kr\n\n#ClipNote #LinkSharing #ClipnoteApp #pikaworks",
-  "image_path": "public/ig/post1.png",
-  "image_url": "https://pikaworks.kr/ig/post1.png",
+  "image_path": [
+    "public/ig/clipnote-1-1.png",
+    "public/ig/clipnote-1-2.png",
+    "public/ig/clipnote-1-3.png",
+    "public/ig/clipnote-1-4.png"
+  ],
+  "image_url": "https://pikaworks.kr/ig/clipnote-1-1.png",
   "design": {
     "cover": {
       "kicker": "App Store 출시",
@@ -73,7 +78,7 @@
     ],
     "outro": {
       "headline": "링크 하나도 예쁘게",
-      "sub": "App Store 에서 ClipNote 검색"
+      "sub": "App Store 에서 받을 수 있어요"
     }
   },
   "scheduled_at": null,
@@ -81,5 +86,11 @@
   "media_id": null,
   "permalink": null,
   "container_id": null,
-  "note": "캐러셀로 재제작 (2026-08-25)"
+  "note": "캐러셀로 재제작 (2026-08-25)",
+  "image_urls": [
+    "https://pikaworks.kr/ig/clipnote-1-1.png",
+    "https://pikaworks.kr/ig/clipnote-1-2.png",
+    "https://pikaworks.kr/ig/clipnote-1-3.png",
+    "https://pikaworks.kr/ig/clipnote-1-4.png"
+  ]
 }
