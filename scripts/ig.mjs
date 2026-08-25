@@ -113,13 +113,9 @@ const ICONS = {
   tag: '<path d="M3 3h8l10 10-8 8L3 11z"/><circle cx="7.5" cy="7.5" r="1.5"/>',
 };
 
-// Apple 로고. 마감 카드의 App Store 배지에만 쓴다.
-const APPLE = '<svg viewBox="0 0 24 24" width="54" height="54" fill="currentColor">'
-  + '<path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0'
-  + '-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8'
-  + ' 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13'
-  + '-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58'
-  + '-2.34 4.5-3.74 4.25z"/></svg>';
+// App Store 배지는 애플 공식 에셋을 그대로 쓴다 (assets/logos/SOURCE.md).
+// 애플은 배지를 재현하거나 변형하는 것을 금지하고 공식 파일 사용을 요구한다.
+const APP_STORE_BADGE = 'assets/logos/app-store-badge.svg';
 
 const esc = (s) =>
   String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -222,9 +218,7 @@ function slideOutro(t) {
       <div class="ot-tag">${esc(t.tagline)}</div>
       <div class="ot-cta">프로필 링크를 확인해주세요</div>
       <div class="ot-dom">https://${esc(t.domain)}</div>
-      ${t.appStore ? `<div class="ot-app-store">${APPLE}
-        <span><small>다운로드하기</small><b>App Store</b></span>
-      </div>` : ''}
+      ${t.appStore ? `<img class="ot-app-store" src="${APP_STORE_URL}" alt="Download on the App Store">` : ''}
     </div>
     <img class="ot-by" src="${t.pikaUrl}" alt="pikaworks">
   </section>`;
@@ -420,15 +414,8 @@ function css(t, fontUrl) {
     padding:28px 56px; border-radius:999px;
   }
   .ot-dom { margin-top:24px; font-size:32px; font-weight:600; color:${t.muted}; letter-spacing:-.02em; }
-  /* 애플 공식 배지 형태를 따른다 — 검정 면, 흰 로고, 작은 윗줄 + 큰 아랫줄 */
-  .ot-app-store {
-    margin-top:30px; display:flex; align-items:center; gap:18px;
-    background:#000; color:#fff;
-    padding:16px 34px 18px 28px; border-radius:16px;
-  }
-  .ot-app-store span { display:flex; flex-direction:column; line-height:1; text-align:left; }
-  .ot-app-store small { font-size:22px; font-weight:500; letter-spacing:-.01em; }
-  .ot-app-store b { font-size:40px; font-weight:600; letter-spacing:-.02em; margin-top:6px; }
+  /* 애플 공식 배지. 비율을 바꾸거나 다시 그리지 않는다 */
+  .ot-app-store { margin-top:32px; display:block; width:300px; height:auto; }
   /* pikaworks 서명. 흐린 색이면 서명이 아니라 잔여물처럼 보여서 본문색을 쓴다.
      라이트 테마에선 흰색이 안 되므로 각 테마의 전경색(fg)을 따른다. */
   .ot-by { display:block; width:330px; height:auto; margin:0 auto; }
@@ -494,6 +481,9 @@ for (const th of Object.values(THEME)) {
   th.pikaUrl = `data:image/svg+xml;base64,${
     Buffer.from(readFileSync(PIKA_LOGO[th.pikaLogo], 'utf8')).toString('base64')}`;
 }
+
+const APP_STORE_URL = `data:image/svg+xml;base64,${
+  Buffer.from(readFileSync(APP_STORE_BADGE, 'utf8')).toString('base64')}`;
 
 const { t, html: slides } = buildSlides(design, input.service);
 
