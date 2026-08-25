@@ -62,7 +62,7 @@ const THEME = {
     onAccent: '#ffffff',
     logo: 'assets/logos/clipnote.png',
     pikaLogo: 'light',
-    outroNote: 'iOS 앱  ·  App Store 출시',   // products.js 의 ios 링크로 확인
+    appStore: true,   // products.js 의 ios 링크(앱 ID 6792600343)로 출시 확인
   },
   // 블랙 배경 + 흰색/보라. --aside-bg 가 TAS 가 실제로 쓰는 다크 면이다.
   // --brand-color(#6526d9)는 어두워서 다크 위 글자로는 안 읽힌다. 면에만 쓰고,
@@ -88,7 +88,7 @@ const THEME = {
     onAccent: '#ffffff',
     logo: 'assets/logos/takeaseat.png',
     pikaLogo: 'dark',
-    outroNote: null,   // 웹 전용. App Store 문구를 쓰면 안 된다
+    appStore: false,   // 웹 전용. App Store 문구를 쓰면 안 된다
     icons: 'assets/icons/takeaseat.json',   // 서비스 사이드바가 실제로 쓰는 글리프
   },
 };
@@ -112,6 +112,14 @@ const ICONS = {
   ticket: '<path d="M3 9a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2 2 2 0 0 0 0 6 2 2 0 0 1-2 2H5a2 2 0 0 1-2-2 2 2 0 0 0 0-6z"/><path d="M12 7v10"/>',
   tag: '<path d="M3 3h8l10 10-8 8L3 11z"/><circle cx="7.5" cy="7.5" r="1.5"/>',
 };
+
+// Apple 로고. 마감 카드의 App Store 배지에만 쓴다.
+const APPLE = '<svg viewBox="0 0 24 24" width="54" height="54" fill="currentColor">'
+  + '<path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0'
+  + '-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8'
+  + ' 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13'
+  + '-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58'
+  + '-2.34 4.5-3.74 4.25z"/></svg>';
 
 const esc = (s) =>
   String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -214,7 +222,9 @@ function slideOutro(t) {
       <div class="ot-tag">${esc(t.tagline)}</div>
       <div class="ot-cta">프로필 링크를 확인해주세요</div>
       <div class="ot-dom">https://${esc(t.domain)}</div>
-      ${t.outroNote ? `<div class="ot-note">${esc(t.outroNote)}</div>` : ''}
+      ${t.appStore ? `<div class="ot-app-store">${APPLE}
+        <span><small>다운로드하기</small><b>App Store</b></span>
+      </div>` : ''}
     </div>
     <img class="ot-by" src="${t.pikaUrl}" alt="pikaworks">
   </section>`;
@@ -410,12 +420,15 @@ function css(t, fontUrl) {
     padding:28px 56px; border-radius:999px;
   }
   .ot-dom { margin-top:24px; font-size:32px; font-weight:600; color:${t.muted}; letter-spacing:-.02em; }
-  .ot-note {
-    margin-top:26px; background:${t.soft}; color:${t.chipInk};
-    border:2px solid ${t.chipBorder};
-    font-size:27px; font-weight:700; letter-spacing:-.02em;
-    padding:14px 28px; border-radius:999px;
+  /* 애플 공식 배지 형태를 따른다 — 검정 면, 흰 로고, 작은 윗줄 + 큰 아랫줄 */
+  .ot-app-store {
+    margin-top:30px; display:flex; align-items:center; gap:18px;
+    background:#000; color:#fff;
+    padding:16px 34px 18px 28px; border-radius:16px;
   }
+  .ot-app-store span { display:flex; flex-direction:column; line-height:1; text-align:left; }
+  .ot-app-store small { font-size:22px; font-weight:500; letter-spacing:-.01em; }
+  .ot-app-store b { font-size:40px; font-weight:600; letter-spacing:-.02em; margin-top:6px; }
   /* pikaworks 서명. 흐린 색이면 서명이 아니라 잔여물처럼 보여서 본문색을 쓴다.
      라이트 테마에선 흰색이 안 되므로 각 테마의 전경색(fg)을 따른다. */
   .ot-by { display:block; width:330px; height:auto; margin:0 auto; }
