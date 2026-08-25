@@ -55,7 +55,7 @@ const THEME = {
     muted: 'rgba(245,245,247,.58)',
     border: 'rgba(255,255,255,.12)',      // --aside-divider
     accent: '#6526d9',                    // --brand-color
-    accentInk: '#9a6bff',
+    accentInk: '#ba9dee',   // #6526d9 + 흰색 55%. #1c1c1e 위 7.41:1 (AAA)
     soft: 'rgba(255,255,255,.07)',        // --aside-hover 계열
     softInk: '#c9b4ff',
     chipInk: '#f5f5f7',
