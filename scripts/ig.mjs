@@ -32,6 +32,9 @@ const MAX_SLIDES = 10;      // 인스타 캐러셀 상한
 // 색은 각 서비스 저장소에서 가져온다. 여기 값을 바꾸려면 먼저 저장소를 확인할 것.
 //   ClipNote   clipnote  app/globals.css
 //   Take a Seat  tas  client/styles/globalStyle.ts
+// 마감 슬라이드 하단에만 쓰는 모기업 마크. public/favicon.svg 와 같은 파일이다.
+const PIKA = { logo: 'public/favicon.svg' };
+
 const THEME = {
   // 흰 배경 + 보라 키컬러. globals.css 의 라이트 테마 그대로다.
   clipnote: {
@@ -195,23 +198,19 @@ function slideCover(d, t) {
   </section>`;
 }
 
-function slideOutro(t, other) {
-  // 건마다 다르게 만들지 않는다. 앱당 한 장으로 고정해서 계속 같은 마무리를 쓴다.
-  // 위 절반은 그 앱, 아래 절반은 pikaworks — 나머지 한 제품을 같이 알린다.
+function slideOutro(t) {
+  // 건마다 다르지 않고 앱당 한 장 고정이다.
+  // 인스타는 캡션의 URL 이 클릭되지 않는다. 유일하게 눌리는 곳이 프로필 링크라
+  // 거기로 보내는 문장을 CTA 로 쓴다. 도메인은 보조로만 적는다.
   return `<section class="s outro">
     <div class="ot-app">
-      <div class="ot-mark">${markSvg(t, 118)}</div>
+      <div class="ot-mark">${markSvg(t, 150)}</div>
       <div class="ot-name">${esc(t.name)}</div>
       <div class="ot-tag">${esc(t.tagline)}</div>
-      <div class="ot-cta">${esc(t.domain)}</div>
+      <div class="ot-cta">프로필 링크에서 바로 열려요</div>
+      <div class="ot-dom">${esc(t.domain)}</div>
     </div>
-    <div class="ot-line"></div>
-    <div class="ot-pika">
-      <div class="ot-bolt">${BOLT}<span>pikaworks</span></div>
-      <div class="ot-pika-tag">일상을 정리하는 작은 도구들</div>
-      <div class="ot-pika-list">${esc(t.name)} <i>·</i> ${esc(other)} <i>·</i> blog</div>
-      <div class="ot-pika-dom">pikaworks.kr</div>
-    </div>
+    <div class="ot-by">${markSvg(PIKA, 46)}<span>pikaworks</span></div>
   </section>`;
 }
 
@@ -390,33 +389,25 @@ function css(t, fontUrl) {
   .brand { font-size:35px; font-weight:800; letter-spacing:-.03em; }
   .domain { margin-left:auto; font-size:29px; font-weight:500; color:${t.muted}; letter-spacing:-.02em; }
 
-  /* ── 마감 ── 앱당 한 장 고정. 위 절반 앱, 아래 절반 pikaworks */
+  /* ── 마감 ── 앱당 한 장 고정. 서비스가 주인공이고 pikaworks 는 서명이다 */
   .outro { background:${t.bg}; color:${t.fg}; text-align:center; }
   .ot-app {
-    flex:1.15; display:flex; flex-direction:column;
+    flex:1; display:flex; flex-direction:column;
     align-items:center; justify-content:center;
   }
-  .ot-mark { margin-bottom:32px; }
-  .ot-name { font-size:60px; font-weight:800; letter-spacing:-.04em; }
-  .ot-tag { margin-top:18px; font-size:34px; font-weight:500; color:${t.muted}; letter-spacing:-.025em; }
+  .ot-mark { margin-bottom:40px; }
+  .ot-name { font-size:78px; font-weight:800; letter-spacing:-.04em; }
+  .ot-tag { margin-top:20px; font-size:40px; font-weight:500; color:${t.muted}; letter-spacing:-.03em; }
   .ot-cta {
-    margin-top:38px; background:${t.accent}; color:${t.onAccent};
-    font-size:34px; font-weight:800; letter-spacing:-.03em;
-    padding:24px 50px; border-radius:999px;
+    margin-top:56px; background:${t.accent}; color:${t.onAccent};
+    font-size:38px; font-weight:800; letter-spacing:-.03em;
+    padding:28px 56px; border-radius:999px;
   }
-  .ot-line { height:2px; background:${t.border}; margin:0 40px; }
-  .ot-pika {
-    flex:1; display:flex; flex-direction:column;
-    align-items:center; justify-content:center; gap:14px;
+  .ot-dom { margin-top:24px; font-size:32px; font-weight:600; color:${t.muted}; letter-spacing:-.02em; }
+  .ot-by {
+    display:flex; align-items:center; justify-content:center; gap:16px;
+    font-size:36px; font-weight:800; letter-spacing:-.03em; color:${t.muted};
   }
-  .ot-bolt {
-    display:flex; align-items:center; gap:14px;
-    font-size:40px; font-weight:800; letter-spacing:-.03em;
-  }
-  .ot-pika-tag { font-size:30px; font-weight:600; color:${t.muted}; letter-spacing:-.025em; }
-  .ot-pika-list { font-size:28px; font-weight:700; color:${t.accentInk}; letter-spacing:-.02em; }
-  .ot-pika-list i { color:${t.muted}; font-style:normal; margin:0 4px; }
-  .ot-pika-dom { margin-top:4px; font-size:27px; font-weight:500; color:${t.muted}; letter-spacing:-.02em; }
 `;
 }
 
@@ -476,6 +467,10 @@ for (const th of Object.values(THEME)) {
   th.logoUrl = `data:image/png;base64,${readFileSync(th.logo).toString('base64')}`;
   th.iconSet = th.icons && existsSync(th.icons)
     ? JSON.parse(readFileSync(th.icons, 'utf8')) : null;
+}
+{
+  const svg = readFileSync(PIKA.logo, 'utf8');
+  PIKA.logoUrl = `data:image/svg+xml;base64,${Buffer.from(svg).toString('base64')}`;
 }
 
 const { t, html: slides } = buildSlides(design, input.service);
