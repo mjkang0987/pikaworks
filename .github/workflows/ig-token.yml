@@ -71,15 +71,31 @@ jobs:
               raise SystemExit(1)
 
           new_token = data.get('access_token', '')
+          # 새 토큰은 아직 secret 이 아니라 러너가 자동으로 가려주지 않는다.
+          # 마스크로 등록해 두면 이후 어떤 경로로 출력되든 *** 로 대체된다.
+          if new_token:
+              print(f'::add-mask::{new_token}', flush=True)
+
           days = int(data.get('expires_in', 0)) // 86400
           if not new_token:
               notify('갱신 응답에 access_token 이 없습니다.', 'error')
               raise SystemExit(1)
 
-          # gh 가 값을 암호화해 저장한다. 토큰은 어디에도 출력하지 않는다.
-          subprocess.run(
-              ['gh', 'secret', 'set', 'IG_ACCESS_TOKEN', '--repo', os.environ['REPO'],
-               '--body', new_token],
-              check=True)
+          # 토큰은 stdin 으로만 넘긴다. --body 로 넘기면 명령줄에 들어가고,
+          # gh 가 실패했을 때 파이썬이 argv 전체를 예외 메시지로 찍으면서
+          # 공개 리포의 Actions 로그에 평문으로 남는다. 실제로 한 번 그렇게 샜다.
+          # check=True 를 쓰지 않는 이유도 같다 — CalledProcessError 가 argv 를 담는다.
+          proc = subprocess.run(
+              ['gh', 'secret', 'set', 'IG_ACCESS_TOKEN',
+               '--repo', os.environ['REPO'], '--body-file', '-'],
+              input=new_token, text=True,
+              stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+          if proc.returncode != 0:
+              err = (proc.stderr or '').replace(new_token, '[TOKEN]').replace(TOKEN, '[TOKEN]')
+              notify(f'갱신된 토큰을 저장하지 못했습니다 — {err.strip()[:300]}\n'
+                     'GH_PAT_SECRETS 에 이 저장소의 "Secrets: Read and write" 권한이 있는지 '
+                     '확인하세요. 기존 토큰은 그대로 유효하므로 발행은 계속됩니다.', 'error')
+              raise SystemExit(1)
+
           notify(f'토큰 갱신 완료 — 만료까지 {days}일')
           PY

@@ -1,53 +1,59 @@
-// 인스타그램 이미지 렌더러 — 파이프라인 3단계(sns-designer)의 실행부.
+// 인스타그램 캐러셀 렌더러 — 파이프라인 3단계(sns-designer)의 실행부.
 //
-//   node scripts/ig.mjs pipeline/ideas/<id>.json      상태 파일의 design 을 렌더
-//   node scripts/ig.mjs <spec>.json --out preview.png  스펙 파일만 렌더 (시안 확인용)
+//   node scripts/ig.mjs pipeline/ideas/<id>.json        상태 파일의 design 을 렌더
+//   node scripts/ig.mjs <spec>.json --out-dir /tmp/x    스펙만 렌더 (시안 확인용)
 //
-// 상태 파일을 넘기면 PNG 를 public/ig/<id>.png 로 쓰고, image_path / image_url 을
-// 채운 뒤 status 를 design_done 으로 올린다. image_ok 는 사람만 쓸 수 있으므로
-// 이 스크립트는 절대 그 값을 쓰지 않는다.
+// 한 건이 여러 장(캐러셀)이다. 순서는 항상 커버 → 내용 1~N → 마감 이다.
+// public/ig/<id>-1.png … <id>-N.png 로 쓰고 image_urls 를 채운 뒤
+// status 를 design_done 으로 올린다. image_ok 는 사람만 쓴다.
 //
-// 폰트는 assets/fonts 에 넣어 뒀다. 시스템 폰트에 의존하지 않으므로 맥·리눅스·CI
-// 어디서 돌려도 같은 픽셀이 나온다.
+// 일관성은 전부 이 파일이 강제한다. 타입 스케일·여백·푸터가 고정이라
+// 카피만 바꿔 넣으면 앞뒤 게시물이 저절로 같은 톤으로 나온다.
+// 새 생김새가 필요하면 인라인 스타일로 우회하지 말고 여기에 템플릿을 추가한다.
 
 import { chromium } from 'playwright';
-import { readFileSync, writeFileSync, existsSync } from 'fs';
-import { basename } from 'path';
+import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
+import { basename, join } from 'path';
 
-const SIZE = 1080;          // CSS px. deviceScaleFactor 2 → 2160×2160 (기존 6장과 동일)
+const SIZE = 1080;          // CSS px. deviceScaleFactor 2 → 2160×2160
 const SITE = 'https://pikaworks.kr';
+const MAX_SLIDES = 10;      // 인스타 캐러셀 상한
 
-// 기존 인스타 6장에서 뽑은 팔레트. 사이트 브랜드(#6526d9)와 다르니 섞지 말 것.
-const C = {
+// 두 앱이 공유하는 값. 여기는 서비스별로 바뀌지 않는다.
+const BASE = {
   bg: '#ffffff',
   ink: '#18181b',
-  accent: '#7c5cfc',
-  accentSoft: '#efebff',
-  border: '#e4e4e7',
   muted: '#71717a',
+  border: '#e4e4e7',
+  faint: '#a1a1aa',
 };
 
-const BRAND = {
+// 서비스 정체성. accent 는 app/data/products.js 의 값과 맞춘다.
+const THEME = {
   clipnote: {
     name: 'ClipNote',
     domain: 'clipnote.co.kr',
-    // 북마크 글리프
+    accent: '#6526d9',
+    soft: '#f1ebfd',
+    softInk: '#4c1d95',
     mark: '<path d="M7 4h10a1 1 0 0 1 1 1v15l-6-4-6 4V5a1 1 0 0 1 1-1z"/>',
   },
   takeaseat: {
     name: 'Take a Seat',
     domain: 'takeaseat.co.kr',
-    // 의자 글리프
+    accent: '#ec4899',
+    soft: '#fdeaf4',
+    softInk: '#9d174d',
     mark: '<path d="M7 4h10v7H7z"/><path d="M6 12h12v2H6z"/><path d="M8 14h1.6v6H8zM14.4 14H16v6h-1.6z"/>',
   },
 };
 
-// list 템플릿용 아이콘. stroke 기반 24×24, currentColor 를 따른다.
 const ICONS = {
   chat: '<path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 9 9 0 0 1-3.8-.8L3 21l1.9-5.2A8.4 8.4 0 0 1 12 3a8.4 8.4 0 0 1 9 8.5z"/>',
   bookmark: '<path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>',
   folder: '<path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>',
   globe: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18 15 15 0 0 1 0-18z"/>',
+  link: '<path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/>',
   calendar: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
   clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
   users: '<path d="M16 20v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 20v-2a4 4 0 0 0-3-3.9"/>',
@@ -58,6 +64,8 @@ const ICONS = {
   sparkle: '<path d="M12 3l2 6 6 2-6 2-2 6-2-6-6-2 6-2z"/>',
   lock: '<rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/>',
   phone: '<rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M11 18.5h2"/>',
+  ticket: '<path d="M3 9a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2 2 2 0 0 0 0 6 2 2 0 0 1-2 2H5a2 2 0 0 1-2-2 2 2 0 0 0 0-6z"/><path d="M12 7v10"/>',
+  tag: '<path d="M3 3h8l10 10-8 8L3 11z"/><circle cx="7.5" cy="7.5" r="1.5"/>',
 };
 
 const esc = (s) =>
@@ -65,182 +73,312 @@ const esc = (s) =>
 
 function icon(name, size = 30, width = 2.1) {
   const path = ICONS[name];
-  if (!path) throw new Error(`알 수 없는 아이콘: ${name} (가능: ${Object.keys(ICONS).join(', ')})`);
+  if (!path) {
+    throw new Error(`알 수 없는 아이콘: ${name}\n가능: ${Object.keys(ICONS).join(', ')}`);
+  }
   return `<svg viewBox="0 0 24 24" width="${size}" height="${size}" fill="none"
     stroke="currentColor" stroke-width="${width}" stroke-linecap="round"
     stroke-linejoin="round">${path}</svg>`;
 }
 
-// ── 템플릿 본문 ────────────────────────────────────────────────────
+// ── 길이 검사 ─────────────────────────────────────────────────────
+// 넘친 글자는 잘리지 않고 레이아웃을 밀어낸다. 렌더 전에 막는다.
 
-function bodyList(d) {
-  const rows = (d.items || []).map((it) => `
-    <div class="row">
-      <div class="ic">${icon(it.icon || 'check')}</div>
-      <div class="rt">${esc(it.text)}</div>
-    </div>`).join('');
-  return `<div class="list">${rows}</div>`;
+const LIMITS = {
+  'cover.title': 13,
+  'cover.kicker': 22,
+  'cover.features': 12,
+  'slide.title': 14,
+  'slide.subtitle': 32,
+  'item.title': 12,
+  'item.text': 30,
+  'outro.headline': 16,
+  'outro.sub': 30,
+  chip: 8,
+};
+
+function check(kind, value, where) {
+  const max = LIMITS[kind];
+  if (value && String(value).length > max) {
+    throw new Error(
+      `${where}: "${value}" 가 ${String(value).length}자입니다. ${kind} 는 ${max}자까지.`);
+  }
+  return value;
 }
 
-function bodyStatement(d) {
-  return `<div class="panel stmt">${esc(d.statement || '')}</div>`;
+// ── 슬라이드 ──────────────────────────────────────────────────────
+
+function slideCover(d, t) {
+  const title = (Array.isArray(d.title) ? d.title : [d.title]).slice(0, 2);
+  title.forEach((l, i) => check('cover.title', l, `커버 title[${i}]`));
+  check('cover.kicker', d.kicker, '커버 kicker');
+
+  const heading = title.map((line, i) =>
+    `<div class="cv-h ${i === title.length - 1 ? 'accent' : ''}">${esc(line)}</div>`).join('');
+
+  const feats = (d.features || []).slice(0, 3).map((f, i) => {
+    check('cover.features', f, `커버 features[${i}]`);
+    return `<div class="cv-f">${esc(f)}</div>`;
+  }).join('');
+
+  return `<section class="s cover">
+    <div class="cv-top">
+      <div class="cv-brand">
+        <div class="mark lg">${markSvg(t, 44)}</div>
+        <span>${esc(t.name)}</span>
+      </div>
+      ${d.kicker ? `<div class="cv-k">${esc(d.kicker)}</div>` : ''}
+    </div>
+    <div class="cv-mid">${heading}</div>
+    ${feats ? `<div class="cv-fs">${feats}</div>` : ''}
+    <div class="cv-swipe">밀어서 보기 <span>→</span></div>
+  </section>`;
 }
 
-function bodyPanel(d) {
-  // 캘린더 그리드처럼 건별로 생김새가 다른 목업은 여기에 HTML 조각으로 넣는다.
-  // 아래 유틸 클래스를 쓸 수 있다: .grid5 .grid4 .cell .cell-on .cell-off
-  return `<div class="panel">${d.html || ''}</div>`;
+function slideOutro(d, t) {
+  check('outro.headline', d.headline, '마감 headline');
+  check('outro.sub', d.sub, '마감 sub');
+  return `<section class="s outro">
+    <div class="ot-mark">${markSvg(t, 62)}</div>
+    <div class="ot-name">${esc(t.name)}</div>
+    ${d.headline ? `<div class="ot-h">${esc(d.headline)}</div>` : ''}
+    ${d.sub ? `<div class="ot-s">${esc(d.sub)}</div>` : ''}
+    <div class="ot-cta">${esc(t.domain)}</div>
+  </section>`;
 }
 
-const BODIES = { list: bodyList, statement: bodyStatement, panel: bodyPanel };
+function slideBody(d, t, index) {
+  const title = (Array.isArray(d.title) ? d.title : [d.title]).slice(0, 2);
+  title.forEach((l, i) => check('slide.title', l, `슬라이드 ${index} title[${i}]`));
+  check('slide.subtitle', d.subtitle, `슬라이드 ${index} subtitle`);
+
+  const heading = title.map((line, i) =>
+    `<div class="h1 ${i === title.length - 1 && title.length > 1 ? 'accent' : ''}">${esc(line)}</div>`)
+    .join('');
+
+  let body;
+  if (d.template === 'list') {
+    const rows = (d.items || []).slice(0, 4).map((it, i) => {
+      check('item.title', it.title, `슬라이드 ${index} items[${i}].title`);
+      check('item.text', it.text, `슬라이드 ${index} items[${i}].text`);
+      return `<div class="card">
+        <div class="ic">${icon(it.icon || 'check')}</div>
+        <div class="ct">
+          ${it.title ? `<div class="ct-t">${esc(it.title)}</div>` : ''}
+          <div class="ct-d">${esc(it.text)}</div>
+        </div>
+      </div>`;
+    }).join('');
+    body = `<div class="cards">${rows}</div>`;
+  } else if (d.template === 'panel') {
+    body = `<div class="panel">${d.html || ''}</div>`;
+  } else if (d.template === 'statement') {
+    body = `<div class="panel stmt">${esc(d.statement || '')}</div>`;
+  } else {
+    throw new Error(
+      `슬라이드 ${index}: 알 수 없는 template "${d.template}" (list | panel | statement)`);
+  }
+
+  const chips = (d.chips || []).slice(0, 4).map((c, i) => {
+    check('chip', c, `슬라이드 ${index} chips[${i}]`);
+    return `<span class="chip">${esc(c)}</span>`;
+  }).join('');
+
+  return `<section class="s body">
+    <div class="head">${heading}</div>
+    ${d.subtitle ? `<div class="sub">${esc(d.subtitle)}</div>` : ''}
+    <div class="main">
+      ${body}
+      ${chips ? `<div class="chips">${chips}</div>` : ''}
+    </div>
+    <div class="foot">
+      <div class="mark">${markSvg(t, 34)}</div>
+      <div class="brand">${esc(t.name)}</div>
+      <div class="domain">${esc(t.domain)}</div>
+    </div>
+  </section>`;
+}
+
+const markSvg = (t, size) =>
+  `<svg viewBox="0 0 24 24" width="${size}" height="${size}" fill="#fff">${t.mark}</svg>`;
 
 // ── 페이지 ────────────────────────────────────────────────────────
 
-function render(design, service, fontDataUrl) {
-  const brand = BRAND[service];
-  if (!brand) throw new Error(`알 수 없는 service: ${service} (clipnote | takeaseat)`);
-
-  const build = BODIES[design.template];
-  if (!build) throw new Error(`알 수 없는 template: ${design.template} (${Object.keys(BODIES).join(' | ')})`);
-
-  const title = Array.isArray(design.title) ? design.title : [design.title];
-  if (title.length > 2) throw new Error('title 은 최대 2줄이다 (1줄 먹색 / 2줄 보라색)');
-
-  const heading = title.map((line, i) =>
-    `<div class="${i === 0 && title.length > 1 ? 'h1' : 'h1 accent'}">${esc(line)}</div>`).join('');
-
-  const chips = (design.chips || []).map((c) => `<span class="chip">${esc(c)}</span>`).join('');
-
-  return `<!doctype html><html lang="ko"><head><meta charset="utf-8"><style>
+function css(t, fontUrl) {
+  return `
   @font-face {
     font-family: 'Pretendard';
-    src: url('${fontDataUrl}') format('woff2-variations');
-    font-weight: 100 900;
-    font-display: block;
+    src: url('${fontUrl}') format('woff2-variations');
+    font-weight: 100 900; font-display: block;
   }
   * { margin:0; padding:0; box-sizing:border-box; }
   body {
     width:${SIZE}px; height:${SIZE}px; overflow:hidden;
-    background:${C.bg}; color:${C.ink};
+    background:${BASE.bg}; color:${BASE.ink};
     font-family:'Pretendard', sans-serif;
     -webkit-font-smoothing:antialiased;
+  }
+  .s {
+    width:${SIZE}px; height:${SIZE}px;
     display:flex; flex-direction:column;
-    padding:88px 84px 74px;
+    padding:92px 84px 78px;
   }
 
-  /* 헤더 */
-  .head { display:flex; align-items:flex-start; gap:24px; }
-  .h1 { font-size:66px; font-weight:800; line-height:1.24; letter-spacing:-.035em; }
-  .accent { color:${C.accent}; }
-  .badge {
-    margin-left:auto; flex:none;
-    background:${C.accentSoft}; color:${C.accent};
-    font-size:26px; font-weight:700; letter-spacing:-.02em;
-    padding:18px 30px; border-radius:999px; white-space:nowrap;
-  }
-  .sub {
-    margin-top:26px; font-size:31px; font-weight:500;
-    color:${C.muted}; letter-spacing:-.02em; line-height:1.45;
-  }
-
-  /* 본문 — 헤더와 푸터 사이 남는 공간을 채우고 세로 중앙에 놓인다 */
-  .body { flex:1; display:flex; flex-direction:column; justify-content:center; min-height:0; padding:38px 0; }
-
-  .list { display:flex; flex-direction:column; }
-  .row { display:flex; align-items:center; gap:34px; padding:36px 4px; }
-  .row + .row { border-top:1.5px solid ${C.border}; }
-  .ic {
-    flex:none; width:78px; height:78px; border-radius:20px;
-    background:${C.accentSoft}; color:${C.accent};
+  /* ── 커버 ── 타이틀과 기능을 크게. 피드에서 이 한 장이 승부다 */
+  .cover { background:${t.accent}; color:#fff; }
+  .cv-top { display:flex; align-items:center; gap:20px; }
+  .cv-brand { display:flex; align-items:center; gap:18px; font-size:33px; font-weight:800; letter-spacing:-.03em; }
+  .cv-brand .mark.lg {
+    width:74px; height:74px; border-radius:21px;
+    background:rgba(255,255,255,.18);
     display:flex; align-items:center; justify-content:center;
   }
-  .rt { font-size:35px; font-weight:700; letter-spacing:-.025em; line-height:1.35; }
-
-  .panel { background:${C.accentSoft}; border-radius:34px; padding:44px; }
-  .stmt {
-    font-size:52px; font-weight:800; line-height:1.4; letter-spacing:-.03em;
-    color:${C.ink}; padding:64px 54px; text-align:center;
+  .cv-k {
+    margin-left:auto; background:rgba(255,255,255,.2);
+    font-size:25px; font-weight:700; letter-spacing:-.02em;
+    padding:16px 28px; border-radius:999px; white-space:nowrap;
   }
+  .cv-mid { flex:1; display:flex; flex-direction:column; justify-content:center; }
+  .cv-h { font-size:104px; font-weight:800; line-height:1.18; letter-spacing:-.045em; }
+  .cv-h.accent { color:rgba(255,255,255,.62); }
+  .cv-fs { display:flex; flex-direction:column; gap:14px; margin-bottom:44px; }
+  .cv-f {
+    align-self:flex-start; background:rgba(255,255,255,.16);
+    font-size:34px; font-weight:700; letter-spacing:-.025em;
+    padding:20px 34px; border-radius:18px;
+  }
+  .cv-swipe {
+    font-size:27px; font-weight:600; color:rgba(255,255,255,.72);
+    letter-spacing:-.02em; display:flex; align-items:center; gap:12px;
+  }
+  .cv-swipe span { font-size:31px; }
 
-  /* panel 안에서 쓰는 유틸 */
-  .grid5, .grid4 { display:grid; gap:18px; margin-bottom:18px; }
+  /* ── 내용 ── 모든 내용 슬라이드가 같은 골격을 쓴다 */
+  .head { min-height:186px; }
+  .h1 { font-size:64px; font-weight:800; line-height:1.26; letter-spacing:-.04em; }
+  .accent { color:${t.accent}; }
+  .sub {
+    margin-top:22px; font-size:30px; font-weight:500;
+    color:${BASE.muted}; letter-spacing:-.02em; line-height:1.45;
+  }
+  .main { flex:1; display:flex; flex-direction:column; justify-content:center; min-height:0; padding:30px 0; }
+
+  .cards { display:flex; flex-direction:column; gap:20px; }
+  .card {
+    background:${t.soft}; border-radius:26px;
+    padding:32px 34px; display:flex; align-items:center; gap:28px;
+  }
+  .ic {
+    flex:none; width:74px; height:74px; border-radius:20px;
+    background:#fff; color:${t.accent};
+    display:flex; align-items:center; justify-content:center;
+  }
+  .ct-t { font-size:36px; font-weight:800; letter-spacing:-.03em; line-height:1.3; }
+  .ct-d { margin-top:8px; font-size:27px; font-weight:600; color:${t.softInk}; opacity:.72; letter-spacing:-.02em; line-height:1.35; }
+  .ct-d:only-child { margin-top:0; font-size:33px; font-weight:700; opacity:.92; }
+
+  .panel { background:${t.soft}; border-radius:30px; padding:42px; }
+  .stmt {
+    font-size:50px; font-weight:800; line-height:1.42; letter-spacing:-.03em;
+    color:${t.softInk}; padding:62px 52px; text-align:center;
+  }
+  .grid5, .grid4 { display:grid; gap:16px; margin-bottom:16px; }
   .grid5 { grid-template-columns:repeat(5,1fr); }
   .grid4 { grid-template-columns:repeat(4,1fr); }
   .cell {
-    background:#fff; border-radius:18px; padding:26px 10px; text-align:center;
-    font-size:32px; font-weight:800; letter-spacing:-.02em;
+    background:#fff; border-radius:16px; padding:24px 8px; text-align:center;
+    font-size:31px; font-weight:800; letter-spacing:-.02em;
   }
-  .cell small { display:block; font-size:23px; font-weight:600; color:${C.muted}; margin-bottom:8px; }
-  .cell-on { background:${C.accent}; color:#fff; }
+  .cell small { display:block; font-size:22px; font-weight:600; color:${BASE.muted}; margin-bottom:7px; }
+  .cell-on { background:${t.accent}; color:#fff; }
   .cell-on small { color:rgba(255,255,255,.75); }
-  .cell-off { background:transparent; border:2px dashed ${C.border}; color:#c9c9d1; }
+  .cell-off { background:transparent; border:2px dashed ${BASE.border}; color:#c9c9d1; }
 
-  .note { margin-top:34px; text-align:center; font-size:29px; font-weight:600; color:${C.muted}; letter-spacing:-.02em; }
-  .chips { margin-top:26px; display:flex; gap:16px; justify-content:center; }
+  .chips { margin-top:26px; display:flex; gap:14px; justify-content:center; }
   .chip {
-    background:${C.accentSoft}; color:${C.accent};
-    font-size:24px; font-weight:700; padding:14px 26px; border-radius:999px;
+    background:${t.soft}; color:${t.accent};
+    font-size:24px; font-weight:700; padding:13px 24px; border-radius:999px;
   }
 
-  /* 푸터 */
-  .foot { display:flex; align-items:center; gap:22px; }
+  .foot { display:flex; align-items:center; gap:20px; }
   .mark {
-    width:70px; height:70px; border-radius:20px; background:${C.accent};
+    width:62px; height:62px; border-radius:18px; background:${t.accent};
     display:flex; align-items:center; justify-content:center;
   }
-  .brand { font-size:38px; font-weight:800; letter-spacing:-.03em; }
-  .domain { margin-left:auto; font-size:31px; font-weight:500; color:#a1a1aa; letter-spacing:-.02em; }
-</style></head><body>
-  <div class="head">
-    <div>${heading}</div>
-    ${design.badge ? `<div class="badge">${esc(design.badge)}</div>` : ''}
-  </div>
-  ${design.subtitle ? `<div class="sub">${esc(design.subtitle)}</div>` : ''}
-  <div class="body">
-    ${build(design)}
-    ${design.footerNote ? `<div class="note">${esc(design.footerNote)}</div>` : ''}
-    ${chips ? `<div class="chips">${chips}</div>` : ''}
-  </div>
-  <div class="foot">
-    <div class="mark"><svg viewBox="0 0 24 24" width="38" height="38" fill="#fff">${brand.mark}</svg></div>
-    <div class="brand">${esc(brand.name)}</div>
-    <div class="domain">${esc(brand.domain)}</div>
-  </div>
-</body></html>`;
+  .brand { font-size:35px; font-weight:800; letter-spacing:-.03em; }
+  .domain { margin-left:auto; font-size:29px; font-weight:500; color:${BASE.faint}; letter-spacing:-.02em; }
+
+  /* ── 마감 ── 커버와 짝을 이룬다 */
+  .outro {
+    background:${t.accent}; color:#fff;
+    align-items:center; justify-content:center; text-align:center; gap:0;
+  }
+  .ot-mark {
+    width:132px; height:132px; border-radius:36px;
+    background:rgba(255,255,255,.18);
+    display:flex; align-items:center; justify-content:center;
+    margin-bottom:38px;
+  }
+  .ot-name { font-size:52px; font-weight:800; letter-spacing:-.035em; }
+  .ot-h { margin-top:46px; font-size:66px; font-weight:800; line-height:1.28; letter-spacing:-.04em; }
+  .ot-s { margin-top:22px; font-size:31px; font-weight:500; color:rgba(255,255,255,.72); letter-spacing:-.02em; }
+  .ot-cta {
+    margin-top:56px; background:#fff; color:${t.accent};
+    font-size:36px; font-weight:800; letter-spacing:-.03em;
+    padding:26px 54px; border-radius:999px;
+  }`;
+}
+
+function buildSlides(design, service) {
+  const t = THEME[service];
+  if (!t) throw new Error(`알 수 없는 service: ${service} (clipnote | takeaseat)`);
+  if (!design.cover) throw new Error('design.cover 가 필요합니다 (캐러셀 첫 장)');
+  if (!design.outro) throw new Error('design.outro 가 필요합니다 (캐러셀 마지막 장)');
+
+  const middles = design.slides || [];
+  if (!middles.length) throw new Error('design.slides 가 비어 있습니다 (내용 슬라이드 최소 1장)');
+
+  const html = [
+    slideCover(design.cover, t),
+    ...middles.map((s, i) => slideBody(s, t, i + 1)),
+    slideOutro(design.outro, t),
+  ];
+  if (html.length > MAX_SLIDES) {
+    throw new Error(`슬라이드가 ${html.length}장입니다. 인스타 캐러셀은 ${MAX_SLIDES}장까지.`);
+  }
+  return { t, html };
 }
 
 // ── 실행 ─────────────────────────────────────────────────────────
 
 const args = process.argv.slice(2);
 const inputPath = args.find((a) => !a.startsWith('--'));
-const outFlag = args.indexOf('--out');
+const outDirFlag = args.indexOf('--out-dir');
 if (!inputPath) {
-  console.error('사용법: node scripts/ig.mjs pipeline/ideas/<id>.json [--out <path>.png]');
+  console.error('사용법: node scripts/ig.mjs pipeline/ideas/<id>.json [--out-dir <디렉터리>]');
   process.exit(2);
 }
 
 const input = JSON.parse(readFileSync(inputPath, 'utf8'));
 const isIdea = Boolean(input.service && Object.prototype.hasOwnProperty.call(input, 'status'));
 const design = isIdea ? input.design : input;
-const service = isIdea ? input.service : input.service;
-
 if (!design) {
   console.error(`${inputPath} 에 design 이 없습니다. sns-designer 가 먼저 채워야 합니다.`);
   process.exit(2);
 }
 
 const id = isIdea ? input.id : basename(inputPath, '.json');
-const outPath = outFlag >= 0 ? args[outFlag + 1] : `public/ig/${id}.png`;
+const outDir = outDirFlag >= 0 ? args[outDirFlag + 1] : 'public/ig';
+mkdirSync(outDir, { recursive: true });
 
 const fontPath = 'assets/fonts/PretendardVariable.woff2';
 if (!existsSync(fontPath)) {
   console.error(`${fontPath} 가 없습니다. 이 파일 없이는 한글이 두부로 렌더됩니다.`);
   process.exit(2);
 }
-const fontDataUrl =
-  `data:font/woff2;base64,${readFileSync(fontPath).toString('base64')}`;
+const fontUrl = `data:font/woff2;base64,${readFileSync(fontPath).toString('base64')}`;
 
-const html = render(design, service, fontDataUrl);
+const { t, html: slides } = buildSlides(design, input.service);
 
 // CHROMIUM_PATH 는 playwright 가 받아둔 브라우저를 못 찾는 환경(컨테이너 등)용 탈출구다.
 const browser = await chromium.launch(
@@ -249,20 +387,31 @@ const page = await browser.newPage({
   viewport: { width: SIZE, height: SIZE },
   deviceScaleFactor: 2,
 });
-await page.setContent(html, { waitUntil: 'load' });
-await page.evaluate(() => document.fonts.ready);
-await page.screenshot({ path: outPath });
+
+const written = [];
+for (let i = 0; i < slides.length; i += 1) {
+  const file = join(outDir, `${id}-${i + 1}.png`);
+  await page.setContent(
+    `<!doctype html><html lang="ko"><head><meta charset="utf-8">
+     <style>${css(t, fontUrl)}</style></head><body>${slides[i]}</body></html>`,
+    { waitUntil: 'load' });
+  await page.evaluate(() => document.fonts.ready);
+  await page.screenshot({ path: file });
+  written.push(file);
+}
 await browser.close();
 
-console.log(`렌더 완료 → ${outPath} (${SIZE * 2}×${SIZE * 2})`);
+console.log(`렌더 완료 — ${written.length}장 (${SIZE * 2}×${SIZE * 2})`);
+written.forEach((f) => console.log(`  ${f}`));
 
-if (isIdea && outFlag < 0) {
-  input.image_path = outPath;
-  input.image_url = `${SITE}/ig/${id}.png`;
+if (isIdea && outDirFlag < 0) {
+  input.image_path = written;
+  input.image_urls = written.map((_, i) => `${SITE}/ig/${id}-${i + 1}.png`);
+  input.image_url = input.image_urls[0];   // 단일 발행 경로와의 호환용
   // design_done 까지만 올린다. image_ok 는 사람이 눈으로 보고 직접 쓴다.
-  if (input.status === 'proposed' || input.status === 'approved' || input.status === 'design_done') {
+  if (['proposed', 'approved', 'design_done', 'image_ok', 'scheduled'].includes(input.status)) {
     input.status = 'design_done';
   }
   writeFileSync(inputPath, `${JSON.stringify(input, null, 2)}\n`, 'utf8');
-  console.log(`${inputPath} 갱신 — status=${input.status}, image_url=${input.image_url}`);
+  console.log(`${inputPath} 갱신 — status=${input.status}, ${input.image_urls.length}장`);
 }

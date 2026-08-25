@@ -163,28 +163,76 @@ def call(method, path, params, _attempt=0):
         raise IGError(f'Instagram API {e.code} — {mask(raw)[:400]}')
 
 
-def publish_one(idea):
-    """컨테이너 생성 → FINISHED 대기 → 발행. media_id, permalink 를 돌려준다."""
-    container = call('POST', f'{IG_USER_ID}/media', {
-        'image_url': idea['image_url'],
+def images_of(idea):
+    """발행할 이미지 URL 목록. 캐러셀이면 여러 장, 아니면 한 장."""
+    urls = idea.get('image_urls') or ([idea['image_url']] if idea.get('image_url') else [])
+    if not urls:
+        raise IGError('image_urls 도 image_url 도 비어 있습니다')
+    if len(urls) > 10:
+        raise IGError(f'이미지가 {len(urls)}장입니다. 캐러셀은 10장까지.')
+    return urls
+
+
+def await_finished(cid, what):
+    """컨테이너가 FINISHED 가 될 때까지 최대 2분 기다린다."""
+    for _ in range(24):                            # 5s × 24
+        state = call('GET', cid, {'fields': 'status_code', 'access_token': TOKEN})
+        code = state.get('status_code')
+        if code == 'FINISHED':
+            return
+        if code in ('ERROR', 'EXPIRED'):
+            raise IGError(f'{what} 상태 {code}', cid)
+        time.sleep(5)
+    raise IGError(f'{what} 가 2분 안에 FINISHED 가 되지 않음', cid)
+
+
+def build_container(idea):
+    """발행 직전까지 만든다. 게시는 하지 않는다.
+
+    캐러셀은 자식 컨테이너를 장마다 만든 뒤(is_carousel_item),
+    그 id 들을 children 으로 묶은 부모 컨테이너를 만든다.
+    캡션은 부모에만 붙는다 — 자식에 붙이면 무시된다.
+    """
+    urls = images_of(idea)
+
+    if len(urls) == 1:
+        cid = call('POST', f'{IG_USER_ID}/media', {
+            'image_url': urls[0],
+            'caption': idea['caption'],
+            'access_token': TOKEN,
+        })['id']
+        log(f'컨테이너 생성됨: {cid}')
+        await_finished(cid, '컨테이너')
+        return cid
+
+    children = []
+    for i, url in enumerate(urls, 1):
+        child = call('POST', f'{IG_USER_ID}/media', {
+            'image_url': url,
+            'is_carousel_item': 'true',
+            'access_token': TOKEN,
+        })['id']
+        log(f'  자식 {i}/{len(urls)}: {child}')
+        children.append(child)
+
+    for i, child in enumerate(children, 1):
+        await_finished(child, f'자식 컨테이너 {i}')
+
+    cid = call('POST', f'{IG_USER_ID}/media', {
+        'media_type': 'CAROUSEL',
+        'children': ','.join(children),
         'caption': idea['caption'],
         'access_token': TOKEN,
-    })
-    cid = container['id']
-    log(f'컨테이너 생성됨: {cid}')
+    })['id']
+    log(f'캐러셀 컨테이너 생성됨: {cid} ({len(urls)}장)')
+    await_finished(cid, '캐러셀 컨테이너')
+    return cid
 
+
+def publish_one(idea):
+    """컨테이너 → FINISHED 대기 → 발행. media_id, permalink, container_id 를 돌려준다."""
+    cid = build_container(idea)
     try:
-        for _ in range(24):                        # 5s × 24 = 최대 2분
-            state = call('GET', cid, {'fields': 'status_code', 'access_token': TOKEN})
-            code = state.get('status_code')
-            if code == 'FINISHED':
-                break
-            if code in ('ERROR', 'EXPIRED'):
-                raise IGError(f'컨테이너 상태 {code}', cid)
-            time.sleep(5)
-        else:
-            raise IGError('컨테이너가 2분 안에 FINISHED 가 되지 않음', cid)
-
         published = call('POST', f'{IG_USER_ID}/media_publish',
                          {'creation_id': cid, 'access_token': TOKEN})
         media_id = published['id']
@@ -225,7 +273,7 @@ def mode_preview(today, dry):
         head = idea['caption'].split('\n')[0]
         notify(f"내일 08:00 KST 발행 예정 — *{idea['id']}* ({idea['service']})\n"
                f"앵글: {idea.get('angle', '—')}\n"
-               f"이미지: {idea['image_url']}\n"
+               f"이미지: {len(idea.get('image_urls') or [1])}장 — {idea.get('image_url')}\n"
                f"캡션 첫 줄: {head}\n"
                f"취소하려면 상태 파일의 status 를 image_ok 로 되돌리세요.")
     return 0
@@ -260,7 +308,15 @@ def mode_verify(today, dry, wanted_id):
         path, target = min(due, key=lambda t: as_date(t[1]['scheduled_at']))
 
     summary(f"대상: `{target['id']}` ({target['service']}) — {target.get('angle', '')}")
-    summary(f"이미지: {target['image_url']}")
+    try:
+        urls = images_of(target)
+    except IGError as e:
+        notify(f"`{target['id']}` — {e}", 'error')
+        return 1
+    kind = f'캐러셀 {len(urls)}장' if len(urls) > 1 else '단일 이미지'
+    summary(f'{kind}')
+    for u in urls:
+        summary(f'  {u}')
     summary(f"캡션 {len(target['caption'])}자")
 
     if dry:
@@ -269,32 +325,15 @@ def mode_verify(today, dry, wanted_id):
         return 0
 
     try:
-        container = call('POST', f'{IG_USER_ID}/media', {
-            'image_url': target['image_url'],
-            'caption': target['caption'],
-            'access_token': TOKEN,
-        })
-        cid = container['id']
-        summary(f'컨테이너 생성됨: `{cid}`')
-
-        for _ in range(24):
-            state = call('GET', cid, {'fields': 'status_code', 'access_token': TOKEN})
-            code = state.get('status_code')
-            if code == 'FINISHED':
-                break
-            if code in ('ERROR', 'EXPIRED'):
-                raise IGError(f'컨테이너 상태 {code}', cid)
-            time.sleep(5)
-        else:
-            raise IGError('컨테이너가 2분 안에 FINISHED 가 되지 않음', cid)
+        cid = build_container(target)
     except IGError as e:
         notify(f"리허설 실패 — {e}\ncontainer_id: `{e.container_id}`\n"
                f'토큰·이미지 URL·캡션 중 하나에 문제가 있습니다. '
                f'게시물은 올라가지 않았습니다.', 'error')
         return 1
 
-    notify(f"리허설 성공 — `{target['id']}` 는 발행 가능합니다.\n"
-           f'토큰 유효, 이미지 URL 접근 가능, 캡션 통과. '
+    notify(f"리허설 성공 — `{target['id']}` 는 발행 가능합니다 ({kind}).\n"
+           f'토큰 유효, 이미지 URL 전부 접근 가능, 캡션 통과. '
            f'컨테이너 `{cid}` 는 발행하지 않았고 24시간 뒤 만료됩니다.\n'
            f'상태 파일은 바꾸지 않았습니다.')
     return 0
@@ -346,7 +385,9 @@ def mode_publish(today, dry):
     summary(f"대상: `{target['id']}` ({target['service']}) — {target.get('angle', '')}")
 
     if dry:
-        summary(f"[dry-run] 이미지 {target['image_url']}")
+        urls = target.get('image_urls') or [target.get('image_url')]
+        kind = f'캐러셀 {len(urls)}장' if len(urls) > 1 else '단일 이미지'
+        summary(f'[dry-run] {kind} — {urls[0]}')
         summary(f"[dry-run] 캡션 {len(target['caption'])}자")
         summary('[dry-run] 실제 발행하지 않고 종료.')
         return 0

@@ -1,16 +1,74 @@
 {
   "id": "takeaseat-3",
   "service": "takeaseat",
-  "status": "scheduled",
+  "status": "approved",
   "angle": "손님이 직접 고르는 온라인 예약 페이지",
   "caption": "손님이 매장 시간을 직접 보고 골라요 🗓️\n\n영업시간 밖이랑 이미 찬 자리를 빼고\n지금 진짜 가능한 시간만 보여요.\n\n손님이 고르면 캘린더에 바로 올라와요.\n변경이나 취소 요청은 알림으로 모여서\n시술 중엔 그냥 두고 손 비었을 때 확인하면 돼요 ✨\n\n한국어·영어·일본어·중국어까지 지원해서\n외국인 손님한테도 링크만 보내면 끝이에요 🌏\n\n로그인하고 설정에서 온라인 예약을 켜면 바로 쓸 수 있어요.\n\n👉 takeaseat.co.kr\n\n#테이크어시트 #TakeASeat #온라인예약 #예약관리 #예약페이지\n#소상공인 #자영업 #미용실 #요가원 #1인샵\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯\n\nYour customers see your real openings and pick one themselves 🗓️\n\nClosed hours and booked slots are left out,\nso only the times you can actually take show up.\n\nWhen they pick one, it lands on your calendar right away.\nChange and cancel requests collect as notifications.\nLeave them while you're with a client, check when you're free ✨\n\nAvailable in Korean, English, Japanese, and Chinese,\nso the same link works for any customer 🌏\n\nLog in and turn on online booking in settings to start.\n\n👉 takeaseat.co.kr\n\n#TakeASeat #booking #smallbusiness #salon #pikaworks",
   "image_path": "public/ig/tas3.png",
   "image_url": "https://pikaworks.kr/ig/tas3.png",
-  "design": null,
-  "scheduled_at": "2026-09-01",
+  "design": {
+    "cover": {
+      "kicker": "온라인 예약",
+      "title": [
+        "손님이 직접",
+        "시간을 골라요"
+      ],
+      "features": [
+        "실시간 가능 시간",
+        "캘린더 자동 반영",
+        "4개 언어 지원"
+      ]
+    },
+    "slides": [
+      {
+        "template": "panel",
+        "title": [
+          "매장 시간 보고",
+          "직접 골라요"
+        ],
+        "subtitle": "영업시간이랑 찬 자리는 빼고 보여줘요",
+        "html": "<div class=\"grid5\"><div class=\"cell\"><small>화</small>25</div><div class=\"cell cell-on\"><small>수</small>26</div><div class=\"cell\"><small>목</small>27</div><div class=\"cell\"><small>금</small>28</div><div class=\"cell\"><small>토</small>29</div></div><div class=\"grid4\"><div class=\"cell\">10:00</div><div class=\"cell cell-off\">10:30</div><div class=\"cell\">11:00</div><div class=\"cell cell-off\">11:30</div></div><div class=\"grid4\"><div class=\"cell cell-off\">13:00</div><div class=\"cell cell-on\">13:30</div><div class=\"cell\">14:00</div><div class=\"cell\">14:30</div></div>",
+        "chips": [
+          "한국어",
+          "English",
+          "日本語",
+          "中文"
+        ]
+      },
+      {
+        "template": "list",
+        "title": [
+          "고르면 캘린더에",
+          "바로 올라와요"
+        ],
+        "items": [
+          {
+            "icon": "calendar",
+            "title": "즉시 반영",
+            "text": "예약이 캘린더에 바로"
+          },
+          {
+            "icon": "bell",
+            "title": "알림으로 모임",
+            "text": "변경·취소 요청은 한곳에"
+          },
+          {
+            "icon": "globe",
+            "title": "외국인 손님도",
+            "text": "링크만 보내면 끝이에요"
+          }
+        ]
+      }
+    ],
+    "outro": {
+      "headline": "예약 전화, 이제 그만",
+      "sub": "설정에서 온라인 예약 켜기"
+    }
+  },
+  "scheduled_at": null,
   "published_at": null,
   "media_id": null,
   "permalink": null,
   "container_id": null,
-  "note": null
+  "note": "캐러셀로 재제작 (2026-08-25)"
 }

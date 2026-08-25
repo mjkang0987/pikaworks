@@ -1,16 +1,80 @@
 {
   "id": "clipnote-2",
   "service": "clipnote",
-  "status": "scheduled",
+  "status": "approved",
   "angle": "저장하고 태그로 정리, 꺼낼 땐 카드째 공유 — 아카이빙",
   "caption": "저장할 땐 무심하게, 꺼내볼 땐 예쁘게 ✨\n\n왼쪽 썸네일은 원본 페이지의 대표 이미지예요.\n없으면 그라디언트로 채워져요.\n\n태그 달아서 분류하고, 나중에 필요할 때 쓱 찾고\n친구한테 공유할 땐 카드 그대로 짧은 링크로 톡\n\n읽고 싶었던 글, 저장해두고 못 찾던 링크들\n클립노트 하나로 정리 끝.\n\n👉 App Store・clipnote.co.kr 프로필 링크에서 만나보세요\n\n#클립노트 #링크저장 #북마크앱 #아카이빙 #링크클립 #꿀앱추천 #디자인앱 #생산성\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯\n\nSave it without thinking, find it looking good later ✨\n\nThe thumbnail is the page's own image — or a gradient if it doesn't have one.\n\nTag it, organize it, find it again in seconds.\nShare it with friends as a card, not just a bare link.\n\nArticles you meant to read, links you kept losing —\nClipNote keeps them all in one place.\n\n👉 Find us on the App Store or at clipnote.co.kr\n\n#ClipNote #SaveForLater #Bookmarks #pikaworks",
   "image_path": "public/ig/post2.png",
   "image_url": "https://pikaworks.kr/ig/post2.png",
-  "design": null,
-  "scheduled_at": "2026-08-28",
+  "design": {
+    "cover": {
+      "kicker": "링크 저장·정리",
+      "title": [
+        "저장할 땐 무심하게",
+        "꺼낼 땐 예쁘게"
+      ],
+      "features": [
+        "태그로 분류",
+        "썸네일로 한눈에",
+        "카드째 공유"
+      ]
+    },
+    "slides": [
+      {
+        "template": "list",
+        "title": [
+          "저장해둔 링크,",
+          "다시 찾으셨나요"
+        ],
+        "subtitle": "읽으려고 담아둔 글이 어디 갔는지 모를 때",
+        "items": [
+          {
+            "icon": "bookmark",
+            "title": "클립으로 저장",
+            "text": "날짜별로 차곡차곡 쌓여요"
+          },
+          {
+            "icon": "tag",
+            "title": "태그로 분류",
+            "text": "같은 태그만 모아서 봐요"
+          },
+          {
+            "icon": "folder",
+            "title": "썸네일 확인",
+            "text": "원본 대표 이미지가 그대로"
+          }
+        ]
+      },
+      {
+        "template": "list",
+        "title": [
+          "찾은 다음엔",
+          "카드째 보내요"
+        ],
+        "subtitle": "친구한테 공유할 때도 링크가 예쁘게 가요",
+        "items": [
+          {
+            "icon": "chat",
+            "title": "짧은 링크로",
+            "text": "카드가 먼저, 그다음 원본으로"
+          },
+          {
+            "icon": "phone",
+            "title": "어디서나",
+            "text": "로그인하면 모든 기기에서"
+          }
+        ]
+      }
+    ],
+    "outro": {
+      "headline": "흩어진 링크, 한곳에",
+      "sub": "App Store · clipnote.co.kr"
+    }
+  },
+  "scheduled_at": null,
   "published_at": null,
   "media_id": null,
   "permalink": null,
   "container_id": null,
-  "note": null
+  "note": "캐러셀로 재제작 (2026-08-25)"
 }
