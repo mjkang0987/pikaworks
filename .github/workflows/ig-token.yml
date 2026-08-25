@@ -85,9 +85,9 @@ jobs:
           # gh 가 실패했을 때 파이썬이 argv 전체를 예외 메시지로 찍으면서
           # 공개 리포의 Actions 로그에 평문으로 남는다. 실제로 한 번 그렇게 샜다.
           # check=True 를 쓰지 않는 이유도 같다 — CalledProcessError 가 argv 를 담는다.
+          # gh 는 --body 를 생략하면 stdin 에서 읽는다 (--body-file 이라는 플래그는 없다).
           proc = subprocess.run(
-              ['gh', 'secret', 'set', 'IG_ACCESS_TOKEN',
-               '--repo', os.environ['REPO'], '--body-file', '-'],
+              ['gh', 'secret', 'set', 'IG_ACCESS_TOKEN', '--repo', os.environ['REPO']],
               input=new_token, text=True,
               stdout=subprocess.PIPE, stderr=subprocess.PIPE)
           if proc.returncode != 0:
