@@ -35,17 +35,17 @@
         "subtitle": "매장 운영에 필요한 걸 한 화면에 모았어요",
         "items": [
           {
-            "icon": "calendar",
+            "icon": "calendarManage",
             "title": "예약",
             "text": "일·주·월 캘린더로 한눈에"
           },
           {
-            "icon": "users",
+            "icon": "customers",
             "title": "고객",
             "text": "방문 이력과 메모까지 함께"
           },
           {
-            "icon": "chart",
+            "icon": "revenue",
             "title": "매출",
             "text": "담당자별로 자동 집계"
           }
@@ -60,12 +60,12 @@
         "subtitle": "매장 이름만 넣으면 게스트로 써볼 수 있어요",
         "items": [
           {
-            "icon": "sparkle",
+            "icon": "create",
             "title": "가입 없이",
             "text": "매장 이름만 넣으면 시작"
           },
           {
-            "icon": "lock",
+            "icon": "account",
             "title": "나중에 로그인",
             "text": "그동안 넣은 내용도 그대로"
           },
