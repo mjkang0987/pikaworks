@@ -250,6 +250,17 @@ function slideBody(d, t, index) {
       </div>`;
     }).join('');
     body = `<div class="cards">${rows}</div>`;
+  } else if (d.template === 'shot') {
+    // 실제 서비스 화면을 그대로 보여준다. 흐리게 깔지 않는 이유는
+    // 흐리면 화면이 정보가 아니라 배경 질감이 되어 넣는 뜻이 사라지기 때문이다.
+    // PC 창을 크게 놓고 폰을 오른쪽 아래에 겹친다.
+    body = `<div class="shot">
+      <div class="sh-pc">
+        <div class="sh-bar"><i></i><i></i><i></i></div>
+        <img src="${shotUrl(d.pc, index, 'pc')}" alt="">
+      </div>
+      <div class="sh-mo"><img src="${shotUrl(d.mobile, index, 'mobile')}" alt=""></div>
+    </div>`;
   } else if (d.template === 'panel') {
     body = `<div class="panel">${d.html || ''}</div>`;
   } else if (d.template === 'statement') {
@@ -277,6 +288,19 @@ function slideBody(d, t, index) {
       <div class="domain">${esc(t.domain)}</div>
     </div>
   </section>`;
+}
+
+// 스크린샷은 파일 경로로 받아 data URI 로 박는다. 외부 참조가 남으면
+// 렌더 시점 네트워크에 의존하게 되고, 그러면 재현이 깨진다.
+// 촬영 절차와 개인정보 근거는 assets/shots/SOURCE.md 를 본다.
+function shotUrl(path, index, which) {
+  if (!path) {
+    throw new Error(`슬라이드 ${index}: shot 템플릿에 ${which} 경로가 없습니다.`);
+  }
+  if (!existsSync(path)) {
+    throw new Error(`슬라이드 ${index}: ${path} 가 없습니다. assets/shots/SOURCE.md 참고.`);
+  }
+  return `data:image/png;base64,${readFileSync(path).toString('base64')}`;
 }
 
 // 서비스 저장소에서 가져온 앱 아이콘을 그대로 쓴다 (assets/logos/SOURCE.md).
@@ -376,6 +400,27 @@ function css(t, fontUrl) {
   .ct-t { font-size:36px; font-weight:800; letter-spacing:-.03em; line-height:1.3; }
   .ct-d { margin-top:8px; font-size:27px; font-weight:600; color:${t.softInk}; opacity:.82; letter-spacing:-.02em; line-height:1.35; }
   .ct-d:only-child { margin-top:0; font-size:33px; font-weight:700; opacity:.92; }
+
+  /* ── 서비스 화면 ── PC 창을 주인공으로 두고 폰을 오른쪽 아래에 겹친다.
+     프레임은 얇게. 목업 장식이 화면보다 눈에 띄면 안 된다. */
+  .shot { position:relative; width:100%; height:100%; }
+  .sh-pc {
+    position:absolute; left:0; top:0; width:812px;
+    border:2px solid ${t.border}; border-radius:18px; overflow:hidden;
+    background:${t.soft}; box-shadow:0 26px 60px rgba(0,0,0,.28);
+  }
+  .sh-bar {
+    height:34px; display:flex; align-items:center; gap:9px; padding:0 16px;
+    background:${t.soft}; border-bottom:2px solid ${t.border};
+  }
+  .sh-bar i { width:11px; height:11px; border-radius:50%; background:${t.border}; }
+  .sh-pc img { display:block; width:100%; height:auto; }
+  .sh-mo {
+    position:absolute; right:0; bottom:0; width:212px;
+    border:9px solid ${t.fg}; border-radius:34px; overflow:hidden;
+    background:${t.fg}; box-shadow:0 22px 46px rgba(0,0,0,.36);
+  }
+  .sh-mo img { display:block; width:100%; height:auto; border-radius:26px; }
 
   .panel { background:${t.soft}; border-radius:30px; padding:42px; }
   .stmt {
@@ -529,7 +574,7 @@ for (let i = 0; i < slides.length; i += 1) {
       }
     }
     // flex:1 로 늘어나는 칸은 안에서 찌그러질 뿐 body 를 늘리지 않는다
-    for (const el of document.querySelectorAll('.cv-mid, .main, .ot-app')) {
+    for (const el of document.querySelectorAll('.cv-mid, .main, .ot-app, .shot')) {
       if (el.scrollHeight > el.clientHeight + 1) {
         bad.push(`${el.className} 세로 눌림 (${el.scrollHeight} > ${el.clientHeight})`);
       }

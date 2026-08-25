@@ -8,7 +8,8 @@
     "public/ig/takeaseat-1-1.png",
     "public/ig/takeaseat-1-2.png",
     "public/ig/takeaseat-1-3.png",
-    "public/ig/takeaseat-1-4.png"
+    "public/ig/takeaseat-1-4.png",
+    "public/ig/takeaseat-1-5.png"
   ],
   "image_url": "https://pikaworks.kr/ig/takeaseat-1-1.png",
   "design": {
@@ -27,29 +28,24 @@
     },
     "slides": [
       {
-        "template": "list",
+        "template": "shot",
         "title": [
-          "예약 노트 따로,",
-          "계산기 따로"
+          "하루도 주도 월도",
+          "한 화면에"
         ],
-        "subtitle": "매장 운영에 필요한 걸 한 화면에 모았어요",
-        "items": [
-          {
-            "icon": "calendarManage",
-            "title": "예약",
-            "text": "일·주·월 캘린더로 한눈에"
-          },
-          {
-            "icon": "customers",
-            "title": "고객",
-            "text": "방문 기록에 메모까지"
-          },
-          {
-            "icon": "revenue",
-            "title": "매출",
-            "text": "담당자별로 자동 집계"
-          }
-        ]
+        "subtitle": "일·주·월·연 보기로 예약을 한눈에 확인해요",
+        "pc": "assets/shots/pc-calendar.png",
+        "mobile": "assets/shots/mobile-calendar.png"
+      },
+      {
+        "template": "shot",
+        "title": [
+          "누가 언제 왔는지",
+          "고객마다 기록"
+        ],
+        "subtitle": "방문 이력·메모·적립금까지 한 명 단위로 모여요",
+        "pc": "assets/shots/pc-customers.png",
+        "mobile": "assets/shots/mobile-customers.png"
       },
       {
         "template": "list",
@@ -83,11 +79,12 @@
   "media_id": null,
   "permalink": null,
   "container_id": null,
-  "note": "캐러셀 재제작 + 카피 개정 (2026-08-25)",
+  "note": "캐러셀 5장 — 서비스 스크린샷 도입 (2026-08-25)",
   "image_urls": [
     "https://pikaworks.kr/ig/takeaseat-1-1.png",
     "https://pikaworks.kr/ig/takeaseat-1-2.png",
     "https://pikaworks.kr/ig/takeaseat-1-3.png",
-    "https://pikaworks.kr/ig/takeaseat-1-4.png"
+    "https://pikaworks.kr/ig/takeaseat-1-4.png",
+    "https://pikaworks.kr/ig/takeaseat-1-5.png"
   ]
 }
