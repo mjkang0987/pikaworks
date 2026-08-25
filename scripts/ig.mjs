@@ -19,31 +19,47 @@ const SIZE = 1080;          // CSS px. deviceScaleFactor 2 → 2160×2160
 const SITE = 'https://pikaworks.kr';
 const MAX_SLIDES = 10;      // 인스타 캐러셀 상한
 
-// 두 앱이 공유하는 값. 여기는 서비스별로 바뀌지 않는다.
-const BASE = {
-  bg: '#ffffff',
-  ink: '#18181b',
-  muted: '#71717a',
-  border: '#e4e4e7',
-  faint: '#a1a1aa',
-};
-
-// 서비스 정체성. accent 는 app/data/products.js 의 값과 맞춘다.
+// 색은 각 서비스 저장소에서 가져온다. 여기 값을 바꾸려면 먼저 저장소를 확인할 것.
+//   ClipNote   clipnote  app/globals.css
+//   Take a Seat  tas  client/styles/globalStyle.ts
 const THEME = {
+  // 흰 배경 + 보라 키컬러. globals.css 의 라이트 테마 그대로다.
   clipnote: {
     name: 'ClipNote',
     domain: 'clipnote.co.kr',
-    accent: '#6526d9',
-    soft: '#f1ebfd',
-    softInk: '#4c1d95',
+    tagline: '밋밋한 링크를 카드 한 장으로',
+    bg: '#ffffff',          // --bg
+    fg: '#18181b',          // --fg
+    muted: '#71717a',       // --fg-muted
+    border: '#e4e4e7',      // --border
+    accent: '#7c5cfc',      // --brand
+    accentInk: '#7c5cfc',   // 밝은 배경이라 글자에도 그대로 쓴다
+    soft: '#efebff',        // --brand-soft
+    softInk: '#5b3fe0',     // --brand-strong
+    chipInk: '#5b3fe0',
+    chipBorder: '#ddd2fa',
+    onAccent: '#ffffff',
     mark: '<path d="M7 4h10a1 1 0 0 1 1 1v15l-6-4-6 4V5a1 1 0 0 1 1-1z"/>',
   },
+  // 블랙 배경 + 흰색/보라. --aside-bg 가 TAS 가 실제로 쓰는 다크 면이다.
+  // --brand-color(#6526d9)는 어두워서 다크 위 글자로는 안 읽힌다. 면에만 쓰고,
+  // 글자 강조는 #9a6bff 를 쓴다 — pikaworks OG 이미지(scripts/og.mjs)가
+  // 같은 #1c1c1e 배경에서 이미 쓰고 있는 밝은 보라다.
   takeaseat: {
     name: 'Take a Seat',
     domain: 'takeaseat.co.kr',
-    accent: '#ec4899',
-    soft: '#fdeaf4',
-    softInk: '#9d174d',
+    tagline: '예약부터 단골 관리까지',
+    bg: '#1c1c1e',                        // --aside-bg
+    fg: '#f5f5f7',                        // --aside-text
+    muted: 'rgba(245,245,247,.58)',
+    border: 'rgba(255,255,255,.12)',      // --aside-divider
+    accent: '#6526d9',                    // --brand-color
+    accentInk: '#9a6bff',
+    soft: 'rgba(255,255,255,.07)',        // --aside-hover 계열
+    softInk: '#c9b4ff',
+    chipInk: '#f5f5f7',
+    chipBorder: 'rgba(255,255,255,.14)',
+    onAccent: '#ffffff',
     mark: '<path d="M7 4h10v7H7z"/><path d="M6 12h12v2H6z"/><path d="M8 14h1.6v6H8zM14.4 14H16v6h-1.6z"/>',
   },
 };
@@ -134,25 +150,30 @@ function slideCover(d, t) {
       ${d.kicker ? `<div class="cv-k">${esc(d.kicker)}</div>` : ''}
     </div>
     <div class="cv-mid">
-      ${heading}
+      <div class="cv-hs">${heading}</div>
       ${feats ? `<div class="cv-fs">${feats}</div>` : ''}
     </div>
     <div class="cv-swipe">밀어서 보기 <span>→</span></div>
   </section>`;
 }
 
-function slideOutro(d, t) {
-  check('outro.headline', d.headline, '마감 headline');
-  check('outro.sub', d.sub, '마감 sub');
+function slideOutro(t, other) {
+  // 건마다 다르게 만들지 않는다. 앱당 한 장으로 고정해서 계속 같은 마무리를 쓴다.
+  // 위 절반은 그 앱, 아래 절반은 pikaworks — 나머지 한 제품을 같이 알린다.
   return `<section class="s outro">
-    <div class="ot-mid">
+    <div class="ot-app">
       <div class="ot-mark">${markSvg(t, 62)}</div>
       <div class="ot-name">${esc(t.name)}</div>
-      ${d.headline ? `<div class="ot-h">${esc(d.headline)}</div>` : ''}
-      ${d.sub ? `<div class="ot-s">${esc(d.sub)}</div>` : ''}
+      <div class="ot-tag">${esc(t.tagline)}</div>
       <div class="ot-cta">${esc(t.domain)}</div>
     </div>
-    <div class="ot-by">${BOLT}<span>pikaworks</span></div>
+    <div class="ot-line"></div>
+    <div class="ot-pika">
+      <div class="ot-bolt">${BOLT}<span>pikaworks</span></div>
+      <div class="ot-pika-tag">일상을 정리하는 작은 도구들</div>
+      <div class="ot-pika-list">${esc(t.name)} <i>·</i> ${esc(other)} <i>·</i> blog</div>
+      <div class="ot-pika-dom">pikaworks.kr</div>
+    </div>
   </section>`;
 }
 
@@ -223,7 +244,7 @@ function css(t, fontUrl) {
   * { margin:0; padding:0; box-sizing:border-box; }
   body {
     width:${SIZE}px; height:${SIZE}px; overflow:hidden;
-    background:${BASE.bg}; color:${BASE.ink};
+    background:${t.bg}; color:${t.fg};
     font-family:'Pretendard', sans-serif;
     -webkit-font-smoothing:antialiased;
   }
@@ -234,30 +255,33 @@ function css(t, fontUrl) {
   }
 
   /* ── 커버 ── 타이틀과 기능을 크게. 피드에서 이 한 장이 승부다 */
-  .cover { background:${t.accent}; color:#fff; }
+  .cover { background:${t.bg}; color:${t.fg}; }
   .cv-top { display:flex; align-items:center; gap:20px; }
   .cv-brand { display:flex; align-items:center; gap:18px; font-size:33px; font-weight:800; letter-spacing:-.03em; }
   .cv-brand .mark.lg {
     width:74px; height:74px; border-radius:21px;
-    background:rgba(255,255,255,.18);
+    background:${t.accent};
     display:flex; align-items:center; justify-content:center;
   }
   .cv-k {
-    margin-left:auto; background:rgba(255,255,255,.2);
+    margin-left:auto; background:${t.soft}; color:${t.accentInk};
+    border:2px solid ${t.chipBorder};
     font-size:25px; font-weight:700; letter-spacing:-.02em;
-    padding:16px 28px; border-radius:999px; white-space:nowrap;
+    padding:14px 26px; border-radius:999px; white-space:nowrap;
   }
   .cv-mid { flex:1; display:flex; flex-direction:column; justify-content:center; gap:54px; }
+  .cv-hs { display:flex; flex-direction:column; }
   .cv-h { font-size:104px; font-weight:800; line-height:1.18; letter-spacing:-.045em; }
-  .cv-h.accent { color:rgba(255,255,255,.62); }
+  .cv-h.accent { color:${t.accentInk}; }
   .cv-fs { display:flex; flex-direction:column; gap:14px; align-items:flex-start; }
   .cv-f {
-    align-self:flex-start; background:rgba(255,255,255,.16);
+    align-self:flex-start; background:${t.soft}; color:${t.chipInk};
+    border:2px solid ${t.chipBorder};
     font-size:34px; font-weight:700; letter-spacing:-.025em;
-    padding:20px 34px; border-radius:18px;
+    padding:18px 32px; border-radius:18px;
   }
   .cv-swipe {
-    font-size:27px; font-weight:600; color:rgba(255,255,255,.72);
+    font-size:27px; font-weight:600; color:${t.muted};
     letter-spacing:-.02em; display:flex; align-items:center; gap:12px;
   }
   .cv-swipe span { font-size:31px; }
@@ -265,10 +289,10 @@ function css(t, fontUrl) {
   /* ── 내용 ── 모든 내용 슬라이드가 같은 골격을 쓴다 */
   .head { min-height:186px; }
   .h1 { font-size:64px; font-weight:800; line-height:1.26; letter-spacing:-.04em; }
-  .accent { color:${t.accent}; }
+  .accent { color:${t.accentInk}; }
   .sub {
     margin-top:22px; font-size:30px; font-weight:500;
-    color:${BASE.muted}; letter-spacing:-.02em; line-height:1.45;
+    color:${t.muted}; letter-spacing:-.02em; line-height:1.45;
   }
   .main { flex:1; display:flex; flex-direction:column; justify-content:center; min-height:0; padding:30px 0; }
 
@@ -279,11 +303,11 @@ function css(t, fontUrl) {
   }
   .ic {
     flex:none; width:74px; height:74px; border-radius:20px;
-    background:#fff; color:${t.accent};
+    background:${t.accent}; color:${t.onAccent};
     display:flex; align-items:center; justify-content:center;
   }
   .ct-t { font-size:36px; font-weight:800; letter-spacing:-.03em; line-height:1.3; }
-  .ct-d { margin-top:8px; font-size:27px; font-weight:600; color:${t.softInk}; opacity:.72; letter-spacing:-.02em; line-height:1.35; }
+  .ct-d { margin-top:8px; font-size:27px; font-weight:600; color:${t.softInk}; opacity:.82; letter-spacing:-.02em; line-height:1.35; }
   .ct-d:only-child { margin-top:0; font-size:33px; font-weight:700; opacity:.92; }
 
   .panel { background:${t.soft}; border-radius:30px; padding:42px; }
@@ -295,17 +319,17 @@ function css(t, fontUrl) {
   .grid5 { grid-template-columns:repeat(5,1fr); }
   .grid4 { grid-template-columns:repeat(4,1fr); }
   .cell {
-    background:#fff; border-radius:16px; padding:24px 8px; text-align:center;
+    background:${t.bg}; border-radius:16px; padding:24px 8px; text-align:center;
     font-size:31px; font-weight:800; letter-spacing:-.02em;
   }
-  .cell small { display:block; font-size:22px; font-weight:600; color:${BASE.muted}; margin-bottom:7px; }
+  .cell small { display:block; font-size:22px; font-weight:600; color:${t.muted}; margin-bottom:7px; }
   .cell-on { background:${t.accent}; color:#fff; }
   .cell-on small { color:rgba(255,255,255,.75); }
-  .cell-off { background:transparent; border:2px dashed ${BASE.border}; color:#c9c9d1; }
+  .cell-off { background:transparent; border:2px dashed ${t.border}; color:${t.muted}; }
 
   .chips { margin-top:26px; display:flex; gap:14px; justify-content:center; }
   .chip {
-    background:${t.soft}; color:${t.accent};
+    background:${t.soft}; color:${t.accentInk};
     font-size:24px; font-weight:700; padding:13px 24px; border-radius:999px;
   }
 
@@ -315,40 +339,45 @@ function css(t, fontUrl) {
     display:flex; align-items:center; justify-content:center;
   }
   .brand { font-size:35px; font-weight:800; letter-spacing:-.03em; }
-  .domain { margin-left:auto; font-size:29px; font-weight:500; color:${BASE.faint}; letter-spacing:-.02em; }
+  .domain { margin-left:auto; font-size:29px; font-weight:500; color:${t.muted}; letter-spacing:-.02em; }
 
-  /* ── 마감 ── 커버와 짝을 이룬다 */
-  .outro { background:${t.accent}; color:#fff; text-align:center; }
-  .ot-mid {
-    flex:1; display:flex; flex-direction:column;
+  /* ── 마감 ── 앱당 한 장 고정. 위 절반 앱, 아래 절반 pikaworks */
+  .outro { background:${t.bg}; color:${t.fg}; text-align:center; }
+  .ot-app {
+    flex:1.15; display:flex; flex-direction:column;
     align-items:center; justify-content:center;
   }
-  .ot-by {
-    display:flex; align-items:center; justify-content:center; gap:13px;
-    font-size:29px; font-weight:700; letter-spacing:-.02em;
-    color:rgba(255,255,255,.66);
-  }
   .ot-mark {
-    width:132px; height:132px; border-radius:36px;
-    background:rgba(255,255,255,.18);
-    display:flex; align-items:center; justify-content:center;
-    margin-bottom:38px;
+    width:118px; height:118px; border-radius:32px; background:${t.accent};
+    display:flex; align-items:center; justify-content:center; margin-bottom:32px;
   }
-  .ot-name { font-size:52px; font-weight:800; letter-spacing:-.035em; }
-  .ot-h { margin-top:46px; font-size:66px; font-weight:800; line-height:1.28; letter-spacing:-.04em; }
-  .ot-s { margin-top:22px; font-size:31px; font-weight:500; color:rgba(255,255,255,.72); letter-spacing:-.02em; }
+  .ot-name { font-size:60px; font-weight:800; letter-spacing:-.04em; }
+  .ot-tag { margin-top:18px; font-size:34px; font-weight:500; color:${t.muted}; letter-spacing:-.025em; }
   .ot-cta {
-    margin-top:56px; background:#fff; color:${t.accent};
-    font-size:36px; font-weight:800; letter-spacing:-.03em;
-    padding:26px 54px; border-radius:999px;
-  }`;
+    margin-top:38px; background:${t.accent}; color:${t.onAccent};
+    font-size:34px; font-weight:800; letter-spacing:-.03em;
+    padding:24px 50px; border-radius:999px;
+  }
+  .ot-line { height:2px; background:${t.border}; margin:0 40px; }
+  .ot-pika {
+    flex:1; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; gap:14px;
+  }
+  .ot-bolt {
+    display:flex; align-items:center; gap:14px;
+    font-size:40px; font-weight:800; letter-spacing:-.03em;
+  }
+  .ot-pika-tag { font-size:30px; font-weight:600; color:${t.muted}; letter-spacing:-.025em; }
+  .ot-pika-list { font-size:28px; font-weight:700; color:${t.accentInk}; letter-spacing:-.02em; }
+  .ot-pika-list i { color:${t.muted}; font-style:normal; margin:0 4px; }
+  .ot-pika-dom { margin-top:4px; font-size:27px; font-weight:500; color:${t.muted}; letter-spacing:-.02em; }
+`;
 }
 
 function buildSlides(design, service) {
   const t = THEME[service];
   if (!t) throw new Error(`알 수 없는 service: ${service} (clipnote | takeaseat)`);
   if (!design.cover) throw new Error('design.cover 가 필요합니다 (캐러셀 첫 장)');
-  if (!design.outro) throw new Error('design.outro 가 필요합니다 (캐러셀 마지막 장)');
 
   const middles = design.slides || [];
   if (!middles.length) throw new Error('design.slides 가 비어 있습니다 (내용 슬라이드 최소 1장)');
@@ -356,7 +385,7 @@ function buildSlides(design, service) {
   const html = [
     slideCover(design.cover, t),
     ...middles.map((s, i) => slideBody(s, t, i + 1)),
-    slideOutro(design.outro, t),
+    slideOutro(t, service === 'clipnote' ? 'Take a Seat' : 'ClipNote'),
   ];
   if (html.length > MAX_SLIDES) {
     throw new Error(`슬라이드가 ${html.length}장입니다. 인스타 캐러셀은 ${MAX_SLIDES}장까지.`);
