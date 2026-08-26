@@ -3,7 +3,7 @@
   "service": "clipnote",
   "status": "design_done",
   "angle": "밋밋한 링크를 제목·대표 이미지 카드로 — 핵심 가치 소개",
-  "caption": "카톡으로, 카페 글로 링크 보낼 때마다\n제목도 안 뜨고 회색 네모만 덩그러니 뜬 적 있으신가요 🥲\n\n밋밋한 링크를 카드 한 장으로.\n제목・대표 이미지가 담긴 카드와 짧은 링크를 한 번에 —\n카카오톡・SNS에서 깔끔하게 보여요.\n\n원본 대표 이미지가 있으면 그대로 배경으로 쓰고,\n없으면 제목에 맞춰 만든 그라디언트로 채워져요.\n\n📱 App Store에 정식 출시했어요 — \"ClipNote by pikaworks\" 검색\n👉 웹으로 바로 쓰려면 clipnote.co.kr\n\n#클립노트 #ClipNote #링크정리 #링크공유 #미리보기카드 #생산성앱 #꿀팁 #링크관리 #앱스토어 #스타트업\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯\n\nEver sent a link on KakaoTalk or in a group chat and gotten a plain gray box with no title? 🥲\n\nTurn plain links into one clean card.\nA card with the title and image, plus a short link — all in one.\nLooks clean wherever you share it.\n\nIf the page has a real image, we use it as the background.\nIf not, we generate a gradient that matches the title.\n\n📱 Now live on the App Store — search \"ClipNote by pikaworks\"\n👉 Or use it right in your browser at clipnote.co.kr\n\n#ClipNote #LinkSharing #ClipnoteApp #pikaworks",
+  "caption": "링크 보냈더니 \"이게 뭐야?\" 소리 들으셨죠? 🥲\n\nClipNote는 링크를 카드로 바꿔주는 서비스예요.\n붙여넣기만 하면 제목・설명・대표 이미지를\n알아서 읽어와 한 장에 담아요.\n받는 사람이 뭘 여는 건지 바로 알아봐요.\n\n네이버 카페 글이나 인스타그램은\n미리보기가 잘 안 잡히죠.\n그런 링크도 제목을 읽어와 카드로 만들어요.\n\n대표 이미지가 없으면 제목에 맞춰\n색을 골라 배경을 채워줘요.\n\n카드가 뜨는 주소는 로그인하면 만들어져요.\niOS 앱도 App Store에 있어요.\n\n프로필 링크에서 https://clipnote.co.kr 확인하세요 🔗\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯\n\nSent someone a link and got \"what is this?\" back? 🥲\n\nClipNote turns a link into a card. Paste the URL and it\npulls in the title, description, and image on its own,\nso whoever opens the chat can tell what it leads to.\n\nNaver Cafe posts and Instagram links almost never\npreview properly. Those get a title and a card too.\n\nNo image on the original? The title decides a color\nand fills the background instead.\n\nThe link that actually shows the card needs an account,\nand there's an iOS app on the App Store.\n\nLink in bio: https://clipnote.co.kr 🔗\n\n#ClipNote #링크공유 #미리보기카드 #블로그운영 #pikaworks",
   "image_path": [
     "public/ig/clipnote-1-1.png",
     "public/ig/clipnote-1-2.png",
@@ -86,7 +86,7 @@
   "media_id": null,
   "permalink": null,
   "container_id": null,
-  "note": "캐러셀로 재제작 (2026-08-25)",
+  "note": "sns-marketer 규격으로 캡션 재작성 (2026-08-26). 이미지는 5장 구성으로 재제작 예정.",
   "image_urls": [
     "https://pikaworks.kr/ig/clipnote-1-1.png",
     "https://pikaworks.kr/ig/clipnote-1-2.png",
