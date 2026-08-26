@@ -493,7 +493,7 @@ function css(t, fontUrl) {
   .s.split .ft-app { display:none; }
 
   /* 화면은 슬라이드 아래로 흘려보낸다. 세로가 긴 폰을 칸에 맞추면 너무 작다. */
-  .shot-stand { position:absolute; left:64px; right:64px; top:330px; display:flex; gap:40px; }
+  .shot-stand { position:absolute; left:64px; right:64px; top:430px; display:flex; gap:40px; }
   .shot-stand img {
     height:800px; width:auto; display:block;
     border:2px solid ${t.border}; border-radius:26px;
