@@ -21,7 +21,7 @@
       "features": [
         "제목·이미지 자동",
         "카페·인스타도",
-        "이미지 없어도"
+        "받는 사람도 한눈에"
       ]
     },
     "slides": [
@@ -39,8 +39,9 @@
         },
         "after": {
           "tag": "ClipNote로",
-          "title": "제목이 먼저 보여요",
-          "domain": "clipnote.co.kr"
+          "title": "카페 글도 제목이 떠요",
+          "domain": "clipnote.co.kr",
+          "desc": "제목·설명·대표 이미지가 카드 한 장에"
         }
       },
       {

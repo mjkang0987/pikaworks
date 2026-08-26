@@ -154,6 +154,7 @@ const LIMITS = {
   'outro.sub': 30,
   'chat.tag': 10,
   'chat.title': 22,
+  'chat.desc': 34,
   chip: 8,
 };
 
@@ -283,6 +284,7 @@ function slideBody(d, t, index) {
     check('chat.tag', b.tag, `슬라이드 ${index} before.tag`);
     check('chat.tag', a.tag, `슬라이드 ${index} after.tag`);
     check('chat.title', a.title, `슬라이드 ${index} after.title`);
+    if (a.desc) check('chat.desc', a.desc, `슬라이드 ${index} after.desc`);
     body = `<div class="chat">
       <div class="ch-row">
         <div class="ch-tag">${esc(b.tag)}</div>
@@ -298,6 +300,7 @@ function slideBody(d, t, index) {
             <div class="ch-thumb"></div>
             <div class="ch-meta">
               <div class="ch-t">${esc(a.title)}</div>
+              ${a.desc ? `<div class="ch-s">${esc(a.desc)}</div>` : ''}
               <div class="ch-d">${esc(a.domain || t.domain)}</div>
             </div>
           </div>
@@ -485,7 +488,7 @@ function css(t, fontUrl) {
   .ch-tag.on { color:${t.accentInk}; }
   .ch-bub {
     align-self:flex-start; width:840px;
-    background:${t.soft}; border:2px solid ${t.border};
+    background:#f4f4f5; border:2px solid ${t.border};
     border-radius:28px 28px 28px 8px; padding:26px 30px;
   }
   .ch-bub.on { background:${t.soft}; border-color:${t.chipBorder}; padding:20px; }
@@ -510,7 +513,8 @@ function css(t, fontUrl) {
   }
   .ch-meta { padding:20px 22px 20px 0; display:flex; flex-direction:column; justify-content:center; gap:8px; }
   .ch-t { font-size:31px; font-weight:800; letter-spacing:-.03em; line-height:1.25; }
-  .ch-d { font-size:24px; font-weight:600; color:${t.muted}; }
+  .ch-s { font-size:25px; font-weight:600; color:${t.muted}; line-height:1.35; }
+  .ch-d { font-size:23px; font-weight:600; color:${t.muted}; opacity:.8; }
 
   .panel { background:${t.soft}; border-radius:30px; padding:42px; }
   .stmt {
