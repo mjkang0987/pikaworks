@@ -279,7 +279,7 @@ function slideBody(d, t, index) {
       const shots = Array.isArray(d.mobile) ? d.mobile.slice(0, 2) : [d.mobile];
       overlay = `<div class="shot-stand${shots.length > 1 ? ' pair' : ''}">${
         shots.map((m, i) => `<img src="${shotUrl(m, index, `mobile[${i}]`)}" alt="">`).join('')
-      }</div><div class="shot-fade"></div>`;
+      }<div class="shot-fade"></div></div>`;
     }
   } else if (d.template === 'chat') {
     // 실제 카톡은 미리보기가 말풍선 "아래" 별도 카드로 붙고, 카드는
@@ -493,7 +493,13 @@ function css(t, fontUrl) {
   .s.split .ft-app { display:none; }
 
   /* 화면은 슬라이드 아래로 흘려보낸다. 세로가 긴 폰을 칸에 맞추면 너무 작다. */
-  .shot-stand { position:absolute; left:64px; right:64px; top:348px; display:flex; gap:40px; }
+  /* top 은 위치, height 는 보이는 길이. 둘을 따로 둔다 — 예전엔 슬라이드
+     바닥에서 잘려서 위로 올리면 길이가 같이 늘어났다. */
+  .shot-stand {
+    position:absolute; left:64px; right:64px; top:400px;
+    height:560px; overflow:hidden;
+    display:flex; gap:40px;
+  }
   .shot-stand img {
     height:800px; width:auto; display:block;
     border:2px solid ${t.border}; border-radius:26px;
@@ -501,7 +507,7 @@ function css(t, fontUrl) {
   }
   /* 아래를 단면으로 자르면 잘린 티가 난다. 배경색으로 서서히 사라지게 한다. */
   .shot-fade {
-    position:absolute; left:0; right:0; bottom:0; height:230px; z-index:1;
+    position:absolute; left:0; right:0; bottom:0; height:200px; z-index:1;
     background:linear-gradient(to bottom, transparent, ${t.bg} 70%);
   }
   .shot-stand:not(.pair) { left:auto; justify-content:flex-end; }
