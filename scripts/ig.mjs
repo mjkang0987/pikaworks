@@ -152,6 +152,8 @@ const LIMITS = {
   'item.text': 30,
   'outro.headline': 16,
   'outro.sub': 30,
+  'chat.tag': 10,
+  'chat.title': 22,
   chip: 8,
 };
 
@@ -260,12 +262,47 @@ function slideBody(d, t, index) {
     // 실제 서비스 화면을 그대로 보여준다. 흐리게 깔지 않는 이유는
     // 흐리면 화면이 정보가 아니라 배경 질감이 되어 넣는 뜻이 사라지기 때문이다.
     // PC 창을 크게 놓고 폰을 오른쪽 아래에 겹친다.
-    body = `<div class="shot">
-      <div class="sh-pc">
-        <div class="sh-bar"><i></i><i></i><i></i></div>
-        <img src="${shotUrl(d.pc, index, 'pc')}" alt="">
+    // pc 가 없으면 모바일 한 장만 크게 놓는다. ClipNote 처럼 모바일에서만
+    // 쓰는 화면을 PC 창틀에 끼우면 실제와 다른 인상을 준다.
+    body = d.pc
+      ? `<div class="shot">
+          <div class="sh-pc">
+            <div class="sh-bar"><i></i><i></i><i></i></div>
+            <img src="${shotUrl(d.pc, index, 'pc')}" alt="">
+          </div>
+          <div class="sh-mo"><img src="${shotUrl(d.mobile, index, 'mobile')}" alt=""></div>
+        </div>`
+      : `<div class="shot solo">
+          <img src="${shotUrl(d.mobile, index, 'mobile')}" alt="">
+        </div>`;
+  } else if (d.template === 'chat') {
+    // 같은 링크를 두 가지로 보낸 모습을 나란히 놓는다.
+    // 카카오톡 UI 를 흉내 내지 않는다 — 남의 서비스 화면을 광고에 재현하는
+    // 문제가 생기고, 어차피 전달하려는 건 "말풍선 안이 어떻게 다른가" 뿐이다.
+    const b = d.before || {}, a = d.after || {};
+    check('chat.tag', b.tag, `슬라이드 ${index} before.tag`);
+    check('chat.tag', a.tag, `슬라이드 ${index} after.tag`);
+    check('chat.title', a.title, `슬라이드 ${index} after.title`);
+    body = `<div class="chat">
+      <div class="ch-row">
+        <div class="ch-tag">${esc(b.tag)}</div>
+        <div class="ch-bub">
+          <div class="ch-url">${esc(b.url || '')}</div>
+          <div class="ch-none">${esc(b.note || '')}</div>
+        </div>
       </div>
-      <div class="sh-mo"><img src="${shotUrl(d.mobile, index, 'mobile')}" alt=""></div>
+      <div class="ch-row">
+        <div class="ch-tag on">${esc(a.tag)}</div>
+        <div class="ch-bub on">
+          <div class="ch-card">
+            <div class="ch-thumb"></div>
+            <div class="ch-meta">
+              <div class="ch-t">${esc(a.title)}</div>
+              <div class="ch-d">${esc(a.domain || t.domain)}</div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>`;
   } else if (d.template === 'panel') {
     body = `<div class="panel">${d.html || ''}</div>`;
@@ -429,6 +466,51 @@ function css(t, fontUrl) {
     background:${t.fg}; box-shadow:0 22px 46px rgba(0,0,0,.36);
   }
   .sh-mo img { display:block; width:100%; height:auto; border-radius:26px; }
+  /* 화면 일부를 잘라 온 것이라 기기 베젤을 두르지 않는다 —
+     전체 화면이 아닌데 폰처럼 보이면 실제와 다른 인상을 준다. */
+  .shot.solo { display:flex; align-items:center; justify-content:center; }
+  .shot.solo img {
+    max-height:100%; width:auto; display:block;
+    border:2px solid ${t.border}; border-radius:22px;
+    box-shadow:0 22px 50px rgba(0,0,0,.16);
+  }
+
+  /* ── 카톡 전후 ── 위는 주소만 간 경우, 아래는 카드가 간 경우.
+     아래쪽만 색을 줘서 눈이 자연스럽게 아래로 떨어지게 한다. */
+  .chat { display:flex; flex-direction:column; gap:34px; }
+  .ch-row { display:flex; flex-direction:column; gap:12px; }
+  .ch-tag {
+    font-size:26px; font-weight:700; color:${t.muted}; letter-spacing:-.02em;
+  }
+  .ch-tag.on { color:${t.accentInk}; }
+  .ch-bub {
+    align-self:flex-start; width:840px;
+    background:${t.soft}; border:2px solid ${t.border};
+    border-radius:28px 28px 28px 8px; padding:26px 30px;
+  }
+  .ch-bub.on { background:${t.soft}; border-color:${t.chipBorder}; padding:20px; }
+  .ch-url {
+    font-size:27px; font-weight:600; color:${t.muted};
+    letter-spacing:-.01em; word-break:break-all;
+  }
+  .ch-none {
+    margin-top:14px; height:74px; border-radius:14px;
+    border:2px dashed ${t.border}; background:${t.bg};
+    display:flex; align-items:center; justify-content:center;
+    font-size:24px; font-weight:600; color:${t.muted};
+  }
+  .ch-card {
+    display:flex; align-items:stretch; gap:20px;
+    background:${t.bg}; border-radius:18px; overflow:hidden;
+    border:2px solid ${t.chipBorder};
+  }
+  .ch-thumb {
+    flex:none; width:132px;
+    background:linear-gradient(135deg, ${t.accent}, #e879f9);
+  }
+  .ch-meta { padding:20px 22px 20px 0; display:flex; flex-direction:column; justify-content:center; gap:8px; }
+  .ch-t { font-size:31px; font-weight:800; letter-spacing:-.03em; line-height:1.25; }
+  .ch-d { font-size:24px; font-weight:600; color:${t.muted}; }
 
   .panel { background:${t.soft}; border-radius:30px; padding:42px; }
   .stmt {
@@ -575,7 +657,7 @@ for (let i = 0; i < slides.length; i += 1) {
   const overflow = await page.evaluate(() => {
     const bad = [];
     // 글자 자체가 넘치는 경우
-    for (const el of document.querySelectorAll('.cv-h, .h1, .ct-t, .ct-d, .cv-f, .cv-k, .ot-name, .ot-h')) {
+    for (const el of document.querySelectorAll('.cv-h, .h1, .ct-t, .ct-d, .cv-f, .cv-k, .ot-name, .ot-h, .ch-t')) {
       if (el.scrollWidth > el.clientWidth + 1) {
         bad.push(`${el.className}: "${el.textContent.trim()}" (${el.scrollWidth} > ${el.clientWidth})`);
       }
@@ -588,7 +670,7 @@ for (let i = 0; i < slides.length; i += 1) {
       }
     }
     // flex:1 로 늘어나는 칸은 안에서 찌그러질 뿐 body 를 늘리지 않는다
-    for (const el of document.querySelectorAll('.cv-mid, .main, .ot-app, .shot')) {
+    for (const el of document.querySelectorAll('.cv-mid, .main, .ot-app, .shot, .chat')) {
       if (el.scrollHeight > el.clientHeight + 1) {
         bad.push(`${el.className} 세로 눌림 (${el.scrollHeight} > ${el.clientHeight})`);
       }
