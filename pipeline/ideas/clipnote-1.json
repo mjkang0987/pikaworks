@@ -63,19 +63,19 @@
         "subtitle": "어떤 주소를 넣어도 카드 한 장이 나와요",
         "items": [
           {
-            "icon": "folder",
+            "icon": "users",
             "title": "네이버 카페",
             "text": "게시글 제목을 읽어와요"
           },
           {
-            "icon": "sparkle",
+            "icon": "globe",
             "title": "인스타그램",
-            "text": "미리보기 안 잡히던 링크도"
+            "text": "주소만 덩그러니 뜨던 링크도"
           },
           {
-            "icon": "bookmark",
-            "title": "이미지 없어도",
-            "text": "제목에 맞춰 색을 채워요"
+            "icon": "link",
+            "title": "아무것도 안 뜨던 링크",
+            "text": "빈 자리 대신 카드가 떠요"
           }
         ]
       }
