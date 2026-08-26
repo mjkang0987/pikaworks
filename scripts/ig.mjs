@@ -501,8 +501,8 @@ function css(t, fontUrl) {
   }
   /* 아래를 단면으로 자르면 잘린 티가 난다. 배경색으로 서서히 사라지게 한다. */
   .shot-fade {
-    position:absolute; left:0; right:0; bottom:0; height:400px; z-index:1;
-    background:linear-gradient(to bottom, transparent, ${t.bg} 62%);
+    position:absolute; left:0; right:0; bottom:0; height:230px; z-index:1;
+    background:linear-gradient(to bottom, transparent, ${t.bg} 70%);
   }
   .shot-stand:not(.pair) { left:auto; justify-content:flex-end; }
   .shot-stand.pair { justify-content:center; }
