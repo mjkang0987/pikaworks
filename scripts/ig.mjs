@@ -289,7 +289,7 @@ function slideBody(d, t, index) {
       <div class="ch-row">
         <div class="ch-tag">${esc(b.tag)}</div>
         <div class="ch-bub">${esc(b.url || '')}</div>
-        <div class="ch-none">${esc(b.note || '')}</div>
+        <div class="ch-none"><span>${esc(b.note || '')}</span></div>
       </div>
       <div class="ch-row">
         <div class="ch-tag on">${esc(a.tag)}</div>
@@ -477,24 +477,31 @@ function css(t, fontUrl) {
 
   /* ── 카톡 전후 ── 말풍선 아래에 미리보기 카드가 붙는 실제 구조를 따른다.
      위는 카드가 안 붙는 경우, 아래는 붙는 경우. 색으로 판정이 읽히게 한다. */
-  .chat { display:flex; flex-direction:column; gap:26px; }
-  .ch-row { display:flex; flex-direction:column; align-items:flex-start; gap:10px; }
+  .chat { display:flex; gap:32px; align-items:flex-start; }
+  .ch-row { flex:1; min-width:0; display:flex; flex-direction:column; gap:12px; }
   .ch-tag { font-size:25px; font-weight:700; color:${t.muted}; letter-spacing:-.02em; }
   .ch-tag.on { color:${t.accentInk}; }
+  .ch-none {
+    flex:1; min-height:238px;
+    border:3px dashed ${t.border}; border-radius:20px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:26px; font-weight:600; color:${t.muted};
+  }
   .ch-bub {
+    align-self:flex-start; max-width:100%; overflow:hidden;
+    text-overflow:ellipsis; white-space:nowrap;
     background:#f4f4f5; border:2px solid ${t.border};
     border-radius:20px 20px 20px 6px; padding:16px 24px;
     font-size:26px; font-weight:600; color:${t.muted}; letter-spacing:-.01em;
   }
   .ch-bub.on { background:${t.soft}; border-color:${t.chipBorder}; color:${t.softInk}; }
-  .ch-none { font-size:24px; font-weight:600; color:${t.muted}; opacity:.7; padding-left:6px; }
   .ch-card {
     width:100%; background:${t.bg}; border:2px solid ${t.chipBorder};
     border-radius:20px; overflow:hidden;
     box-shadow:0 14px 34px rgba(0,0,0,.10);
   }
-  .ch-thumb { height:158px; background:linear-gradient(135deg, ${t.accent}, #e879f9); }
-  .ch-meta { padding:20px 26px 22px; display:flex; flex-direction:column; gap:7px; }
+  .ch-thumb { height:238px; background:linear-gradient(135deg, ${t.accent}, #e879f9); }
+  .ch-meta { padding:18px 24px 20px; display:flex; flex-direction:column; gap:6px; }
   .ch-t { font-size:31px; font-weight:800; letter-spacing:-.03em; line-height:1.25; }
   .ch-s { font-size:25px; font-weight:600; color:${t.muted}; line-height:1.35; }
   .ch-d { font-size:23px; font-weight:600; color:${t.accentInk}; }
