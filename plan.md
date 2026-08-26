@@ -2,7 +2,7 @@
 
 구조는 `index.md` 를 본다. 이 파일은 "지금 무엇이 되어 있고 다음에 뭘 하는가" 만 적는다.
 
-최종 갱신: 2026-08-25
+최종 갱신: 2026-08-26
 
 ## 완료
 
@@ -21,25 +21,9 @@
 - [x] `ig-post.yml` 재작성 — 취소된 실행에서도 상태를 커밋하도록 `always()` 적용
 - [x] `ig-preview.yml` — 발행 전날 프리뷰 + 빈 큐 경고
 - [x] `ig-token.yml` — 토큰 갱신 크론
-
-## 지금 막혀 있는 것
-
-**`main` 머지 대기.** `takeaseat-1` 은 검수를 통과해 8/27(목) 08:00 KST 로
-배정됐지만, 그 상태가 이 작업 브랜치에만 있다.
-
-`ig-post.yml` 은 기본 브랜치를 체크아웃한다. `main` 의 `takeaseat-1` 은 아직
-`design_done` · 배정 없음 · 옛 4장이라, 이대로 8/27 이 되면 실행기가
-**"대기 건 없음" 경고만 내고 끝난다.** 실패가 아니라 아무 일도 안 일어나서
-알림만 봐서는 정상처럼 보인다 — 이게 이 건의 제일 위험한 지점이다.
-
-Claude 는 `main` 에 직접 푸시하지 않는다. 사람이 머지해야 한다.
-
-```bash
-git checkout main && git merge claude/instagram-image-automation-rgh141
-git push origin main
-```
-
-8/26 중에만 머지되면 된다 (Pages 배포 1~2분).
+- [x] `takeaseat-1`(8/27) · `clipnote-1`(8/28) 을 `main` 에 머지 — 발행기가 기본
+      브랜치를 체크아웃하므로 이게 안 되면 배정일에 "대기 건 없음" 으로 조용히
+      끝난다. PR #19 · #20 으로 머지됐고 Pages 배포도 `15dbbac` 에서 성공했다
 
 ## takeaseat-1 발행 준비 상태
 
@@ -58,12 +42,14 @@ git push origin main
 
 ## 다음에 할 일
 
-1. **사람이 `main` 머지** (위 참고) — 이게 안 되면 나머지가 무의미하다
-2. 배포 후 `https://pikaworks.kr/ig/takeaseat-1-{1..5}.png` 5장이 200 인지 확인
-3. 8/27 08:00 자동 발행 → Slack 알림 확인
-4. 발행 성공하면 `pipeline/history.md` 의 발행 완료 표에 기록
-5. **큐 보충** — Take a Seat 대기 2건(`takeaseat-2`·`3`)뿐이다. 둘 다 옛 4장
-   구성이라 새 5장 형식으로 다시 만들어야 한다. ClipNote 3건도 마찬가지다
+1. `https://pikaworks.kr/ig/takeaseat-1-{1..5}.png` · `clipnote-1-{1..5}.png`
+   각 5장이 200 인지 확인
+2. 8/27 08:00 `takeaseat-1` 자동 발행 → Slack 알림 확인
+3. 8/28 08:00 `clipnote-1` 자동 발행 → Slack 알림 확인
+4. 발행 성공하면 `publish.py` 가 `pipeline/history.md` 발행 완료 표에 자동으로
+   한 줄 넣는다. 들어갔는지만 확인한다
+5. **큐 보충** — 대기 4건(`clipnote-2`·`3`, `takeaseat-2`·`3`)이 전부 옛 4장
+   구성이라 새 5장 형식으로 다시 만들어야 한다
 
 ## 아직 안 정한 것
 
