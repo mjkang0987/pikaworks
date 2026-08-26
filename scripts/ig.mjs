@@ -514,7 +514,7 @@ function css(t, fontUrl) {
     background:linear-gradient(135deg, ${t.accent}, #e879f9);
   }
   .ch-thumb img { display:block; width:100%; height:100%; object-fit:cover; }
-  .ch-meta { padding:18px 24px 20px; display:flex; flex-direction:column; gap:6px; }
+  .ch-meta { padding:38px 38px 40px; display:flex; flex-direction:column; gap:16px; }
   .ch-t { font-size:31px; font-weight:800; letter-spacing:-.03em; line-height:1.25; }
   .ch-s { font-size:25px; font-weight:600; color:${t.muted}; line-height:1.35; }
   .ch-d { font-size:23px; font-weight:600; color:${t.accentInk}; }
