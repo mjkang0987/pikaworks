@@ -339,8 +339,14 @@ def mode_verify(today, dry, wanted_id):
     return 0
 
 
-def mode_publish(today, dry):
-    summary(f'### 발행 {today:%Y-%m-%d} KST — 오늘 슬롯: {slot_label(today)}')
+def mode_publish(today, dry, catchup=False):
+    """catchup=True 는 같은 날 두 번째 실행이다.
+
+    첫 실행이 이미 올렸으면 대기 건이 없는 게 정상이므로 경고하지 않는다.
+    그 경우까지 알림을 보내면 매일 거짓 경보가 울려 진짜 경고가 묻힌다.
+    """
+    label = '따라잡기' if catchup else '발행'
+    summary(f'### {label} {today:%Y-%m-%d} KST — 오늘 슬롯: {slot_label(today)}')
 
     ideas = load_ideas()
     target = target_path = None
@@ -377,6 +383,9 @@ def mode_publish(today, dry):
         product = CADENCE.get(today.weekday())
         if product is None:
             summary('오늘은 발행 요일이 아닙니다. 종료.')
+        elif catchup:
+            summary(f'오늘 {product} 슬롯에 대기 건이 없습니다. '
+                    f'앞선 실행이 이미 올렸다는 뜻입니다. 종료.')
         else:
             notify(f'오늘 {product} 슬롯인데 대기 중인 발행 건이 없습니다. '
                    f'파이프라인이 멈춘 건지 확인해 주세요.', 'warn')
@@ -420,7 +429,11 @@ def mode_publish(today, dry):
         by[i['service']] = by.get(i['service'], 0) + 1
     left = ' / '.join(f'{k} {v}건' for k, v in sorted(by.items())) or '없음'
 
-    notify(f"*{target['id']}* 발행 완료 — {permalink}\n남은 대기: {left}")
+    # 따라잡기 실행이 실제로 올렸다는 건 정시 실행이 안 돌았다는 뜻이다.
+    # 결과만 보면 정상이라 이 사실이 알림에 남지 않으면 영영 모른다.
+    late = ('\n⚠️ 정시(08:00) 실행이 아니라 따라잡기 실행이 올렸습니다. '
+            'GitHub Actions 크론이 씹혔는지 확인해 주세요.' if catchup else '')
+    notify(f"*{target['id']}* 발행 완료 — {permalink}\n남은 대기: {left}{late}")
     if len(waiting) <= 1:
         notify('콘텐츠 소진 임박 — 아이디어를 새로 만들어 주세요.', 'warn')
 
@@ -449,7 +462,8 @@ def _guard(dry):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument('--mode', choices=('publish', 'preview', 'verify'), default='publish')
+    ap.add_argument('--mode', choices=('publish', 'catchup', 'preview', 'verify'),
+                    default='publish')
     ap.add_argument('--dry-run', action='store_true')
     ap.add_argument('--date', help='오늘 날짜를 덮어쓴다 (테스트용, YYYY-MM-DD)')
     ap.add_argument('--id', dest='wanted_id',
@@ -460,8 +474,9 @@ def main():
     today = as_date(args.date) if args.date else datetime.now(KST).date()
     if args.mode == 'verify':
         return mode_verify(today, args.dry_run, args.wanted_id)
-    run = mode_preview if args.mode == 'preview' else mode_publish
-    return run(today, args.dry_run)
+    if args.mode == 'preview':
+        return mode_preview(today, args.dry_run)
+    return mode_publish(today, args.dry_run, catchup=args.mode == 'catchup')
 
 
 if __name__ == '__main__':
