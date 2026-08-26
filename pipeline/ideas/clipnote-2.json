@@ -14,16 +14,16 @@
   "image_url": "https://pikaworks.kr/ig/clipnote-2-1.png",
   "design": {
     "cover": {
-      "kicker": "링크 저장·공유",
+      "kicker": "링크 보관함",
       "title": [
         "저장해둔 링크",
         "설명 없이",
         "카드째 보내요"
       ],
       "features": [
+        "제목·이미지 자동",
         "태그로 정리",
-        "썸네일로 한눈에",
-        "카드째 공유"
+        "짧은 URL로 공유"
       ]
     },
     "slides": [
