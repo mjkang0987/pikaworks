@@ -484,8 +484,9 @@ function css(t, fontUrl) {
      위는 카드가 안 붙는 경우, 아래는 붙는 경우. 색으로 판정이 읽히게 한다. */
   .chat { display:flex; gap:32px; align-items:flex-start; }
   .chat.solo { justify-content:center; }
-  .chat.solo .ch-row { flex:none; width:660px; }
-  .chat.solo .ch-thumb { height:346px; }
+  .chat.solo .ch-tag { display:none; }
+  .chat.solo .ch-row { flex:none; width:520px; gap:18px; }
+  .chat.solo .ch-thumb { height:273px; }
   .ch-row { flex:1; min-width:0; display:flex; flex-direction:column; gap:12px; }
   .ch-tag { font-size:25px; font-weight:700; color:${t.muted}; letter-spacing:-.02em; }
   .ch-tag.on { color:${t.accentInk}; }
