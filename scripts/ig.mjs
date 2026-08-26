@@ -152,6 +152,9 @@ const LIMITS = {
   'item.text': 30,
   'outro.headline': 16,
   'outro.sub': 30,
+  'chat.tag': 10,
+  'chat.title': 22,
+  'chat.desc': 34,
   chip: 8,
 };
 
@@ -243,6 +246,7 @@ function slideBody(d, t, index) {
   }).join('');
 
   let body;
+  let overlay = '';
   if (d.template === 'list') {
     const rows = (d.items || []).slice(0, 4).map((it, i) => {
       check('item.title', it.title, `슬라이드 ${index} items[${i}].title`);
@@ -260,12 +264,55 @@ function slideBody(d, t, index) {
     // 실제 서비스 화면을 그대로 보여준다. 흐리게 깔지 않는 이유는
     // 흐리면 화면이 정보가 아니라 배경 질감이 되어 넣는 뜻이 사라지기 때문이다.
     // PC 창을 크게 놓고 폰을 오른쪽 아래에 겹친다.
-    body = `<div class="shot">
-      <div class="sh-pc">
-        <div class="sh-bar"><i></i><i></i><i></i></div>
-        <img src="${shotUrl(d.pc, index, 'pc')}" alt="">
+    // pc 가 없으면 모바일 한 장만 크게 놓는다. ClipNote 처럼 모바일에서만
+    // 쓰는 화면을 PC 창틀에 끼우면 실제와 다른 인상을 준다.
+    body = d.pc
+      ? `<div class="shot">
+          <div class="sh-pc">
+            <div class="sh-bar"><i></i><i></i><i></i></div>
+            <img src="${shotUrl(d.pc, index, 'pc')}" alt="">
+          </div>
+          <div class="sh-mo"><img src="${shotUrl(d.mobile, index, 'mobile')}" alt=""></div>
+        </div>`
+      : '';
+    if (!d.pc) {
+      const shots = Array.isArray(d.mobile) ? d.mobile.slice(0, 2) : [d.mobile];
+      overlay = `<div class="shot-stand${shots.length > 1 ? ' pair' : ''}">${
+        shots.map((m, i) => `<img src="${shotUrl(m, index, `mobile[${i}]`)}" alt="">`).join('')
+      }<div class="shot-fade"></div></div>`;
+    }
+  } else if (d.template === 'chat') {
+    // 실제 카톡은 미리보기가 말풍선 "아래" 별도 카드로 붙고, 카드는
+    // 이미지가 위·글이 아래인 세로 구조다. 카카오톡 UI(노란 말풍선·다크 배경)를
+    // 베끼지는 않되 이 구조는 맞춘다 — 안 맞추면 실제와 다른 걸 보여주게 된다.
+    const b = d.before || {}, a = d.after || {};
+    check('chat.tag', b.tag, `슬라이드 ${index} before.tag`);
+    check('chat.tag', a.tag, `슬라이드 ${index} after.tag`);
+    check('chat.title', a.title, `슬라이드 ${index} after.title`);
+    if (a.desc) check('chat.desc', a.desc, `슬라이드 ${index} after.desc`);
+    // before 를 안 주면 결과만 크게 보여준다. 제목이 이미 문제를 말하고
+    // 있으면 빈 칸을 그려 대비를 만들 필요가 없다.
+    const beforeCol = !d.before ? '' : `
+      <div class="ch-row">
+        <div class="ch-tag">${esc(b.tag)}</div>
+        <div class="ch-bub">${esc(b.url || '')}</div>
+        <div class="ch-none"><span>${esc(b.note || '')}</span></div>
+      </div>`;
+    body = `<div class="chat${d.before ? '' : ' solo'}">
+      ${beforeCol}
+      <div class="ch-row">
+        <div class="ch-tag on">${esc(a.tag)}</div>
+        <div class="ch-bub on">${esc(a.url || '')}</div>
+        <div class="ch-card">
+          <div class="ch-thumb">${a.image
+            ? `<img src="${shotUrl(a.image, index, 'after.image')}" alt="">` : ''}</div>
+          <div class="ch-meta">
+            <div class="ch-t">${esc(a.title)}</div>
+            ${a.desc ? `<div class="ch-s">${esc(a.desc)}</div>` : ''}
+            <div class="ch-d">${esc(a.domain || t.domain)}</div>
+          </div>
+        </div>
       </div>
-      <div class="sh-mo"><img src="${shotUrl(d.mobile, index, 'mobile')}" alt=""></div>
     </div>`;
   } else if (d.template === 'panel') {
     body = `<div class="panel">${d.html || ''}</div>`;
@@ -281,13 +328,14 @@ function slideBody(d, t, index) {
     return `<span class="chip">${esc(c)}</span>`;
   }).join('');
 
-  return `<section class="s body">
+  return `<section class="s body${overlay && !Array.isArray(d.mobile) ? ' split' : ''}">
     <div class="head">${heading}</div>
     ${d.subtitle ? `<div class="sub">${esc(d.subtitle)}</div>` : ''}
     <div class="main">
       ${body}
       ${chips ? `<div class="chips">${chips}</div>` : ''}
     </div>
+    ${overlay}
     <div class="foot">
       <img class="ft-pika" src="${t.pikaUrl}" alt="pikaworks">
       <div class="ft-app">
@@ -333,6 +381,9 @@ function css(t, fontUrl) {
     -webkit-font-smoothing:antialiased;
   }
   .s {
+    /* 슬라이드 밖으로 흘려보낸 요소는 여기서 잘린다. 이게 없으면 문서 높이가
+       늘어나 넘침 검사가 의도한 연출을 사고로 잡는다. */
+    position:relative; overflow:hidden;
     width:${SIZE}px; height:${SIZE}px;
     display:flex; flex-direction:column;
     padding:74px 64px 64px;
@@ -429,6 +480,78 @@ function css(t, fontUrl) {
     background:${t.fg}; box-shadow:0 22px 46px rgba(0,0,0,.36);
   }
   .sh-mo img { display:block; width:100%; height:auto; border-radius:26px; }
+  /* 화면 일부를 잘라 온 것이라 기기 베젤을 두르지 않는다 —
+     전체 화면이 아닌데 폰처럼 보이면 실제와 다른 인상을 준다. */
+  /* 화면을 오른쪽에 크게 세운다. 칸 안에 맞추면 세로가 긴 폰 화면이
+     너무 작아져서, 아래로 흘려보내고 슬라이드 밖에서 잘리게 둔다. */
+  /* 화면을 오른쪽에 세우면 글이 왼쪽 절반만 쓴다. 제목을 그 안에서
+     세로 가운데로 내리고, 오른쪽 푸터는 뺀다 — 폰과 겹친다. */
+  .s.split .head, .s.split .sub { max-width:560px; }
+  .s.split .head { margin-top:auto; }
+  .s.split .sub { margin-bottom:auto; }
+  .s.split .main { display:none; }
+  .s.split .ft-app { display:none; }
+
+  /* 화면은 슬라이드 아래로 흘려보낸다. 세로가 긴 폰을 칸에 맞추면 너무 작다. */
+  /* top 은 위치, height 는 보이는 길이. 둘을 따로 둔다 — 예전엔 슬라이드
+     바닥에서 잘려서 위로 올리면 길이가 같이 늘어났다. */
+  .shot-stand {
+    position:absolute; left:64px; right:64px; top:400px;
+    height:560px; overflow:hidden;
+    display:flex; gap:40px;
+  }
+  .shot-stand img {
+    height:800px; width:auto; display:block;
+    border:2px solid ${t.border}; border-radius:26px;
+    box-shadow:0 26px 60px rgba(0,0,0,.18);
+  }
+  /* 아래를 단면으로 자르면 잘린 티가 난다. 배경색으로 서서히 사라지게 한다. */
+  .shot-fade {
+    position:absolute; left:0; right:0; bottom:0; height:200px; z-index:1;
+    background:linear-gradient(to bottom, transparent, ${t.bg} 70%);
+  }
+  .shot-stand:not(.pair) { left:auto; justify-content:flex-end; }
+  .shot-stand.pair { justify-content:center; }
+  .shot-stand.pair img { height:760px; }
+
+  /* ── 카톡 전후 ── 말풍선 아래에 미리보기 카드가 붙는 실제 구조를 따른다.
+     위는 카드가 안 붙는 경우, 아래는 붙는 경우. 색으로 판정이 읽히게 한다. */
+  .chat { display:flex; gap:32px; align-items:flex-start; }
+  .chat.solo { justify-content:center; }
+  .chat.solo .ch-tag { display:none; }
+  .chat.solo .ch-row { flex:none; width:520px; gap:18px; }
+  .chat.solo .ch-thumb { height:273px; }
+  .ch-row { flex:1; min-width:0; display:flex; flex-direction:column; gap:12px; }
+  .ch-tag { font-size:25px; font-weight:700; color:${t.muted}; letter-spacing:-.02em; }
+  .ch-tag.on { color:${t.accentInk}; }
+  .ch-none {
+    flex:1; min-height:238px;
+    border:3px dashed ${t.border}; border-radius:20px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:26px; font-weight:600; color:${t.muted};
+  }
+  .ch-bub {
+    align-self:flex-start; max-width:100%; overflow:hidden;
+    text-overflow:ellipsis; white-space:nowrap;
+    background:#f4f4f5; border:2px solid ${t.border};
+    border-radius:20px 20px 20px 6px; padding:16px 24px;
+    font-size:26px; font-weight:600; color:${t.muted}; letter-spacing:-.01em;
+  }
+  .ch-bub.on { background:${t.soft}; border-color:${t.chipBorder}; color:${t.softInk}; }
+  .ch-card {
+    width:100%; background:${t.bg}; border:2px solid ${t.chipBorder};
+    border-radius:20px; overflow:hidden;
+    box-shadow:0 14px 34px rgba(0,0,0,.10);
+  }
+  .ch-thumb {
+    height:238px; overflow:hidden;
+    background:linear-gradient(135deg, ${t.accent}, #e879f9);
+  }
+  .ch-thumb img { display:block; width:100%; height:100%; object-fit:cover; }
+  .ch-meta { padding:38px 38px 40px; display:flex; flex-direction:column; gap:16px; }
+  .ch-t { font-size:31px; font-weight:800; letter-spacing:-.03em; line-height:1.25;  word-break:keep-all; }
+  .ch-s { font-size:25px; font-weight:600; color:${t.muted}; line-height:1.35; word-break:keep-all; }
+  .ch-d { font-size:23px; font-weight:600; color:${t.accentInk}; }
 
   .panel { background:${t.soft}; border-radius:30px; padding:42px; }
   .stmt {
@@ -455,7 +578,7 @@ function css(t, fontUrl) {
 
   /* 커버·마감의 서명과 같은 자리·같은 크기로 둔다. 다섯 장을 넘길 때
      왼쪽 아래가 흔들리지 않아야 한 묶음으로 읽힌다. */
-  .foot { display:flex; align-items:center; gap:20px; }
+  .foot { position:relative; z-index:2; display:flex; align-items:center; gap:20px; }
   .ft-pika { display:block; width:210px; height:auto; opacity:.9; }
   /* pikaworks 서명은 210px 폭 = 29.5px 높이(viewBox 698.3×98)로 렌더된다.
      오른쪽 서비스 쪽을 거기에 맞춘다 — 아이콘 62px 은 두 배가 넘어서
@@ -575,7 +698,7 @@ for (let i = 0; i < slides.length; i += 1) {
   const overflow = await page.evaluate(() => {
     const bad = [];
     // 글자 자체가 넘치는 경우
-    for (const el of document.querySelectorAll('.cv-h, .h1, .ct-t, .ct-d, .cv-f, .cv-k, .ot-name, .ot-h')) {
+    for (const el of document.querySelectorAll('.cv-h, .h1, .ct-t, .ct-d, .cv-f, .cv-k, .ot-name, .ot-h, .ch-t')) {
       if (el.scrollWidth > el.clientWidth + 1) {
         bad.push(`${el.className}: "${el.textContent.trim()}" (${el.scrollWidth} > ${el.clientWidth})`);
       }
@@ -588,7 +711,7 @@ for (let i = 0; i < slides.length; i += 1) {
       }
     }
     // flex:1 로 늘어나는 칸은 안에서 찌그러질 뿐 body 를 늘리지 않는다
-    for (const el of document.querySelectorAll('.cv-mid, .main, .ot-app, .shot')) {
+    for (const el of document.querySelectorAll('.cv-mid, .main, .ot-app, .shot, .chat')) {
       if (el.scrollHeight > el.clientHeight + 1) {
         bad.push(`${el.className} 세로 눌림 (${el.scrollHeight} > ${el.clientHeight})`);
       }

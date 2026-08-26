@@ -1,96 +1,98 @@
 {
   "id": "clipnote-1",
   "service": "clipnote",
-  "status": "design_done",
+  "status": "scheduled",
   "angle": "밋밋한 링크를 제목·대표 이미지 카드로 — 핵심 가치 소개",
-  "caption": "카톡으로, 카페 글로 링크 보낼 때마다\n제목도 안 뜨고 회색 네모만 덩그러니 뜬 적 있으신가요 🥲\n\n밋밋한 링크를 카드 한 장으로.\n제목・대표 이미지가 담긴 카드와 짧은 링크를 한 번에 —\n카카오톡・SNS에서 깔끔하게 보여요.\n\n원본 대표 이미지가 있으면 그대로 배경으로 쓰고,\n없으면 제목에 맞춰 만든 그라디언트로 채워져요.\n\n📱 App Store에 정식 출시했어요 — \"ClipNote by pikaworks\" 검색\n👉 웹으로 바로 쓰려면 clipnote.co.kr\n\n#클립노트 #ClipNote #링크정리 #링크공유 #미리보기카드 #생산성앱 #꿀팁 #링크관리 #앱스토어 #스타트업\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯\n\nEver sent a link on KakaoTalk or in a group chat and gotten a plain gray box with no title? 🥲\n\nTurn plain links into one clean card.\nA card with the title and image, plus a short link — all in one.\nLooks clean wherever you share it.\n\nIf the page has a real image, we use it as the background.\nIf not, we generate a gradient that matches the title.\n\n📱 Now live on the App Store — search \"ClipNote by pikaworks\"\n👉 Or use it right in your browser at clipnote.co.kr\n\n#ClipNote #LinkSharing #ClipnoteApp #pikaworks",
+  "caption": "링크 보냈더니 \"이게 뭐야?\" 소리 들으셨죠? 🥲\n\nClipNote는 링크를 공유 카드로 바꿔줘요.\n붙여넣기만 하면 제목・설명・대표 이미지를\n알아서 읽어와 한 장에 담아요.\n받는 사람이 뭘 여는 건지 바로 알아봐요.\n\n네이버 카페 글이나 인스타그램은\n미리보기가 잘 안 잡히죠.\n그런 링크도 제목을 읽어와\n공유 카드로 만들어요.\n\n공유 카드가 뜨는 주소는\n로그인하면 만들어져요.\niOS 앱도 App Store에 있어요.\n\n프로필 링크에서 https://clipnote.co.kr 확인하세요 🔗\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯\n\nSent someone a link and got \"what is this?\" back? 🥲\n\nClipNote turns a link into a share card. Paste the URL\nand it pulls in the title, description, and image on its\nown, so whoever opens the chat can tell what it leads to.\n\nNaver Cafe posts and Instagram links almost never\npreview properly. Those get a title and a share card too.\n\nThe address that shows the share card needs an account,\nand there's an iOS app on the App Store.\n\nLink in bio: https://clipnote.co.kr 🔗\n\n#ClipNote #링크공유 #공유카드 #블로그운영 #pikaworks",
   "image_path": [
     "public/ig/clipnote-1-1.png",
     "public/ig/clipnote-1-2.png",
     "public/ig/clipnote-1-3.png",
-    "public/ig/clipnote-1-4.png"
+    "public/ig/clipnote-1-4.png",
+    "public/ig/clipnote-1-5.png"
   ],
   "image_url": "https://pikaworks.kr/ig/clipnote-1-1.png",
   "design": {
     "cover": {
-      "kicker": "App Store 출시",
+      "kicker": "카톡에 링크 보낼 때",
       "title": [
-        "밋밋한 링크를",
-        "카드 한 장으로"
+        "URL 대신",
+        "공유 카드로",
+        "보내세요"
       ],
       "features": [
         "제목·이미지 자동",
-        "짧은 링크 한 번에",
-        "4개 언어 지원"
+        "카페·인스타도",
+        "받는 사람도 한눈에"
       ]
     },
     "slides": [
       {
-        "template": "list",
+        "template": "chat",
         "title": [
-          "그냥 보내면",
-          "회색 네모만 떠요"
+          "ClipNote로 보내면",
+          "이렇게 떠요"
         ],
-        "subtitle": "카카오톡에서 링크가 밋밋하게 보이는 이유",
-        "items": [
-          {
-            "icon": "link",
-            "title": "주소만 덩그러니",
-            "text": "뭘 여는 링크인지 알 수 없어요"
-          },
-          {
-            "icon": "bookmark",
-            "title": "카드로 보내면",
-            "text": "제목과 대표 이미지가 먼저"
-          },
-          {
-            "icon": "sparkle",
-            "title": "이미지가 없어도",
-            "text": "제목에 맞춘 그라디언트로"
-          }
+        "subtitle": "카톡·SNS에서 제목과 이미지가 먼저 보여요",
+        "after": {
+          "tag": "ClipNote로",
+          "url": "https://clipnote.co.kr/q7Kd2xB",
+          "title": "URL을 깔끔한 공유 카드로",
+          "desc": "링크 하나로 공유 카드와 짧은 링크를 만들어요",
+          "domain": "clipnote.co.kr",
+          "image": "assets/shots/cn-og-card.png"
+        }
+      },
+      {
+        "template": "shot",
+        "title": [
+          "붙여넣기 한 번에",
+          "이렇게 보여요"
+        ],
+        "subtitle": "제목·설명·대표 이미지를 자동으로 읽어와요",
+        "mobile": [
+          "assets/shots/cn-mobile-form.png",
+          "assets/shots/cn-mobile-result.png"
         ]
       },
       {
         "template": "list",
         "title": [
-          "붙여넣기 한 번이면",
-          "끝나요"
+          "미리보기 안 잡히던",
+          "그 링크들까지"
         ],
-        "subtitle": "복잡한 가입 없이 주소만 넣으면 돼요",
+        "subtitle": "어떤 주소를 넣어도 카드 한 장이 나와요",
         "items": [
           {
-            "icon": "link",
-            "title": "주소 붙여넣기",
-            "text": "제목·설명·이미지를 자동으로"
-          },
-          {
-            "icon": "tag",
-            "title": "태그로 정리",
-            "text": "쉼표로 최대 6개까지"
+            "icon": "users",
+            "title": "네이버 카페",
+            "text": "게시글 제목을 읽어와요"
           },
           {
             "icon": "globe",
-            "title": "4개 언어",
-            "text": "한국어·영어·일본어·중국어"
+            "title": "인스타그램",
+            "text": "주소만 덩그러니 뜨던 링크도"
+          },
+          {
+            "icon": "link",
+            "title": "아무것도 안 뜨던 링크",
+            "text": "빈 자리 대신 카드가 떠요"
           }
         ]
       }
-    ],
-    "outro": {
-      "headline": "링크 하나도 예쁘게",
-      "sub": "App Store 에서 받을 수 있어요"
-    }
+    ]
   },
-  "scheduled_at": null,
+  "scheduled_at": "2026-08-28",
   "published_at": null,
   "media_id": null,
   "permalink": null,
   "container_id": null,
-  "note": "캐러셀로 재제작 (2026-08-25)",
+  "note": "2026-08-26 사용자가 5장 전부 검수하고 2번 지적 두 건(카드 설명문이 실제 메타데이터가 아님 / 제목에 ClipNote 접두 없음)을 반영하지 않기로 결정. image_ok 는 그 지시를 옮겨 적은 것이다.",
   "image_urls": [
     "https://pikaworks.kr/ig/clipnote-1-1.png",
     "https://pikaworks.kr/ig/clipnote-1-2.png",
     "https://pikaworks.kr/ig/clipnote-1-3.png",
-    "https://pikaworks.kr/ig/clipnote-1-4.png"
+    "https://pikaworks.kr/ig/clipnote-1-4.png",
+    "https://pikaworks.kr/ig/clipnote-1-5.png"
   ]
 }
