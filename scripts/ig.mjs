@@ -295,7 +295,8 @@ function slideBody(d, t, index) {
         <div class="ch-tag on">${esc(a.tag)}</div>
         <div class="ch-bub on">${esc(a.url || '')}</div>
         <div class="ch-card">
-          <div class="ch-thumb"></div>
+          <div class="ch-thumb">${a.image
+            ? `<img src="${shotUrl(a.image, index, 'after.image')}" alt="">` : ''}</div>
           <div class="ch-meta">
             <div class="ch-t">${esc(a.title)}</div>
             ${a.desc ? `<div class="ch-s">${esc(a.desc)}</div>` : ''}
@@ -500,7 +501,11 @@ function css(t, fontUrl) {
     border-radius:20px; overflow:hidden;
     box-shadow:0 14px 34px rgba(0,0,0,.10);
   }
-  .ch-thumb { height:238px; background:linear-gradient(135deg, ${t.accent}, #e879f9); }
+  .ch-thumb {
+    height:238px; overflow:hidden;
+    background:linear-gradient(135deg, ${t.accent}, #e879f9);
+  }
+  .ch-thumb img { display:block; width:100%; height:100%; object-fit:cover; }
   .ch-meta { padding:18px 24px 20px; display:flex; flex-direction:column; gap:6px; }
   .ch-t { font-size:31px; font-weight:800; letter-spacing:-.03em; line-height:1.25; }
   .ch-s { font-size:25px; font-weight:600; color:${t.muted}; line-height:1.35; }

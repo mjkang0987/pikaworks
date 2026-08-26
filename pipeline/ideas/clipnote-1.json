@@ -40,9 +40,10 @@
         "after": {
           "tag": "ClipNote로",
           "url": "https://clipnote.co.kr/a1b2",
-          "title": "카페 글도 제목이 떠요",
-          "desc": "제목·설명·대표 이미지가 카드 한 장에",
-          "domain": "clipnote.co.kr"
+          "title": "URL을 깔끔한 공유 카드로",
+          "desc": "링크 하나로 공유 카드와 짧은 링크를 만들어요",
+          "domain": "clipnote.co.kr",
+          "image": "assets/shots/cn-og-card.png"
         }
       },
       {
