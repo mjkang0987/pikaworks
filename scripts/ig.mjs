@@ -293,7 +293,7 @@ function slideBody(d, t, index) {
           <div class="ch-none">${esc(b.note || '')}</div>
         </div>
       </div>
-      <div class="ch-row right">
+      <div class="ch-row">
         <div class="ch-tag on">${esc(a.tag)}</div>
         <div class="ch-bub on">
           <div class="ch-card">
@@ -482,20 +482,16 @@ function css(t, fontUrl) {
      아래쪽만 색을 줘서 눈이 자연스럽게 아래로 떨어지게 한다. */
   .chat { display:flex; flex-direction:column; gap:34px; }
   .ch-row { display:flex; flex-direction:column; gap:12px; align-items:flex-start; }
-  .ch-row.right { align-items:flex-end; }
   .ch-tag {
     font-size:26px; font-weight:700; color:${t.muted}; letter-spacing:-.02em;
   }
   .ch-tag.on { color:${t.accentInk}; }
   .ch-bub {
-    width:700px;
+    width:100%;
     background:#f4f4f5; border:2px solid ${t.border};
     border-radius:28px 28px 28px 8px; padding:26px 30px;
   }
-  .ch-bub.on {
-    background:${t.soft}; border-color:${t.chipBorder}; padding:20px;
-    border-radius:28px 28px 8px 28px;
-  }
+  .ch-bub.on { background:${t.soft}; border-color:${t.chipBorder}; padding:20px; }
   .ch-url {
     font-size:27px; font-weight:600; color:${t.muted};
     letter-spacing:-.01em; word-break:break-all;
