@@ -279,7 +279,7 @@ function slideBody(d, t, index) {
       const shots = Array.isArray(d.mobile) ? d.mobile.slice(0, 2) : [d.mobile];
       overlay = `<div class="shot-stand${shots.length > 1 ? ' pair' : ''}">${
         shots.map((m, i) => `<img src="${shotUrl(m, index, `mobile[${i}]`)}" alt="">`).join('')
-      }</div>`;
+      }</div><div class="shot-fade"></div>`;
     }
   } else if (d.template === 'chat') {
     // 실제 카톡은 미리보기가 말풍선 "아래" 별도 카드로 붙고, 카드는
@@ -498,6 +498,11 @@ function css(t, fontUrl) {
     height:800px; width:auto; display:block;
     border:2px solid ${t.border}; border-radius:26px;
     box-shadow:0 26px 60px rgba(0,0,0,.18);
+  }
+  /* 아래를 단면으로 자르면 잘린 티가 난다. 배경색으로 서서히 사라지게 한다. */
+  .shot-fade {
+    position:absolute; left:0; right:0; bottom:0; height:400px; z-index:1;
+    background:linear-gradient(to bottom, transparent, ${t.bg} 62%);
   }
   .shot-stand:not(.pair) { left:auto; justify-content:flex-end; }
   .shot-stand.pair { justify-content:center; }
