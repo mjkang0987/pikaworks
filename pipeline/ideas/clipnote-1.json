@@ -28,15 +28,10 @@
       {
         "template": "chat",
         "title": [
-          "주소만 가면",
-          "아무도 안 눌러요"
+          "ClipNote로 보내면",
+          "이렇게 떠요"
         ],
-        "subtitle": "같은 링크인데 이렇게 달라져요",
-        "before": {
-          "tag": "그냥 보내면",
-          "url": "https://cafe.naver.com/…",
-          "note": "미리보기가 안 붙어요"
-        },
+        "subtitle": "카톡·SNS에서 제목과 이미지가 먼저 보여요",
         "after": {
           "tag": "ClipNote로",
           "url": "https://clipnote.co.kr/a1b2",

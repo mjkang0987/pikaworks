@@ -285,12 +285,16 @@ function slideBody(d, t, index) {
     check('chat.tag', a.tag, `슬라이드 ${index} after.tag`);
     check('chat.title', a.title, `슬라이드 ${index} after.title`);
     if (a.desc) check('chat.desc', a.desc, `슬라이드 ${index} after.desc`);
-    body = `<div class="chat">
+    // before 를 안 주면 결과만 크게 보여준다. 제목이 이미 문제를 말하고
+    // 있으면 빈 칸을 그려 대비를 만들 필요가 없다.
+    const beforeCol = !d.before ? '' : `
       <div class="ch-row">
         <div class="ch-tag">${esc(b.tag)}</div>
         <div class="ch-bub">${esc(b.url || '')}</div>
         <div class="ch-none"><span>${esc(b.note || '')}</span></div>
-      </div>
+      </div>`;
+    body = `<div class="chat${d.before ? '' : ' solo'}">
+      ${beforeCol}
       <div class="ch-row">
         <div class="ch-tag on">${esc(a.tag)}</div>
         <div class="ch-bub on">${esc(a.url || '')}</div>
@@ -479,6 +483,9 @@ function css(t, fontUrl) {
   /* ── 카톡 전후 ── 말풍선 아래에 미리보기 카드가 붙는 실제 구조를 따른다.
      위는 카드가 안 붙는 경우, 아래는 붙는 경우. 색으로 판정이 읽히게 한다. */
   .chat { display:flex; gap:32px; align-items:flex-start; }
+  .chat.solo { justify-content:center; }
+  .chat.solo .ch-row { flex:none; width:660px; }
+  .chat.solo .ch-thumb { height:346px; }
   .ch-row { flex:1; min-width:0; display:flex; flex-direction:column; gap:12px; }
   .ch-tag { font-size:25px; font-weight:700; color:${t.muted}; letter-spacing:-.02em; }
   .ch-tag.on { color:${t.accentInk}; }
