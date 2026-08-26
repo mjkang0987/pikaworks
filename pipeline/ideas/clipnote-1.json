@@ -14,10 +14,11 @@
   "image_url": "https://pikaworks.kr/ig/clipnote-1-1.png",
   "design": {
     "cover": {
-      "kicker": "App Store 출시",
+      "kicker": "카톡에 링크 보낼 때",
       "title": [
-        "밋밋한 링크를",
-        "카드 한 장으로"
+        "URL 대신",
+        "공유 카드로",
+        "보내세요"
       ],
       "features": [
         "제목·이미지 자동",
