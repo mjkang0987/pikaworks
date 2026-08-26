@@ -48,7 +48,10 @@
           "이렇게 보여요"
         ],
         "subtitle": "제목·설명·대표 이미지를 자동으로 읽어와요",
-        "mobile": "assets/shots/cn-mobile-form.png"
+        "mobile": [
+          "assets/shots/cn-mobile-form.png",
+          "assets/shots/cn-mobile-result.png"
+        ]
       },
       {
         "template": "list",

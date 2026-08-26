@@ -246,6 +246,7 @@ function slideBody(d, t, index) {
   }).join('');
 
   let body;
+  let overlay = '';
   if (d.template === 'list') {
     const rows = (d.items || []).slice(0, 4).map((it, i) => {
       check('item.title', it.title, `슬라이드 ${index} items[${i}].title`);
@@ -273,9 +274,13 @@ function slideBody(d, t, index) {
           </div>
           <div class="sh-mo"><img src="${shotUrl(d.mobile, index, 'mobile')}" alt=""></div>
         </div>`
-      : `<div class="shot solo">
-          <img src="${shotUrl(d.mobile, index, 'mobile')}" alt="">
-        </div>`;
+      : '';
+    if (!d.pc) {
+      const shots = Array.isArray(d.mobile) ? d.mobile.slice(0, 2) : [d.mobile];
+      overlay = `<div class="shot-stand${shots.length > 1 ? ' pair' : ''}">${
+        shots.map((m, i) => `<img src="${shotUrl(m, index, `mobile[${i}]`)}" alt="">`).join('')
+      }</div>`;
+    }
   } else if (d.template === 'chat') {
     // 실제 카톡은 미리보기가 말풍선 "아래" 별도 카드로 붙고, 카드는
     // 이미지가 위·글이 아래인 세로 구조다. 카카오톡 UI(노란 말풍선·다크 배경)를
@@ -323,13 +328,14 @@ function slideBody(d, t, index) {
     return `<span class="chip">${esc(c)}</span>`;
   }).join('');
 
-  return `<section class="s body">
+  return `<section class="s body${overlay && !Array.isArray(d.mobile) ? ' split' : ''}">
     <div class="head">${heading}</div>
     ${d.subtitle ? `<div class="sub">${esc(d.subtitle)}</div>` : ''}
     <div class="main">
       ${body}
       ${chips ? `<div class="chips">${chips}</div>` : ''}
     </div>
+    ${overlay}
     <div class="foot">
       <img class="ft-pika" src="${t.pikaUrl}" alt="pikaworks">
       <div class="ft-app">
@@ -375,6 +381,9 @@ function css(t, fontUrl) {
     -webkit-font-smoothing:antialiased;
   }
   .s {
+    /* 슬라이드 밖으로 흘려보낸 요소는 여기서 잘린다. 이게 없으면 문서 높이가
+       늘어나 넘침 검사가 의도한 연출을 사고로 잡는다. */
+    position:relative; overflow:hidden;
     width:${SIZE}px; height:${SIZE}px;
     display:flex; flex-direction:column;
     padding:74px 64px 64px;
@@ -473,12 +482,26 @@ function css(t, fontUrl) {
   .sh-mo img { display:block; width:100%; height:auto; border-radius:26px; }
   /* 화면 일부를 잘라 온 것이라 기기 베젤을 두르지 않는다 —
      전체 화면이 아닌데 폰처럼 보이면 실제와 다른 인상을 준다. */
-  .shot.solo { display:flex; align-items:center; justify-content:center; }
-  .shot.solo img {
-    max-height:100%; width:auto; display:block;
-    border:2px solid ${t.border}; border-radius:22px;
-    box-shadow:0 22px 50px rgba(0,0,0,.16);
+  /* 화면을 오른쪽에 크게 세운다. 칸 안에 맞추면 세로가 긴 폰 화면이
+     너무 작아져서, 아래로 흘려보내고 슬라이드 밖에서 잘리게 둔다. */
+  /* 화면을 오른쪽에 세우면 글이 왼쪽 절반만 쓴다. 제목을 그 안에서
+     세로 가운데로 내리고, 오른쪽 푸터는 뺀다 — 폰과 겹친다. */
+  .s.split .head, .s.split .sub { max-width:560px; }
+  .s.split .head { margin-top:auto; }
+  .s.split .sub { margin-bottom:auto; }
+  .s.split .main { display:none; }
+  .s.split .ft-app { display:none; }
+
+  /* 화면은 슬라이드 아래로 흘려보낸다. 세로가 긴 폰을 칸에 맞추면 너무 작다. */
+  .shot-stand { position:absolute; left:64px; right:64px; top:330px; display:flex; gap:40px; }
+  .shot-stand img {
+    height:800px; width:auto; display:block;
+    border:2px solid ${t.border}; border-radius:26px;
+    box-shadow:0 26px 60px rgba(0,0,0,.18);
   }
+  .shot-stand:not(.pair) { left:auto; justify-content:flex-end; }
+  .shot-stand.pair { justify-content:center; }
+  .shot-stand.pair img { height:760px; }
 
   /* ── 카톡 전후 ── 말풍선 아래에 미리보기 카드가 붙는 실제 구조를 따른다.
      위는 카드가 안 붙는 경우, 아래는 붙는 경우. 색으로 판정이 읽히게 한다. */
@@ -544,7 +567,7 @@ function css(t, fontUrl) {
 
   /* 커버·마감의 서명과 같은 자리·같은 크기로 둔다. 다섯 장을 넘길 때
      왼쪽 아래가 흔들리지 않아야 한 묶음으로 읽힌다. */
-  .foot { display:flex; align-items:center; gap:20px; }
+  .foot { position:relative; z-index:2; display:flex; align-items:center; gap:20px; }
   .ft-pika { display:block; width:210px; height:auto; opacity:.9; }
   /* pikaworks 서명은 210px 폭 = 29.5px 높이(viewBox 698.3×98)로 렌더된다.
      오른쪽 서비스 쪽을 거기에 맞춘다 — 아이콘 62px 은 두 배가 넘어서
