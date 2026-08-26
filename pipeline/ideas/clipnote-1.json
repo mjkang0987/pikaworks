@@ -35,13 +35,14 @@
         "before": {
           "tag": "그냥 보내면",
           "url": "https://cafe.naver.com/…",
-          "note": "미리보기 없음"
+          "note": "미리보기가 안 붙어요"
         },
         "after": {
           "tag": "ClipNote로",
+          "url": "https://clipnote.co.kr/a1b2",
           "title": "카페 글도 제목이 떠요",
-          "domain": "clipnote.co.kr",
-          "desc": "제목·설명·대표 이미지가 카드 한 장에"
+          "desc": "제목·설명·대표 이미지가 카드 한 장에",
+          "domain": "clipnote.co.kr"
         }
       },
       {

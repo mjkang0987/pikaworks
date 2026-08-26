@@ -277,9 +277,9 @@ function slideBody(d, t, index) {
           <img src="${shotUrl(d.mobile, index, 'mobile')}" alt="">
         </div>`;
   } else if (d.template === 'chat') {
-    // 같은 링크를 두 가지로 보낸 모습을 나란히 놓는다.
-    // 카카오톡 UI 를 흉내 내지 않는다 — 남의 서비스 화면을 광고에 재현하는
-    // 문제가 생기고, 어차피 전달하려는 건 "말풍선 안이 어떻게 다른가" 뿐이다.
+    // 실제 카톡은 미리보기가 말풍선 "아래" 별도 카드로 붙고, 카드는
+    // 이미지가 위·글이 아래인 세로 구조다. 카카오톡 UI(노란 말풍선·다크 배경)를
+    // 베끼지는 않되 이 구조는 맞춘다 — 안 맞추면 실제와 다른 걸 보여주게 된다.
     const b = d.before || {}, a = d.after || {};
     check('chat.tag', b.tag, `슬라이드 ${index} before.tag`);
     check('chat.tag', a.tag, `슬라이드 ${index} after.tag`);
@@ -288,21 +288,18 @@ function slideBody(d, t, index) {
     body = `<div class="chat">
       <div class="ch-row">
         <div class="ch-tag">${esc(b.tag)}</div>
-        <div class="ch-bub">
-          <div class="ch-url">${esc(b.url || '')}</div>
-          <div class="ch-none">${esc(b.note || '')}</div>
-        </div>
+        <div class="ch-bub">${esc(b.url || '')}</div>
+        <div class="ch-none">${esc(b.note || '')}</div>
       </div>
       <div class="ch-row">
         <div class="ch-tag on">${esc(a.tag)}</div>
-        <div class="ch-bub on">
-          <div class="ch-card">
-            <div class="ch-thumb"></div>
-            <div class="ch-meta">
-              <div class="ch-t">${esc(a.title)}</div>
-              ${a.desc ? `<div class="ch-s">${esc(a.desc)}</div>` : ''}
-              <div class="ch-d">${esc(a.domain || t.domain)}</div>
-            </div>
+        <div class="ch-bub on">${esc(a.url || '')}</div>
+        <div class="ch-card">
+          <div class="ch-thumb"></div>
+          <div class="ch-meta">
+            <div class="ch-t">${esc(a.title)}</div>
+            ${a.desc ? `<div class="ch-s">${esc(a.desc)}</div>` : ''}
+            <div class="ch-d">${esc(a.domain || t.domain)}</div>
           </div>
         </div>
       </div>
@@ -478,43 +475,29 @@ function css(t, fontUrl) {
     box-shadow:0 22px 50px rgba(0,0,0,.16);
   }
 
-  /* ── 카톡 전후 ── 위는 주소만 간 경우, 아래는 카드가 간 경우.
-     아래쪽만 색을 줘서 눈이 자연스럽게 아래로 떨어지게 한다. */
-  .chat { display:flex; flex-direction:column; gap:34px; }
-  .ch-row { display:flex; flex-direction:column; gap:12px; align-items:flex-start; }
-  .ch-tag {
-    font-size:26px; font-weight:700; color:${t.muted}; letter-spacing:-.02em;
-  }
+  /* ── 카톡 전후 ── 말풍선 아래에 미리보기 카드가 붙는 실제 구조를 따른다.
+     위는 카드가 안 붙는 경우, 아래는 붙는 경우. 색으로 판정이 읽히게 한다. */
+  .chat { display:flex; flex-direction:column; gap:26px; }
+  .ch-row { display:flex; flex-direction:column; align-items:flex-start; gap:10px; }
+  .ch-tag { font-size:25px; font-weight:700; color:${t.muted}; letter-spacing:-.02em; }
   .ch-tag.on { color:${t.accentInk}; }
   .ch-bub {
-    width:100%;
     background:#f4f4f5; border:2px solid ${t.border};
-    border-radius:28px 28px 28px 8px; padding:26px 30px;
+    border-radius:20px 20px 20px 6px; padding:16px 24px;
+    font-size:26px; font-weight:600; color:${t.muted}; letter-spacing:-.01em;
   }
-  .ch-bub.on { background:${t.soft}; border-color:${t.chipBorder}; padding:20px; }
-  .ch-url {
-    font-size:27px; font-weight:600; color:${t.muted};
-    letter-spacing:-.01em; word-break:break-all;
-  }
-  .ch-none {
-    margin-top:14px; height:74px; border-radius:14px;
-    border:2px dashed ${t.border}; background:${t.bg};
-    display:flex; align-items:center; justify-content:center;
-    font-size:24px; font-weight:600; color:${t.muted};
-  }
+  .ch-bub.on { background:${t.soft}; border-color:${t.chipBorder}; color:${t.softInk}; }
+  .ch-none { font-size:24px; font-weight:600; color:${t.muted}; opacity:.7; padding-left:6px; }
   .ch-card {
-    display:flex; align-items:stretch; gap:20px;
-    background:${t.bg}; border-radius:18px; overflow:hidden;
-    border:2px solid ${t.chipBorder};
+    width:100%; background:${t.bg}; border:2px solid ${t.chipBorder};
+    border-radius:20px; overflow:hidden;
+    box-shadow:0 14px 34px rgba(0,0,0,.10);
   }
-  .ch-thumb {
-    flex:none; width:132px;
-    background:linear-gradient(135deg, ${t.accent}, #e879f9);
-  }
-  .ch-meta { padding:20px 22px 20px 0; display:flex; flex-direction:column; justify-content:center; gap:8px; }
+  .ch-thumb { height:158px; background:linear-gradient(135deg, ${t.accent}, #e879f9); }
+  .ch-meta { padding:20px 26px 22px; display:flex; flex-direction:column; gap:7px; }
   .ch-t { font-size:31px; font-weight:800; letter-spacing:-.03em; line-height:1.25; }
   .ch-s { font-size:25px; font-weight:600; color:${t.muted}; line-height:1.35; }
-  .ch-d { font-size:23px; font-weight:600; color:${t.muted}; opacity:.8; }
+  .ch-d { font-size:23px; font-weight:600; color:${t.accentInk}; }
 
   .panel { background:${t.soft}; border-radius:30px; padding:42px; }
   .stmt {
