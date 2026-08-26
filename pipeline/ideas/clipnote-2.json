@@ -3,7 +3,7 @@
   "service": "clipnote",
   "status": "design_done",
   "angle": "저장하고 태그로 정리, 꺼낼 땐 카드째 공유 — 아카이빙",
-  "caption": "\"그때 그 링크 좀 다시 보내줄래?\"\n이 말 들으면 어디부터 뒤지세요? 📌\n\n클립노트에 저장해두면\n원본 대표 이미지가 썸네일로 붙어요.\n이미지가 없는 페이지는\n색 그라디언트로 채워지고요.\n훑어보다 눈으로 바로 찾아요.\n\n태그를 달아두면\n같은 태그끼리 모아서 볼 수 있어요.\n\n찾았으면 그대로 건네요.\n주소만 덩그러니 가는 게 아니라\n제목・이미지가 담긴 카드로 가요.\n그 짧은 주소는 로그인하면 만들어져요.\n\n프로필 링크에서\nhttps://clipnote.co.kr 확인하세요 🔗\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯\n\n\"Can you send me that link again?\"\n\nWhere do you even start looking?\n\nA clip you save takes the page's own image as its\nthumbnail, and pages without one get a colour gradient\ninstead — so you spot things by looking, not by reading\ndown a list of blue text.\n\nAdd a tag and everything under it lines up together.\n\nWhen you find the one you want, it goes out as a card:\ntitle and image included, not a bare URL. That short\naddress is created once you sign in.\n\nLink in bio: https://clipnote.co.kr\n\n#ClipNote #링크저장 #태그정리 #자료조사 #pikaworks",
+  "caption": "\"그때 그 링크 좀 다시 보내줄래?\"\n찾느라 한참 헤매게 되죠 📌\n\n클립노트에 저장해두면\n원본 대표 이미지가 썸네일로 붙어요.\n이미지가 없는 페이지는\n색 그라디언트로 채워지고요.\n훑어보다 눈으로 바로 찾아요.\n\n태그를 달아두면\n같은 태그끼리 모아서 볼 수 있어요.\n\n찾았으면 그대로 건네요.\n주소만 덩그러니 가는 게 아니라\n제목・이미지가 담긴 카드로 가요.\n그 짧은 주소는 로그인하면 만들어져요.\n\n프로필 링크에서\nhttps://clipnote.co.kr 확인하세요 🔗\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯\n\n\"Can you send me that link again?\"\n\nWhere do you even start looking?\n\nA clip you save takes the page's own image as its\nthumbnail, and pages without one get a colour gradient\ninstead — so you spot things by looking, not by reading\ndown a list of blue text.\n\nAdd a tag and everything under it lines up together.\n\nWhen you find the one you want, it goes out as a card:\ntitle and image included, not a bare URL. That short\naddress is created once you sign in.\n\nLink in bio: https://clipnote.co.kr\n\n#ClipNote #링크저장 #태그정리 #자료조사 #pikaworks",
   "image_path": [
     "public/ig/clipnote-2-1.png",
     "public/ig/clipnote-2-2.png",
@@ -82,7 +82,7 @@
   "media_id": null,
   "permalink": null,
   "container_id": null,
-  "note": "캡션 재작성(2026-08-26). 후킹을 \"저장만 하고 못 찾는다\"에서 \"남이 그 링크를 달라고 하는 순간\"으로 옮겼다 — 전자는 국내 경쟁 앱(링포미) 카피와 사실상 같은 카테고리 공통 문구다. 비로그인은 공유 주소가 안 만들어지는 조건을 본문에 명시했고(clipnote index.md:17-18), 확인이 안 되는 App Store 문구는 뺐다. 해시태그는 12개 → 5개(플랫폼 상한). 이미지는 폐기된 4장 구성이라 5장(cover+slides×3)으로 다시 만들어야 한다.",
+  "note": "캡션 재작성(2026-08-26). 후킹을 \"저장만 하고 못 찾는다\"에서 \"남이 그 링크를 달라고 하는 순간\"으로 옮겼다 — 전자는 국내 경쟁 앱(링포미) 카피와 사실상 같은 카테고리 공통 문구다. 비로그인은 공유 주소가 안 만들어지는 조건을 본문에 명시했고(clipnote index.md:17-18), 확인이 안 되는 App Store 문구는 뺐다. 해시태그는 12개 → 5개(플랫폼 상한). 후킹 둘째 줄의 \"뒤지세요\"는 \"뒈지세요\"로 읽혀 뺐다 — 인스타에서 펼치기 전 보이는 두 줄이라 그 자리에 둘 위험이 아니다. 이미지는 폐기된 4장 구성이라 5장(cover+slides×3)으로 다시 만들어야 한다.",
   "image_urls": [
     "https://pikaworks.kr/ig/clipnote-2-1.png",
     "https://pikaworks.kr/ig/clipnote-2-2.png",
