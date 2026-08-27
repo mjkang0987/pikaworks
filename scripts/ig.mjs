@@ -279,7 +279,9 @@ function slideBody(d, t, index) {
       // 가로로 넓은 화면 조각. shot-stand 는 height 고정이라 세로로 긴 폰
       // 화면만 맞는다 — 가로 조각을 넣으면 폭이 튀어 컨테이너를 뚫는다.
       // 흘려보내지 않고 본문 안에 카드로 앉힌다.
-      body = `<div class="shot-wide"><img src="${shotUrl(d.mobile, index, 'mobile')}" alt=""></div>`;
+      body = `<div class="shot-wide"><div class="sw-frame">`
+        + `<img src="${shotUrl(d.mobile, index, 'mobile')}" alt="">`
+        + `<div class="shot-fade"></div></div></div>`;
     } else if (!d.pc) {
       const shots = Array.isArray(d.mobile) ? d.mobile.slice(0, 2) : [d.mobile];
       overlay = `<div class="shot-stand${shots.length > 1 ? ' pair' : ''}">${
@@ -562,10 +564,17 @@ function css(t, fontUrl) {
   /* 가로로 넓은 화면 조각. 세로로 긴 폰 화면(.shot-stand)과 달리 흘려보내지
      않고 본문 안에 통째로 앉힌다. 잘리면 무슨 화면인지 못 알아본다. */
   .shot-wide { display:flex; justify-content:center; align-items:center; min-height:0; }
-  .shot-wide img {
+  /* 테두리로 가두지 않는다. 잘라 온 화면 조각이라 네모를 두르면 "여기서
+     끝난 화면" 으로 읽힌다. 아래를 배경색으로 흘려보내면 화면이 이어지는
+     것으로 읽히고, 세로로 긴 화면(.shot-stand)과도 같은 마감이 된다. */
+  .sw-frame { position:relative; max-width:100%; max-height:100%; display:flex; }
+  .sw-frame img {
     max-width:100%; max-height:100%; width:auto; height:auto; display:block;
-    border:2px solid ${t.border}; border-radius:26px;
+    border-radius:26px 26px 0 0;
   }
+  /* 잘린 글줄만 지우는 정도로 짧게. 길면 화면 안 내용(공유 카드 같은
+     주인공)까지 흐려져 오히려 잘린 것처럼 보인다. */
+  .sw-frame .shot-fade { height:80px; }
   .stmt {
     font-size:50px; font-weight:800; line-height:1.42; letter-spacing:-.03em;
     color:${t.softInk}; padding:62px 52px; text-align:center;
