@@ -275,7 +275,12 @@ function slideBody(d, t, index) {
           <div class="sh-mo"><img src="${shotUrl(d.mobile, index, 'mobile')}" alt=""></div>
         </div>`
       : '';
-    if (!d.pc) {
+    if (!d.pc && d.wide) {
+      // 가로로 넓은 화면 조각. shot-stand 는 height 고정이라 세로로 긴 폰
+      // 화면만 맞는다 — 가로 조각을 넣으면 폭이 튀어 컨테이너를 뚫는다.
+      // 흘려보내지 않고 본문 안에 카드로 앉힌다.
+      body = `<div class="shot-wide"><img src="${shotUrl(d.mobile, index, 'mobile')}" alt=""></div>`;
+    } else if (!d.pc) {
       const shots = Array.isArray(d.mobile) ? d.mobile.slice(0, 2) : [d.mobile];
       overlay = `<div class="shot-stand${shots.length > 1 ? ' pair' : ''}">${
         shots.map((m, i) => `<img src="${shotUrl(m, index, `mobile[${i}]`)}" alt="">`).join('')
@@ -554,6 +559,13 @@ function css(t, fontUrl) {
   .ch-d { font-size:23px; font-weight:600; color:${t.accentInk}; }
 
   .panel { background:${t.soft}; border-radius:30px; padding:42px; }
+  /* 가로로 넓은 화면 조각. 세로로 긴 폰 화면(.shot-stand)과 달리 흘려보내지
+     않고 본문 안에 통째로 앉힌다. 잘리면 무슨 화면인지 못 알아본다. */
+  .shot-wide { display:flex; justify-content:center; align-items:center; min-height:0; }
+  .shot-wide img {
+    max-width:100%; max-height:100%; width:auto; height:auto; display:block;
+    border:2px solid ${t.border}; border-radius:26px;
+  }
   .stmt {
     font-size:50px; font-weight:800; line-height:1.42; letter-spacing:-.03em;
     color:${t.softInk}; padding:62px 52px; text-align:center;

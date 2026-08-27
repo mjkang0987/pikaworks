@@ -28,42 +28,37 @@
     },
     "slides": [
       {
-        "template": "list",
+        "template": "shot",
         "title": [
-          "저장해두면",
-          "눈으로 찾아요"
+          "저장하면",
+          "목록에 이렇게"
         ],
-        "subtitle": "제목과 이미지가 그대로 붙어 목록만 훑어도 보여요",
-        "items": [
-          {
-            "icon": "bookmark",
-            "title": "카드로 저장",
-            "text": "제목과 대표 이미지가 그대로 붙어요"
-          },
-          {
-            "icon": "tag",
-            "title": "태그로 정리",
-            "text": "같은 태그끼리 모아볼 수 있어요"
-          },
-          {
-            "icon": "sparkle",
-            "title": "이미지 없으면",
-            "text": "색 조합을 골라 채워요"
-          }
-        ]
+        "subtitle": "제목과 대표 이미지가 그대로 붙어요",
+        "mobile": "assets/shots/cn-mobile-list.png",
+        "wide": true
+      },
+      {
+        "template": "shot",
+        "title": [
+          "보내면",
+          "이렇게 떠요"
+        ],
+        "subtitle": "주소만 가는 게 아니라 카드가 같이 가요",
+        "mobile": "assets/shots/cn-mobile-card.png",
+        "wide": true
       },
       {
         "template": "list",
         "title": [
-          "보낼 땐",
-          "카드째 보내요"
+          "쌓아둘수록",
+          "빨라져요"
         ],
-        "subtitle": "찾은 카드를 그대로 건네면 끝이에요",
+        "subtitle": "화면에 안 보이는 나머지 셋",
         "items": [
           {
-            "icon": "chat",
-            "title": "공유 카드로",
-            "text": "제목과 이미지가 같이 따라가요"
+            "icon": "tag",
+            "title": "태그로 정리",
+            "text": "같은 태그끼리 모아볼 수 있어요"
           },
           {
             "icon": "check",
@@ -76,14 +71,6 @@
             "text": "카드가 열리는 짧은 URL이 생겨요"
           }
         ]
-      },
-      {
-        "template": "statement",
-        "title": [
-          "쌓아둔 게",
-          "그대로 쓰여요"
-        ],
-        "statement": "담아둘 땐 한 번, 보낼 땐 그대로"
       }
     ]
   },
