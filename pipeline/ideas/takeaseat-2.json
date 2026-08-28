@@ -2,91 +2,103 @@
   "id": "takeaseat-2",
   "service": "takeaseat",
   "status": "design_done",
-  "angle": "적립금·회원권·쿠폰을 앱에서 — 단골 관리",
-  "caption": "단골 손님 관리, 수첩에 적고 계신가요 📒\n\n적립금이랑 회원권, 쿠폰을 앱에서 관리해요.\n누가 얼마 남았는지 한 화면에.\n\n적립 정책을 정해두면 알아서 쌓이고\n필요할 때 수동으로 적립하거나 차감할 수도 있어요 ✨\n\n쌓이고 빠진 이력이 고객마다 따로 남으니\n\"저번에 적립 안 됐는데요\" 소리 들을 일이 없어요.\n\n👉 takeaseat.co.kr\n\n#테이크어시트 #TakeASeat #적립금 #회원권 #쿠폰 #고객관리\n#단골관리 #예약관리 #소상공인 #자영업 #미용실 #1인샵\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯\n\nStill tracking regulars in a notebook? 📒\n\nPoints, memberships, and coupons — all in the app.\nSee who has what left, on one screen.\n\nSet a policy and points add up on their own.\nAdd or deduct by hand whenever you need to ✨\n\nEvery change is logged per customer,\nso \"I didn't get my points last time\" stops being a conversation.\n\n👉 takeaseat.co.kr\n\n#TakeASeat #booking #smallbusiness #pikaworks",
+  "angle": "\"저번에 적립 안 됐는데요\"에 이력으로 답한다 — 적립금 하나 깊게",
+  "caption": "\"저번에 적립 안 됐는데요\"\n\n이 말 들으면 난감하죠 😥\n\nTake a Seat는 적립금을\n정해둔 정책대로 쌓아요.\n퍼센트를 한 번 정해두면\n결제완료될 때 알아서 붙어요.\n\n필요할 땐 직접 적립하거나\n차감할 수도 있어요.\n\n중요한 건 그다음이에요.\n언제 얼마가 쌓이고 빠졌는지\n고객마다 한 줄씩 남아요.\n어느 예약에서 붙은 건지도\n눌러서 바로 확인돼요.\n\n기억을 더듬을 일이\n없어지는 셈이에요.\n\n프로필 링크에서\nhttps://takeaseat.co.kr 확인하세요 🔗\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯\n\n\"I didn't get my points last time.\"\n\nThat one is hard to answer from memory.\n\nTake a Seat adds points by the rule you set.\nPick a percentage once and it lands on its\nown when a payment is marked complete.\nYou can still add or subtract by hand\nwhenever a visit needs it.\n\nWhat matters is what comes after. Every\nchange stays as its own line under that\ncustomer — what happened, how much, and\nthe balance left after it. Lines that came\nfrom a booking open that booking.\n\nSo the answer is on the screen instead of\nin your memory.\n\nLink in bio\nhttps://takeaseat.co.kr 🔗\n\n#TAS #적립금 #단골관리 #1인샵 #pikaworks",
   "image_path": [
     "public/ig/takeaseat-2-1.png",
     "public/ig/takeaseat-2-2.png",
     "public/ig/takeaseat-2-3.png",
-    "public/ig/takeaseat-2-4.png"
+    "public/ig/takeaseat-2-4.png",
+    "public/ig/takeaseat-2-5.png"
   ],
   "image_url": "https://pikaworks.kr/ig/takeaseat-2-1.png",
   "design": {
     "cover": {
-      "kicker": "적립·쿠폰·회원권",
+      "kicker": "적립금 관리",
       "title": [
-        "단골 관리,",
-        "아직",
-        "수첩인가요"
+        "저번에 적립",
+        "안 됐는데요",
+        "이력이 답해요"
       ],
       "features": [
-        "적립금 자동 적립",
-        "회원권 잔여 차감",
-        "쿠폰 발급·관리"
+        "정책대로 자동",
+        "수동 적립·차감",
+        "고객별 변동 이력"
       ]
     },
     "slides": [
       {
         "template": "list",
         "title": [
-          "적립금·회원권·쿠폰",
-          "한 화면에"
+          "결제만 하면",
+          "알아서 쌓여요"
         ],
-        "subtitle": "누가 얼마 남았는지 바로 보여요",
+        "subtitle": "퍼센트를 한 번 정해두면 그다음은 자동이에요",
         "items": [
           {
+            "icon": "settings",
+            "title": "퍼센트만 설정",
+            "text": "결제완료되면 그만큼 적립돼요"
+          },
+          {
             "icon": "point",
-            "title": "적립금",
-            "text": "결제 금액에서 자동으로"
+            "title": "수동 적립·차감",
+            "text": "필요할 땐 직접 넣고 뺄 수 있어요"
           },
           {
-            "icon": "coupon",
-            "title": "쿠폰",
-            "text": "정액·정률, 유효기간까지"
-          },
-          {
-            "icon": "membership",
-            "title": "회원권",
-            "text": "쓸 때마다 잔여 횟수 차감"
+            "icon": "revenue",
+            "title": "선불 충전도",
+            "text": "미리 충전해두고 쓸 때마다 차감"
           }
         ]
       },
       {
         "template": "list",
         "title": [
-          "이력이 남으니까",
-          "다툴 일이 없어요"
+          "언제 얼마가",
+          "쌓였는지 그대로"
         ],
-        "subtitle": "쌓이고 빠진 내역이 고객마다 따로 남아요",
+        "subtitle": "고객마다 한 줄씩, 남은 잔액까지 같이 남아요",
         "items": [
           {
             "icon": "history",
-            "title": "고객별 기록",
-            "text": "언제 얼마가 쌓였는지 그대로"
+            "title": "한 줄씩 기록",
+            "text": "적립도 차감도 건마다 따로"
           },
           {
-            "icon": "settings",
-            "title": "수동 조정",
-            "text": "필요할 때 적립하거나 차감"
+            "icon": "member",
+            "title": "고객별로",
+            "text": "그 손님 것만 모아서 볼 수 있어요"
+          },
+          {
+            "icon": "booking",
+            "title": "예약과 연결",
+            "text": "어느 예약에서 붙었는지 눌러서 확인"
           }
         ]
+      },
+      {
+        "template": "statement",
+        "title": [
+          "기억 말고",
+          "기록으로"
+        ],
+        "subtitle": "적립이 됐는지 안 됐는지 다투지 않아도 돼요",
+        "statement": "적립은 정책이 하고, 증명은 기록이 해요"
       }
-    ],
-    "outro": {
-      "headline": "단골이 남는 매장",
-      "sub": "takeaseat.co.kr"
-    }
+    ]
   },
   "scheduled_at": null,
   "published_at": null,
   "media_id": null,
   "permalink": null,
   "container_id": null,
-  "note": "캐러셀로 재제작 (2026-08-25)",
+  "note": "캐러셀 5장으로 재제작 (2026-08-28). 적립금 하나만 다룬다 — 쿠폰 발급·회원권 결제 차감은 tas@99390ef 기준 미구현이라 뺐다.",
   "image_urls": [
     "https://pikaworks.kr/ig/takeaseat-2-1.png",
     "https://pikaworks.kr/ig/takeaseat-2-2.png",
     "https://pikaworks.kr/ig/takeaseat-2-3.png",
-    "https://pikaworks.kr/ig/takeaseat-2-4.png"
+    "https://pikaworks.kr/ig/takeaseat-2-4.png",
+    "https://pikaworks.kr/ig/takeaseat-2-5.png"
   ]
 }
