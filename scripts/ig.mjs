@@ -275,7 +275,12 @@ function slideBody(d, t, index) {
           <div class="sh-mo"><img src="${shotUrl(d.mobile, index, 'mobile')}" alt=""></div>
         </div>`
       : '';
-    if (!d.pc) {
+    if (!d.pc && d.wide) {
+      // 가로로 넓은 화면 조각. shot-stand 는 height 고정이라 세로로 긴 폰
+      // 화면만 맞는다 — 가로 조각을 넣으면 폭이 튀어 컨테이너를 뚫는다.
+      // 흘려보내지 않고 본문 안에 카드로 앉힌다.
+      body = `<div class="shot-wide"><img src="${shotUrl(d.mobile, index, 'mobile')}" alt=""></div>`;
+    } else if (!d.pc) {
       const shots = Array.isArray(d.mobile) ? d.mobile.slice(0, 2) : [d.mobile];
       overlay = `<div class="shot-stand${shots.length > 1 ? ' pair' : ''}">${
         shots.map((m, i) => `<img src="${shotUrl(m, index, `mobile[${i}]`)}" alt="">`).join('')
@@ -554,6 +559,22 @@ function css(t, fontUrl) {
   .ch-d { font-size:23px; font-weight:600; color:${t.accentInk}; }
 
   .panel { background:${t.soft}; border-radius:30px; padding:42px; }
+  /* 가로로 넓은 화면 조각. 세로로 긴 폰 화면(.shot-stand)과 달리 흘려보내지
+     않고 본문 안에 통째로 앉힌다. 잘리면 무슨 화면인지 못 알아본다.
+
+     이미지를 .shot-wide 의 직접 자식으로 둔다. flex:1 이라 높이가 확정되므로
+     img 의 max-height:100% 가 실제로 걸린다. 래퍼를 한 겹 끼우면 래퍼 높이가
+     auto 여서 퍼센트가 풀리지 않고, 이미지가 컨테이너를 넘어 잘린다.
+     align-items 를 빼면 flex 기본값 stretch 로 세로가 늘어나 비율이 깨진다. */
+  .shot-wide { display:flex; justify-content:center; align-items:center; flex:1; min-height:0; }
+  .shot-wide img {
+    max-width:100%; max-height:100%; width:auto; height:auto; display:block;
+    border-radius:26px 26px 0 0;
+    /* 테두리로 가두지 않는다. 네모를 두르면 화면이 아니라 삽화로 읽힌다.
+       페이드도 걸지 않는다 — 넣을 화면을 필요한 영역만 잘라 두므로 아래가
+       중간에 끊기지 않는다. 끊기지 않는 것을 흘려보내면 오히려 덜 만든
+       화면처럼 보인다. */
+  }
   .stmt {
     font-size:50px; font-weight:800; line-height:1.42; letter-spacing:-.03em;
     color:${t.softInk}; padding:62px 52px; text-align:center;
