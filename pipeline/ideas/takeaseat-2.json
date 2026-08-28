@@ -2,27 +2,28 @@
   "id": "takeaseat-2",
   "service": "takeaseat",
   "status": "design_done",
-  "angle": "\"저번에 적립 안 됐는데요\"에 이력으로 답한다 — 적립금 하나 깊게",
-  "caption": "\"저번에 적립 안 됐는데요\"\n\n이 말 들으면 난감하죠 😥\n\nTake a Seat는 적립금을\n정해둔 정책대로 쌓아요.\n퍼센트를 한 번 정해두면\n결제완료될 때 알아서 붙어요.\n\n필요할 땐 직접 적립하거나\n차감할 수도 있어요.\n\n중요한 건 그다음이에요.\n언제 얼마가 쌓이고 빠졌는지\n고객마다 한 줄씩 남아요.\n어느 예약에서 붙은 건지도\n눌러서 바로 확인돼요.\n\n기억을 더듬을 일이\n없어지는 셈이에요.\n\n프로필 링크에서\nhttps://takeaseat.co.kr 확인하세요 🔗\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯\n\n\"I didn't get my points last time.\"\n\nThat one is hard to answer from memory.\n\nTake a Seat adds points by the rule you set.\nPick a percentage once and it lands on its\nown when a payment is marked complete.\nYou can still add or subtract by hand\nwhenever a visit needs it.\n\nWhat matters is what comes after. Every\nchange stays as its own line under that\ncustomer — what happened, how much, and\nthe balance left after it. Lines that came\nfrom a booking open that booking.\n\nSo the answer is on the screen instead of\nin your memory.\n\nLink in bio\nhttps://takeaseat.co.kr 🔗\n\n#TAS #적립금 #단골관리 #1인샵 #pikaworks",
+  "angle": "적립금·회원권 변동이 기록으로 남는다 — \"저번에 적립 안 됐는데요\"에 답하기",
+  "caption": "\"저번에 적립 안 됐는데요\"\n\n이 말 들으면 난감하죠 😥\n\nTake a Seat는 적립금을\n정해둔 정책대로 쌓아요.\n퍼센트를 한 번 정해두면\n결제완료될 때 알아서 붙어요.\n\n회원권도 같이 관리해요.\n10회권이든 3개월권이든\n만들어서 발급해두면\n쓸 때마다 한 번씩 빼요.\n\n중요한 건 그다음이에요.\n언제 얼마가 쌓이고 빠졌는지\n고객마다 한 줄씩 남아요.\n어느 예약에서 붙은 건지도\n눌러서 바로 확인돼요.\n\n기억을 더듬을 일이\n없어지는 셈이에요 ✨\n\n프로필 링크에서\nhttps://takeaseat.co.kr 확인하세요 🔗\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯\n\n\"I didn't get my points last time.\"\n\nThat one is hard to answer from memory.\n\nTake a Seat adds points by the rule you set.\nPick a percentage once and it lands on its own\nwhen a payment is marked complete.\n\nMemberships sit next to it. Build a ten-visit\npass or a three-month one, hand it to a\ncustomer, and take one off each time they come.\nPressed it by mistake? Put it back.\n\nWhat matters is what comes after. Every change\nstays as its own line under that customer —\nwhat happened, how much, and what is left.\n\nSo the answer is on the screen instead of\nin your memory.\n\nLink in bio\nhttps://takeaseat.co.kr 🔗\n\n#TAS #적립금 #회원권 #1인샵 #pikaworks",
   "image_path": [
     "public/ig/takeaseat-2-1.png",
     "public/ig/takeaseat-2-2.png",
     "public/ig/takeaseat-2-3.png",
     "public/ig/takeaseat-2-4.png",
-    "public/ig/takeaseat-2-5.png"
+    "public/ig/takeaseat-2-5.png",
+    "public/ig/takeaseat-2-6.png"
   ],
   "image_url": "https://pikaworks.kr/ig/takeaseat-2-1.png",
   "design": {
     "cover": {
-      "kicker": "적립금 관리",
+      "kicker": "적립금·회원권",
       "title": [
         "저번에 적립",
         "안 됐는데요",
         "이력이 답해요"
       ],
       "features": [
-        "정책대로 자동",
-        "수동 적립·차감",
+        "정책대로 자동 적립",
+        "회원권 횟수 차감",
         "고객별 변동 이력"
       ]
     },
@@ -49,6 +50,31 @@
             "icon": "revenue",
             "title": "선불 충전도",
             "text": "미리 충전해두고 쓸 때마다 차감"
+          }
+        ]
+      },
+      {
+        "template": "list",
+        "title": [
+          "회원권도",
+          "몇 회 남았는지"
+        ],
+        "subtitle": "횟수권·기간권을 만들어 고객에게 발급해요",
+        "items": [
+          {
+            "icon": "membership",
+            "title": "횟수·기간",
+            "text": "10회권도 3개월권도 돼요"
+          },
+          {
+            "icon": "customerAdd",
+            "title": "고객에게 발급",
+            "text": "누구 것인지 남아요"
+          },
+          {
+            "icon": "check",
+            "title": "1회씩 차감",
+            "text": "잘못 눌러도 복원할 수 있어요"
           }
         ]
       },
@@ -93,12 +119,13 @@
   "media_id": null,
   "permalink": null,
   "container_id": null,
-  "note": "캐러셀 5장으로 재제작 (2026-08-28). 적립금 하나만 다룬다 — 쿠폰 발급·회원권 결제 차감은 tas@99390ef 기준 미구현이라 뺐다.",
+  "note": "캐러셀 6장으로 재제작 (2026-08-28). 적립금·회원권은 tas@99390ef 에서 동작을 확인했다. 쿠폰은 상품 등록까지만이고 발급 UI 가 없어 뺐다 — 화면 안내문도 \"발급·결제 차감은 추후 지원됩니다\" 다.",
   "image_urls": [
     "https://pikaworks.kr/ig/takeaseat-2-1.png",
     "https://pikaworks.kr/ig/takeaseat-2-2.png",
     "https://pikaworks.kr/ig/takeaseat-2-3.png",
     "https://pikaworks.kr/ig/takeaseat-2-4.png",
-    "https://pikaworks.kr/ig/takeaseat-2-5.png"
+    "https://pikaworks.kr/ig/takeaseat-2-5.png",
+    "https://pikaworks.kr/ig/takeaseat-2-6.png"
   ]
 }
