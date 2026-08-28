@@ -340,12 +340,13 @@ def mode_verify(today, dry, wanted_id):
 
 
 def mode_publish(today, dry, catchup=False):
-    """catchup=True 는 같은 날 두 번째 실행이다.
+    """catchup=True 는 크론이 아니라 수동 스위치로 돈 실행이다.
 
-    첫 실행이 이미 올렸으면 대기 건이 없는 게 정상이므로 경고하지 않는다.
-    그 경우까지 알림을 보내면 매일 거짓 경보가 울려 진짜 경고가 묻힌다.
+    `.github/publish-now` 를 푸시해 지금 올리려고 누른 경우다. 크론이
+    이미 올렸으면 대기 건이 없는 게 정상이므로 경고하지 않는다.
+    그 경우까지 알림을 보내면 거짓 경보가 울려 진짜 경고가 묻힌다.
     """
-    label = '따라잡기' if catchup else '발행'
+    label = '수동 발행' if catchup else '발행'
     summary(f'### {label} {today:%Y-%m-%d} KST — 오늘 슬롯: {slot_label(today)}')
 
     ideas = load_ideas()
@@ -429,9 +430,9 @@ def mode_publish(today, dry, catchup=False):
         by[i['service']] = by.get(i['service'], 0) + 1
     left = ' / '.join(f'{k} {v}건' for k, v in sorted(by.items())) or '없음'
 
-    # 따라잡기 실행이 실제로 올렸다는 건 정시 실행이 안 돌았다는 뜻이다.
+    # 수동 스위치가 실제로 올렸다는 건 크론이 제때 안 돌았다는 뜻이다.
     # 결과만 보면 정상이라 이 사실이 알림에 남지 않으면 영영 모른다.
-    late = ('\n⚠️ 정시(08:00) 실행이 아니라 따라잡기 실행이 올렸습니다. '
+    late = ('\n⚠️ 크론이 아니라 수동 스위치(.github/publish-now)가 올렸습니다. '
             'GitHub Actions 크론이 씹혔는지 확인해 주세요.' if catchup else '')
     notify(f"*{target['id']}* 발행 완료 — {permalink}\n남은 대기: {left}{late}")
     if len(waiting) <= 1:
