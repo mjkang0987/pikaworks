@@ -570,12 +570,10 @@ function css(t, fontUrl) {
   .shot-wide img {
     max-width:100%; max-height:100%; width:auto; height:auto; display:block;
     border-radius:26px 26px 0 0;
-    /* 테두리로 가두지 않는다. 잘라 온 조각이라 네모를 두르면 "여기서 끝난
-       화면" 으로 읽힌다. 아래를 흘려보내면 이어지는 것으로 읽힌다.
-       덧씌우는 div 는 이미지가 컨테이너보다 작을 때 엉뚱한 자리에 앉지만,
-       마스크는 이미지 박스를 그대로 따라간다. */
-    -webkit-mask-image:linear-gradient(to bottom, #000 calc(100% - 110px), transparent);
-    mask-image:linear-gradient(to bottom, #000 calc(100% - 110px), transparent);
+    /* 테두리로 가두지 않는다. 네모를 두르면 화면이 아니라 삽화로 읽힌다.
+       페이드도 걸지 않는다 — 넣을 화면을 필요한 영역만 잘라 두므로 아래가
+       중간에 끊기지 않는다. 끊기지 않는 것을 흘려보내면 오히려 덜 만든
+       화면처럼 보인다. */
   }
   .stmt {
     font-size:50px; font-weight:800; line-height:1.42; letter-spacing:-.03em;

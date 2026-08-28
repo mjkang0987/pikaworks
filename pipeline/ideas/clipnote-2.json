@@ -34,7 +34,7 @@
           "목록에 이렇게"
         ],
         "subtitle": "제목과 대표 이미지가 그대로 붙어요",
-        "mobile": "assets/shots/cn-mobile-list.png",
+        "mobile": "assets/shots/cn-mobile-list-crop.png",
         "wide": true
       },
       {
@@ -44,7 +44,7 @@
           "이렇게 떠요"
         ],
         "subtitle": "주소만 가는 게 아니라 카드가 같이 가요",
-        "mobile": "assets/shots/cn-mobile-card.png",
+        "mobile": "assets/shots/cn-mobile-card-crop.png",
         "wide": true
       },
       {
