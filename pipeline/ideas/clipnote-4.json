@@ -1,0 +1,111 @@
+{
+  "id": "clipnote-4",
+  "service": "clipnote",
+  "status": "design_done",
+  "angle": "여기저기서 받은 공구 링크를 카드로 모아 태그로 진행·마감 가르기 — 공구방",
+  "caption": "여기저기서 받은 공구 링크, 주소만 쌓여 있지 않나요 📦\n\n나중에 열어보기 전엔\n뭐가 뭔지 알 수가 없죠.\n\nClipNote에 붙여넣으면\n어떤 공구인지 내용을 읽어와\n카드로 저장돼요.\n목록만 훑어도 바로 보여요.\n\n태그를 달아두면\n진행 중인 공구와 마감된 공구를\n따로 모아 볼 수 있어요.\n\n방에 공유할 때도\n목록에서 꺼내 그대로 보내면 돼요.\n주소만 가는 게 아니라\n내용이 담긴 카드로 가요.\n\n프로필 링크에서\nhttps://clipnote.co.kr 확인하세요 🔗\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯\n\nGroup-buy links pile up from every direction, and all you keep is the address.\n\nWeeks later you cannot tell one from another without opening each one.\n\nPaste them into ClipNote and it reads what the buy actually is, then keeps it\nas a card. Scanning the list is enough to know which is which.\n\nTag them and the ones still running stay separate from the ones that closed.\n\nWhen you pass one along to your own chat, it goes out as that same card — not\na bare address the group has to guess at.\n\nLink in bio: https://clipnote.co.kr\n\n#ClipNote #링크저장 #공유카드 #공구방 #pikaworks",
+  "image_path": [
+    "public/ig/clipnote-4-1.png",
+    "public/ig/clipnote-4-2.png",
+    "public/ig/clipnote-4-3.png",
+    "public/ig/clipnote-4-4.png",
+    "public/ig/clipnote-4-5.png"
+  ],
+  "image_url": "https://pikaworks.kr/ig/clipnote-4-1.png",
+  "design": {
+    "cover": {
+      "kicker": "공구 링크 정리",
+      "title": [
+        "공구 링크,",
+        "주소만",
+        "쌓이나요"
+      ],
+      "features": [
+        "붙여넣으면 카드로",
+        "태그로 진행·마감",
+        "꺼내서 그대로 공유"
+      ]
+    },
+    "slides": [
+      {
+        "template": "clips",
+        "title": [
+          "목록만 훑어도",
+          "뭐가 뭔지 보여요"
+        ],
+        "subtitle": "붙여넣으면 어떤 공구인지 읽어와요",
+        "items": [
+          {
+            "title": "봄맞이 생활용품 공동구매",
+            "domain": "blog.naver.com",
+            "tag": "진행 중"
+          },
+          {
+            "title": "베이커리 2차 공구 안내",
+            "domain": "cafe.naver.com",
+            "tag": "진행 중"
+          },
+          {
+            "title": "겨울 이불 공동구매 3차",
+            "domain": "smartstore.naver.com",
+            "tag": "마감",
+            "done": true
+          }
+        ]
+      },
+      {
+        "template": "list",
+        "title": [
+          "진행 중인 공구만",
+          "따로 모아봐요"
+        ],
+        "subtitle": "태그를 달아두면 마감된 건 안 섞여요",
+        "items": [
+          {
+            "icon": "tag",
+            "title": "태그로 구분",
+            "text": "진행 중과 마감을 갈라둬요"
+          },
+          {
+            "icon": "bookmark",
+            "title": "모아 보기",
+            "text": "같은 태그끼리 한 번에 꺼내요"
+          },
+          {
+            "icon": "clock",
+            "title": "놓치지 않게",
+            "text": "열려 있는 공구만 남겨둬요"
+          }
+        ]
+      },
+      {
+        "template": "chat",
+        "title": [
+          "공구방에 보낼 땐",
+          "카드째로"
+        ],
+        "subtitle": "주소만 가는 게 아니라 내용이 같이 가요",
+        "after": {
+          "tag": "ClipNote로",
+          "url": "https://clipnote.co.kr/q7Kd2xB",
+          "title": "봄맞이 생활용품 공동구매",
+          "domain": "blog.naver.com",
+          "desc": "3월 5일 마감 · 신청은 댓글로 남겨주세요"
+        }
+      }
+    ]
+  },
+  "scheduled_at": null,
+  "published_at": null,
+  "media_id": null,
+  "permalink": null,
+  "container_id": null,
+  "note": "사용자가 캡션을 직접 주고 이미지 제작을 지시(2026-08-30). 캡션은 받은 그대로 옮겼다. clipnote-2(저장·태그·카드 공유)와 뼈대가 같고 공구방 장면으로 좁힌 건이라, 겹침을 줄이려고 화면은 다르게 잡았다 — 2번은 랜딩 스크린샷 두 장, 이 건은 목록 한 장(clips)과 대화방 카드 한 장이다. clips 템플릿을 ig.mjs 에 새로 추가했다.",
+  "image_urls": [
+    "https://pikaworks.kr/ig/clipnote-4-1.png",
+    "https://pikaworks.kr/ig/clipnote-4-2.png",
+    "https://pikaworks.kr/ig/clipnote-4-3.png",
+    "https://pikaworks.kr/ig/clipnote-4-4.png",
+    "https://pikaworks.kr/ig/clipnote-4-5.png"
+  ]
+}
