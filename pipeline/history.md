@@ -12,6 +12,7 @@
 
 | 날짜 | 서비스 | 앵글 | 링크 |
 |---|---|---|---|
+| 2026-08-31 | clipnote | 저장하고 태그로 정리, 꺼낼 땐 카드째 공유 — 아카이빙 | [보기](https://www.instagram.com/p/DcrpH8tjrPg/) |
 | 2026-08-28 | clipnote | 밋밋한 링크를 제목·대표 이미지 카드로 — 핵심 가치 소개 | [보기](https://www.instagram.com/p/DcjQQfJICso/) |
 | 2026-08-27 | takeaseat | 예약·고객·매출을 한 곳에, 게스트로 바로 시작 — 브랜드 소개 | [보기](https://www.instagram.com/p/DciHkM8oDzQ/) |
 | — | — | (아직 없음) | — |
