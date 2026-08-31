@@ -367,21 +367,25 @@ function slideBody(d, t, index) {
       </div>
     </div>`;
   } else if (d.template === 'clips') {
-    // 저장된 클립 목록. 실제 목록 한 줄의 구조(썸네일 · 제목 · 도메인)를 따른다.
-    // 썸네일은 대표 이미지가 없을 때 채워지는 그라디언트다 — 여기서 보여주려는
-    // 건 이미지가 아니라 제목이 읽힌다는 것이라 그 상태로 둔다.
-    // tag 는 목록 화면에 실제로 있는 요소가 아니라 태그를 달아둔 상태를
-    // 나타내려고 붙이는 것이므로, 태그 이야기를 하는 장에서만 준다.
+    // 저장된 클립 목록. 한 줄의 구조는 source 템플릿의 미리보기와 같다 —
+    // 실제 화면에서 둘이 같은 컴포넌트 모양이고, 두 장을 넘길 때 같은 줄이
+    // 늘어난 것으로 읽혀야 한다.
     const rows = (d.items || []).slice(0, 3).map((it, i) => {
       check('clip.title', it.title, `슬라이드 ${index} items[${i}].title`);
-      check('clip.tag', it.tag, `슬라이드 ${index} items[${i}].tag`);
+      (it.overlay || []).forEach((l, j) =>
+        check('post.overlay', l, `슬라이드 ${index} items[${i}].overlay[${j}]`));
+      const tags = (it.tags || []).slice(0, 4).map((g, j) => {
+        check('clip.tag', g, `슬라이드 ${index} items[${i}].tags[${j}]`);
+        return `<span class="pv-g">${esc(g)}</span>`;
+      }).join('');
       return `<div class="clip">
-        <div class="cl-th${i ? ` g${i + 1}` : ''}"></div>
-        <div class="cl-m">
-          <div class="cl-t">${esc(it.title)}</div>
-          ${it.domain ? `<div class="cl-d">${esc(it.domain)}</div>` : ''}
+        <div class="pv-th${i ? ` g${i + 1}` : ''}"><span>${
+          (it.overlay || []).map(esc).join('<br>')}</span></div>
+        <div class="pv-m">
+          <div class="pv-t">${esc(it.title)}</div>
+          ${it.domain ? `<div class="pv-d">${esc(it.domain)}</div>` : ''}
+          ${tags ? `<div class="pv-tags">${tags}</div>` : ''}
         </div>
-        ${it.tag ? `<div class="cl-g${it.done ? '' : ' on'}">${esc(it.tag)}</div>` : ''}
       </div>`;
     }).join('');
     body = `<div class="clips">${rows}</div>`;
@@ -679,9 +683,14 @@ function css(t, fontUrl) {
     display:flex; align-items:center; justify-content:center;
     background:linear-gradient(135deg, #6366f1, #a855f7 55%, #e879f9);
   }
+  /* 실제 앱도 대표 이미지가 없으면 프리셋 중에서 고른다 — 목록 세 줄이
+     같은 색이면 한 사람이 찍어낸 목업처럼 보인다. */
+  .pv-th.g2 { background:linear-gradient(135deg, #0ea5e9, #6366f1 55%, #a855f7); }
+  .pv-th.g3 { background:linear-gradient(135deg, #fb7185, #f97316 55%, #fbbf24); }
   .pv-th span {
-    color:#fff; font-size:20px; font-weight:800; line-height:1.18;
+    color:#fff; font-size:19px; font-weight:800; line-height:1.2;
     letter-spacing:-.03em; text-align:center; text-shadow:0 2px 10px rgba(0,0,0,.3);
+    padding:0 6px;
   }
   .pv-m { flex:1; min-width:0; }
   .pv-t { font-size:32px; font-weight:800; letter-spacing:-.03em; line-height:1.3; word-break:keep-all; }
@@ -696,34 +705,16 @@ function css(t, fontUrl) {
   }
 
   /* ── 클립 목록 ── 저장해둔 것들이 목록에서 어떻게 보이는지.
-     한 줄이 썸네일·제목·도메인으로 끝나서, 훑기만 해도 무엇인지 읽힌다는
-     말을 그림으로 그대로 옮긴 것이다. 태그는 켜짐(키컬러)/꺼짐(테두리)
-     둘뿐이라 진행 중과 마감이 색 하나로 갈린다. */
-  .clips { display:flex; flex-direction:column; gap:22px; }
+     한 줄이 썸네일 · 제목 · 호스트 · 태그로 끝난다. source 템플릿의
+     미리보기와 같은 모양이라 두 장이 한 화면의 앞뒤로 읽힌다. */
+  .clips { display:flex; flex-direction:column; gap:18px; }
   .clip {
     background:${t.soft}; border-radius:26px;
-    padding:26px 30px; display:flex; align-items:center; gap:26px;
+    padding:22px 26px; display:flex; align-items:flex-start; gap:24px;
   }
-  /* 썸네일. 실제로는 원본 페이지의 대표 이미지가 들어가는 자리다.
-     세 줄이 같은 색이면 한 사람이 만든 목업처럼 보인다 — 실제 앱도 대표
-     이미지가 없으면 프리셋 중에서 고르므로 줄마다 다른 조합을 쓴다. */
-  .cl-th {
-    flex:none; width:104px; height:104px; border-radius:22px;
-    background:linear-gradient(135deg, ${t.accent}, #e879f9);
-  }
-  .cl-th.g2 { background:linear-gradient(135deg, #6366f1, #22d3ee); }
-  .cl-th.g3 { background:linear-gradient(135deg, #fb7185, #fbbf24); }
-  .cl-m { flex:1; min-width:0; }
-  .cl-t { font-size:34px; font-weight:800; letter-spacing:-.03em; line-height:1.3; word-break:keep-all; }
-  /* 도메인은 흐린 글씨로 둔다. 실제 목록 화면도 그렇고, 보라를 여기까지
-     쓰면 한 장에 보라가 다섯 군데가 되어 태그 강조가 묻힌다. */
-  .cl-d { margin-top:10px; font-size:26px; font-weight:600; color:${t.muted}; letter-spacing:-.02em; }
-  .cl-g {
-    flex:none; font-size:24px; font-weight:700; letter-spacing:-.02em;
-    padding:12px 22px; border-radius:999px; white-space:nowrap;
-    background:${t.bg}; color:${t.muted}; border:2px solid ${t.chipBorder};
-  }
-  .cl-g.on { background:${t.accent}; color:${t.onAccent}; border-color:${t.accent}; }
+  /* 줄 배경이 이미 연보라라, 태그 알약까지 연보라면 알약이 사라지고 글자만
+     남는다. 줄 안에서는 알약을 바탕색으로 뒤집는다. */
+  .clip .pv-g { background:${t.bg}; }
 
   .panel { background:${t.soft}; border-radius:30px; padding:42px; }
   /* 가로로 넓은 화면 조각. 세로로 긴 폰 화면(.shot-stand)과 달리 흘려보내지
@@ -886,7 +877,7 @@ for (let i = 0; i < slides.length; i += 1) {
   const overflow = await page.evaluate(() => {
     const bad = [];
     // 글자 자체가 넘치는 경우
-    for (const el of document.querySelectorAll('.cv-h, .h1, .ct-t, .ct-d, .cv-f, .cv-k, .ot-name, .ot-h, .ch-t, .cl-t, .cl-d, .ig-id, .pv-d')) {
+    for (const el of document.querySelectorAll('.cv-h, .h1, .ct-t, .ct-d, .cv-f, .cv-k, .ot-name, .ot-h, .ch-t, .ig-id, .pv-d')) {
       if (el.scrollWidth > el.clientWidth + 1) {
         bad.push(`${el.className}: "${el.textContent.trim()}" (${el.scrollWidth} > ${el.clientWidth})`);
       }
