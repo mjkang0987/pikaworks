@@ -15,8 +15,9 @@
     "cover": {
       "kicker": "이런 분께 추천",
       "title": [
-        "링크 정리가",
-        "필요하다면"
+        "링크 자주",
+        "보내는 분이면",
+        "더 편해요"
       ],
       "features": [
         "가입 없이 바로",
@@ -74,18 +75,14 @@
           }
         ]
       }
-    ],
-    "outro": {
-      "headline": "지금 무료로 써보세요",
-      "sub": "가입 없이 바로 써볼 수 있어요"
-    }
+    ]
   },
   "scheduled_at": null,
   "published_at": null,
   "media_id": null,
   "permalink": null,
   "container_id": null,
-  "note": "캐러셀로 재제작 (2026-08-25)",
+  "note": "캐러셀로 재제작 (2026-08-25). 커버·마감을 발행분 시안에 맞췄다(2026-08-31): 마감 카드는 ig.mjs:216 slideOutro(t) 가 테마만 보고 그리므로 design.outro 는 렌더에 반영되지 않는 죽은 데이터라 제거했다 — 발행된 clipnote-1·2, takeaseat-1 전부 이 키가 없다. 커버 타이틀은 2줄에서 시안과 같은 3줄로 바꿨고, kicker 가 \"이런 분께 추천\"이라 타이틀에서 \"추천\"을 반복하지 않았다.",
   "image_urls": [
     "https://pikaworks.kr/ig/clipnote-3-1.png",
     "https://pikaworks.kr/ig/clipnote-3-2.png",
