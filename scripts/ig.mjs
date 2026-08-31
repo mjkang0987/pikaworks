@@ -357,6 +357,12 @@ function slideBody(d, t, index) {
         <div class="ch-meta">
           <div class="ch-t">${esc(cd.title || '')}</div>
           ${cd.desc ? `<div class="ch-s">${esc(cd.desc)}</div>` : ''}
+          ${(cd.tags || []).length ? `<div class="ch-tags">${
+            cd.tags.slice(0, 4).map((g, i) => {
+              check('clip.tag', g, `슬라이드 ${index} card.tags[${i}]`);
+              return `<span class="ch-g">${esc(g)}</span>`;
+            }).join('')
+          }</div>` : ''}
           <div class="ch-d">${esc(cd.domain || t.domain)}</div>
         </div>
       </div>
@@ -664,6 +670,14 @@ function css(t, fontUrl) {
     letter-spacing:-.03em; text-align:center; text-shadow:0 2px 12px rgba(0,0,0,.3);
   }
   .src .ch-meta { padding:28px 28px 32px; gap:12px; }
+  /* 저장할 때 달아둔 태그. 여러 개가 한 줄에 눕는 모양이라 태그를 여럿
+     달 수 있다는 게 3번을 보기 전에 여기서 이미 읽힌다. */
+  .ch-tags { display:flex; flex-wrap:wrap; gap:10px; margin-top:2px; }
+  .ch-g {
+    background:${t.soft}; color:${t.softInk}; border:2px solid ${t.chipBorder};
+    font-size:21px; font-weight:700; letter-spacing:-.02em;
+    padding:9px 18px; border-radius:999px; white-space:nowrap;
+  }
 
   /* ── 클립 목록 ── 저장해둔 것들이 목록에서 어떻게 보이는지.
      한 줄이 썸네일·제목·도메인으로 끝나서, 훑기만 해도 무엇인지 읽힌다는
@@ -863,7 +877,7 @@ for (let i = 0; i < slides.length; i += 1) {
     }
     // 배지처럼 내용에 맞춰 커지는 요소는 자기 자신은 절대 안 넘친다.
     // 넘침이 부모 행에서 일어나므로 컨테이너도 같이 재야 한다.
-    for (const el of document.querySelectorAll('.cv-top, .cv-fs, .cv-hs, .chips, .foot, .ft-app, .cards, .clip')) {
+    for (const el of document.querySelectorAll('.cv-top, .cv-fs, .cv-hs, .chips, .foot, .ft-app, .cards, .clip, .ch-tags')) {
       if (el.scrollWidth > el.clientWidth + 1) {
         bad.push(`${el.className} 가로 넘침 (${el.scrollWidth} > ${el.clientWidth})`);
       }
