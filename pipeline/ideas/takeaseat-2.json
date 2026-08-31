@@ -1,7 +1,7 @@
 {
   "id": "takeaseat-2",
   "service": "takeaseat",
-  "status": "scheduled",
+  "status": "published",
   "angle": "검색 한 번에 적립금·이력·예약 조회 — 고객정보 한 곳에 모인다",
   "caption": "검색 한 번에\n적립금, 예약 내역까지\n\nTake a Seat는 어느 화면에서나\n고객 검색이 가능해요.\n이름으로도, 번호 뒷자리로도요.\n\n고객정보에서\n적립금 잔액과 이력,\n예약 내역까지 조회가 가능해요.\n\n언제 얼마가 적립되고 쓰였는지\n건별로 남아요.\n\n적립은 방식 선택도 가능해요.\n결제 금액 퍼센트 자동 적립과\n선불금 충전, 둘 다 쓸 수 있어요.\n\n적립·차감을 직접 하는 것도\n고객정보에서 바로 가능해요 🙂\n\n프로필 링크에서\nhttps://takeaseat.co.kr 확인하세요 🔗\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯\n\nOne search, and it is all in one place.\n\nTake a Seat keeps customer search one tap\naway from any screen — by name, or by the\nlast digits of a phone number.\n\nOpen a customer and you get the point\nbalance, the full ledger, and the visit\nhistory: what was earned, what was spent,\nwhen, and the balance after each line.\n\nEarning has two modes and you can run\neither or both — a percentage of the paid\namount, added the moment a payment is\nmarked complete, and prepaid top-ups you\nmanage per customer.\n\nLink in bio\nhttps://takeaseat.co.kr 🔗\n\n#TAS #적립금 #고객관리 #공방운영 #pikaworks",
   "image_path": [
@@ -75,10 +75,10 @@
     ]
   },
   "scheduled_at": "2026-09-01",
-  "published_at": null,
-  "media_id": null,
-  "permalink": null,
-  "container_id": null,
+  "published_at": "2026-09-01",
+  "media_id": "18115399532061721",
+  "permalink": "https://www.instagram.com/p/DcuOTL_lP2e/",
+  "container_id": "18112612201928088",
   "note": "2026-08-31 재작성. 앵글을 \"검색 한 번에 조회\" 로 바꿨다. 쿠폰은 발급 UI 가 없어 제외, 회원권은 고객정보에 없어 제외.",
   "image_urls": [
     "https://pikaworks.kr/ig/takeaseat-2-1.png",
