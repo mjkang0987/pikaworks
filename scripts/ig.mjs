@@ -352,18 +352,17 @@ function slideBody(d, t, index) {
         <div class="ig-cap"><b>${esc(po.name || '')}</b> ${esc(po.caption || '')}</div>
       </div>
       <div class="src-arrow">→</div>
-      <div class="ch-card">
-        <div class="ch-thumb src-th"><span>${(po.overlay || []).map(esc).join('<br>')}</span></div>
-        <div class="ch-meta">
-          <div class="ch-t">${esc(cd.title || '')}</div>
-          ${cd.desc ? `<div class="ch-s">${esc(cd.desc)}</div>` : ''}
-          ${(cd.tags || []).length ? `<div class="ch-tags">${
+      <div class="prev">
+        <div class="pv-th"><span>${(po.overlay || []).map(esc).join('<br>')}</span></div>
+        <div class="pv-m">
+          <div class="pv-t">${esc(cd.title || '')}</div>
+          <div class="pv-d">${esc(cd.domain || t.domain)}</div>
+          ${(cd.tags || []).length ? `<div class="pv-tags">${
             cd.tags.slice(0, 4).map((g, i) => {
               check('clip.tag', g, `슬라이드 ${index} card.tags[${i}]`);
-              return `<span class="ch-g">${esc(g)}</span>`;
+              return `<span class="pv-g">${esc(g)}</span>`;
             }).join('')
           }</div>` : ''}
-          <div class="ch-d">${esc(cd.domain || t.domain)}</div>
         </div>
       </div>
     </div>`;
@@ -629,9 +628,9 @@ function css(t, fontUrl) {
   /* ── 원본 게시물 → 카드 ── 게시물의 구조만 빌린다. 로고도 브랜드색도
      안 쓴다. 계정 이름은 라틴 핸들(@…)이 아니라 한글로 둬서 실재하는
      계정으로 오해될 여지를 없앤다. */
-  .src { display:flex; align-items:center; justify-content:center; gap:26px; height:100%; }
+  .src { display:flex; align-items:center; justify-content:center; gap:22px; height:100%; }
   .ig {
-    flex:none; width:386px; background:${t.bg};
+    flex:none; width:376px; background:${t.bg};
     border:2px solid ${t.border}; border-radius:24px; overflow:hidden;
     box-shadow:0 18px 44px rgba(0,0,0,.10);
   }
@@ -660,23 +659,37 @@ function css(t, fontUrl) {
   }
   .ig-cap b { color:${t.fg}; font-weight:800; }
   .src-arrow { flex:none; font-size:44px; font-weight:800; color:${t.accentInk}; }
-  .src .ch-card { flex:none; width:386px; }
-  /* 카드 썸네일은 게시물 사진과 같은 그림이어야 한다 — 대표 이미지를
-     그대로 불러온다는 말이 그림으로 읽히는 지점이 여기다. */
-  .src .ch-thumb { height:218px; background:linear-gradient(135deg, #6366f1, #a855f7 55%, #e879f9); }
-  .src-th { display:flex; align-items:center; justify-content:center; }
-  .src-th span {
-    color:#fff; font-size:31px; font-weight:800; line-height:1.18;
-    letter-spacing:-.03em; text-align:center; text-shadow:0 2px 12px rgba(0,0,0,.3);
+  /* 저장 결과는 가로형 한 줄이다 — 정사각 썸네일 · 제목 · 호스트 · 태그.
+     세로 카드(이미지 크게 + 글 아래)는 공유했을 때 뜨는 그림이고 거기엔
+     태그가 안 붙는다. 태그가 보이는 건 이 줄뿐이라 이 모양으로 그린다.
+     (clipnote main f121a32 — HomeClient 클립 미리보기 · ClipsClient 목록) */
+  .prev {
+    flex:none; width:512px; background:${t.bg};
+    border:2px solid ${t.chipBorder}; border-radius:24px;
+    padding:28px 30px; display:flex; align-items:flex-start; gap:24px;
+    box-shadow:0 18px 44px rgba(0,0,0,.10);
   }
-  .src .ch-meta { padding:28px 28px 32px; gap:12px; }
-  /* 저장할 때 달아둔 태그. 여러 개가 한 줄에 눕는 모양이라 태그를 여럿
-     달 수 있다는 게 3번을 보기 전에 여기서 이미 읽힌다. */
-  .ch-tags { display:flex; flex-wrap:wrap; gap:10px; margin-top:2px; }
-  .ch-g {
-    background:${t.soft}; color:${t.softInk}; border:2px solid ${t.chipBorder};
+  /* 썸네일은 게시물 사진과 같은 그림이어야 한다 — 대표 이미지를 그대로
+     불러온다는 말이 그림으로 읽히는 지점이 여기다. */
+  .pv-th {
+    flex:none; width:124px; height:124px; border-radius:20px;
+    display:flex; align-items:center; justify-content:center;
+    background:linear-gradient(135deg, #6366f1, #a855f7 55%, #e879f9);
+  }
+  .pv-th span {
+    color:#fff; font-size:20px; font-weight:800; line-height:1.18;
+    letter-spacing:-.03em; text-align:center; text-shadow:0 2px 10px rgba(0,0,0,.3);
+  }
+  .pv-m { flex:1; min-width:0; }
+  .pv-t { font-size:32px; font-weight:800; letter-spacing:-.03em; line-height:1.3; word-break:keep-all; }
+  .pv-d { margin-top:9px; font-size:25px; font-weight:600; color:${t.muted}; letter-spacing:-.02em; }
+  /* 여러 개가 한 줄에 눕는 모양이라, 태그를 여럿 달 수 있다는 게
+     3번을 보기 전에 여기서 이미 읽힌다. */
+  .pv-tags { margin-top:14px; display:flex; flex-wrap:wrap; gap:10px; }
+  .pv-g {
+    background:${t.soft}; color:${t.softInk};
     font-size:21px; font-weight:700; letter-spacing:-.02em;
-    padding:9px 18px; border-radius:999px; white-space:nowrap;
+    padding:8px 16px; border-radius:999px; white-space:nowrap;
   }
 
   /* ── 클립 목록 ── 저장해둔 것들이 목록에서 어떻게 보이는지.
@@ -870,20 +883,20 @@ for (let i = 0; i < slides.length; i += 1) {
   const overflow = await page.evaluate(() => {
     const bad = [];
     // 글자 자체가 넘치는 경우
-    for (const el of document.querySelectorAll('.cv-h, .h1, .ct-t, .ct-d, .cv-f, .cv-k, .ot-name, .ot-h, .ch-t, .cl-t, .cl-d, .ig-id')) {
+    for (const el of document.querySelectorAll('.cv-h, .h1, .ct-t, .ct-d, .cv-f, .cv-k, .ot-name, .ot-h, .ch-t, .cl-t, .cl-d, .ig-id, .pv-d')) {
       if (el.scrollWidth > el.clientWidth + 1) {
         bad.push(`${el.className}: "${el.textContent.trim()}" (${el.scrollWidth} > ${el.clientWidth})`);
       }
     }
     // 배지처럼 내용에 맞춰 커지는 요소는 자기 자신은 절대 안 넘친다.
     // 넘침이 부모 행에서 일어나므로 컨테이너도 같이 재야 한다.
-    for (const el of document.querySelectorAll('.cv-top, .cv-fs, .cv-hs, .chips, .foot, .ft-app, .cards, .clip, .ch-tags')) {
+    for (const el of document.querySelectorAll('.cv-top, .cv-fs, .cv-hs, .chips, .foot, .ft-app, .cards, .clip, .pv-tags')) {
       if (el.scrollWidth > el.clientWidth + 1) {
         bad.push(`${el.className} 가로 넘침 (${el.scrollWidth} > ${el.clientWidth})`);
       }
     }
     // flex:1 로 늘어나는 칸은 안에서 찌그러질 뿐 body 를 늘리지 않는다
-    for (const el of document.querySelectorAll('.cv-mid, .main, .ot-app, .shot, .chat, .clips, .src, .ig')) {
+    for (const el of document.querySelectorAll('.cv-mid, .main, .ot-app, .shot, .chat, .clips, .src, .ig, .prev')) {
       if (el.scrollHeight > el.clientHeight + 1) {
         bad.push(`${el.className} 세로 눌림 (${el.scrollHeight} > ${el.clientHeight})`);
       }
