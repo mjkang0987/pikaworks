@@ -331,7 +331,7 @@ function slideBody(d, t, index) {
       check('clip.title', it.title, `슬라이드 ${index} items[${i}].title`);
       check('clip.tag', it.tag, `슬라이드 ${index} items[${i}].tag`);
       return `<div class="clip">
-        <div class="cl-th"></div>
+        <div class="cl-th${i ? ` g${i + 1}` : ''}"></div>
         <div class="cl-m">
           <div class="cl-t">${esc(it.title)}</div>
           ${it.domain ? `<div class="cl-d">${esc(it.domain)}</div>` : ''}
@@ -589,12 +589,15 @@ function css(t, fontUrl) {
     background:${t.soft}; border-radius:26px;
     padding:26px 30px; display:flex; align-items:center; gap:26px;
   }
-  /* 대표 이미지가 없는 페이지에 채워지는 그라디언트. 말풍선 카드(.ch-thumb)와
-     같은 조합을 쓴다 — 두 장에서 다른 색이 나오면 다른 기능처럼 보인다. */
+  /* 썸네일. 실제로는 원본 페이지의 대표 이미지가 들어가는 자리다.
+     세 줄이 같은 색이면 한 사람이 만든 목업처럼 보인다 — 실제 앱도 대표
+     이미지가 없으면 프리셋 중에서 고르므로 줄마다 다른 조합을 쓴다. */
   .cl-th {
     flex:none; width:104px; height:104px; border-radius:22px;
     background:linear-gradient(135deg, ${t.accent}, #e879f9);
   }
+  .cl-th.g2 { background:linear-gradient(135deg, #6366f1, #22d3ee); }
+  .cl-th.g3 { background:linear-gradient(135deg, #fb7185, #fbbf24); }
   .cl-m { flex:1; min-width:0; }
   .cl-t { font-size:34px; font-weight:800; letter-spacing:-.03em; line-height:1.3; word-break:keep-all; }
   /* 도메인은 흐린 글씨로 둔다. 실제 목록 화면도 그렇고, 보라를 여기까지
