@@ -606,9 +606,12 @@ function css(t, fontUrl) {
     display:flex; align-items:center; gap:16px;
     padding-bottom:24px; border-bottom:2px solid ${t.border};
   }
+  /* 카페 글리프만 테마 색을 쓰지 않는다. 어느 게시판인지 알아보게 하려면
+     그 서비스의 키컬러여야 한다. 아래 초록은 테마 토큰이 아니라 이 용도로
+     박아 둔 값이다 — 다른 곳에 쓰지 않는다. */
   .mk-cafe {
     flex:none; width:54px; height:54px; border-radius:17px;
-    background:${t.accent}; color:${t.onAccent};
+    background:#03c75a; color:#ffffff;
     display:flex; align-items:center; justify-content:center;
   }
   .mk-row { display:flex; align-items:center; gap:16px; min-width:0; }
