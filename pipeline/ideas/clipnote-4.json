@@ -1,7 +1,7 @@
 {
   "id": "clipnote-4",
   "service": "clipnote",
-  "status": "image_ok",
+  "status": "scheduled",
   "angle": "여기저기서 받은 공구 링크를 카드로 모아 태그로 진행·마감 가르기 — 공구방",
   "caption": "여기저기서 받은 공구 링크, 주소만 쌓여 있지 않나요 📦\n\n나중에 열어보기 전엔\n뭐가 뭔지 알 수가 없죠.\n\n클립노트(ClipNote)에 붙여넣으면\n어떤 공구인지 내용을 읽어와\n카드로 저장돼요.\n목록만 훑어도 바로 보여요.\n\n태그를 달아두면\n진행 중인 공구와 마감된 공구를\n따로 모아 볼 수 있어요.\n\n공구방에 공유할 때도\n목록에서 꺼내 그대로 보내면 돼요.\n주소만 덩그러니 가는 게 아니라\n제목과 이미지가 같이 가요.\n\n공유 링크는 로그인하면 만들어져요.\n\n프로필 링크에서\nhttps://clipnote.co.kr 확인하세요 🔗\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯\n\nGroup-buy links pile up from every direction, and all you keep is the address.\n\nWeeks later you cannot tell one from another without opening each one.\n\nPaste them into ClipNote and it reads what the buy actually is, then keeps it\nas a card. Scanning the list is enough to know which is which.\n\nTag them and the ones still running stay separate from the ones that closed.\n\nWhen you pass one along to your own chat, the title and image go with it —\nnot a bare address the group has to guess at. Creating that share link needs\nan account.\n\nLink in bio: https://clipnote.co.kr\n\n#ClipNote #링크저장 #공유카드 #공구방 #pikaworks",
   "image_path": [
@@ -102,7 +102,7 @@
       }
     ]
   },
-  "scheduled_at": null,
+  "scheduled_at": "2026-09-04",
   "published_at": null,
   "media_id": null,
   "permalink": null,
