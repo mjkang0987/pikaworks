@@ -157,6 +157,9 @@ const LIMITS = {
   'chat.desc': 34,
   'clip.title': 22,
   'clip.tag': 6,
+  'post.name': 12,
+  'post.overlay': 9,
+  'post.caption': 24,
   chip: 8,
 };
 
@@ -321,6 +324,43 @@ function slideBody(d, t, index) {
         </div>
       </div>
     </div>`;
+  } else if (d.template === 'source') {
+    // 원본 게시물 → 클립 카드. 공구 글은 인스타에 올라오는 경우가 많은데
+    // 남의 계정 게시물을 가져다 쓸 수 없어서 더미로 그린다.
+    // 말풍선(chat)에서 카카오톡을 베끼지 않은 것과 같은 선을 지킨다 —
+    // 로고·브랜드색은 안 가져오고 게시물의 구조(프로필 · 사진 · 반응 · 캡션)만
+    // 빌린다. 사진 자리는 공구 글이 실제로 그러듯 이미지 위에 글자를 얹는다.
+    const po = d.post || {}, cd = d.card || {};
+    check('post.name', po.name, `슬라이드 ${index} post.name`);
+    (po.overlay || []).forEach((l, i) =>
+      check('post.overlay', l, `슬라이드 ${index} post.overlay[${i}]`));
+    check('post.caption', po.caption, `슬라이드 ${index} post.caption`);
+    check('chat.title', cd.title, `슬라이드 ${index} card.title`);
+    if (cd.desc) check('chat.desc', cd.desc, `슬라이드 ${index} card.desc`);
+    const heart = '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 6.6a5 5 0 0 0-7.1 0L12 8.3l-1.7-1.7a5 5 0 1 0-7.1 7.1L12 22l8.8-8.3a5 5 0 0 0 0-7.1z"/></svg>';
+    body = `<div class="src">
+      <div class="ig">
+        <div class="ig-top">
+          <div class="ig-av"></div>
+          <div class="ig-id">${esc(po.name || '')}</div>
+        </div>
+        <div class="ig-img"><span>${(po.overlay || []).map(esc).join('<br>')}</span></div>
+        <div class="ig-act">
+          <i>${heart}${esc(po.likes || '')}</i>
+          <i>${icon('chat', t, 26)}${esc(po.comments || '')}</i>
+        </div>
+        <div class="ig-cap"><b>${esc(po.name || '')}</b> ${esc(po.caption || '')}</div>
+      </div>
+      <div class="src-arrow">→</div>
+      <div class="ch-card">
+        <div class="ch-thumb src-th"><span>${(po.overlay || []).map(esc).join('<br>')}</span></div>
+        <div class="ch-meta">
+          <div class="ch-t">${esc(cd.title || '')}</div>
+          ${cd.desc ? `<div class="ch-s">${esc(cd.desc)}</div>` : ''}
+          <div class="ch-d">${esc(cd.domain || t.domain)}</div>
+        </div>
+      </div>
+    </div>`;
   } else if (d.template === 'clips') {
     // 저장된 클립 목록. 실제 목록 한 줄의 구조(썸네일 · 제목 · 도메인)를 따른다.
     // 썸네일은 대표 이미지가 없을 때 채워지는 그라디언트다 — 여기서 보여주려는
@@ -347,7 +387,7 @@ function slideBody(d, t, index) {
   } else {
     throw new Error(
       `슬라이드 ${index}: 알 수 없는 template "${d.template}"`
-      + ' (list | clips | shot | chat | panel | statement)');
+      + ' (list | clips | source | shot | chat | panel | statement)');
   }
 
   const chips = (d.chips || []).slice(0, 4).map((c, i) => {
@@ -580,6 +620,51 @@ function css(t, fontUrl) {
   .ch-s { font-size:25px; font-weight:600; color:${t.muted}; line-height:1.35; word-break:keep-all; }
   .ch-d { font-size:23px; font-weight:600; color:${t.accentInk}; }
 
+  /* ── 원본 게시물 → 카드 ── 게시물의 구조만 빌린다. 로고도 브랜드색도
+     안 쓴다. 계정 이름은 라틴 핸들(@…)이 아니라 한글로 둬서 실재하는
+     계정으로 오해될 여지를 없앤다. */
+  .src { display:flex; align-items:center; justify-content:center; gap:26px; height:100%; }
+  .ig {
+    flex:none; width:386px; background:${t.bg};
+    border:2px solid ${t.border}; border-radius:24px; overflow:hidden;
+    box-shadow:0 18px 44px rgba(0,0,0,.10);
+  }
+  .ig-top { display:flex; align-items:center; gap:14px; padding:18px 20px; }
+  .ig-av {
+    flex:none; width:50px; height:50px; border-radius:50%;
+    background:linear-gradient(135deg, #fbbf24, #fb7185);
+  }
+  .ig-id { font-size:25px; font-weight:800; letter-spacing:-.03em; }
+  .ig-img {
+    height:290px; display:flex; align-items:center; justify-content:center;
+    background:linear-gradient(135deg, #6366f1, #a855f7 55%, #e879f9);
+  }
+  .ig-img span {
+    color:#fff; font-size:42px; font-weight:800; line-height:1.18;
+    letter-spacing:-.03em; text-align:center; text-shadow:0 2px 14px rgba(0,0,0,.3);
+  }
+  .ig-act { display:flex; align-items:center; gap:22px; padding:16px 20px 0; }
+  .ig-act i {
+    display:flex; align-items:center; gap:8px; font-style:normal;
+    font-size:22px; font-weight:700; color:${t.muted};
+  }
+  .ig-cap {
+    padding:12px 20px 22px; font-size:22px; font-weight:600;
+    color:${t.muted}; line-height:1.4; letter-spacing:-.02em;
+  }
+  .ig-cap b { color:${t.fg}; font-weight:800; }
+  .src-arrow { flex:none; font-size:44px; font-weight:800; color:${t.accentInk}; }
+  .src .ch-card { flex:none; width:386px; }
+  /* 카드 썸네일은 게시물 사진과 같은 그림이어야 한다 — 대표 이미지를
+     그대로 불러온다는 말이 그림으로 읽히는 지점이 여기다. */
+  .src .ch-thumb { height:218px; background:linear-gradient(135deg, #6366f1, #a855f7 55%, #e879f9); }
+  .src-th { display:flex; align-items:center; justify-content:center; }
+  .src-th span {
+    color:#fff; font-size:31px; font-weight:800; line-height:1.18;
+    letter-spacing:-.03em; text-align:center; text-shadow:0 2px 12px rgba(0,0,0,.3);
+  }
+  .src .ch-meta { padding:28px 28px 32px; gap:12px; }
+
   /* ── 클립 목록 ── 저장해둔 것들이 목록에서 어떻게 보이는지.
      한 줄이 썸네일·제목·도메인으로 끝나서, 훑기만 해도 무엇인지 읽힌다는
      말을 그림으로 그대로 옮긴 것이다. 태그는 켜짐(키컬러)/꺼짐(테두리)
@@ -771,7 +856,7 @@ for (let i = 0; i < slides.length; i += 1) {
   const overflow = await page.evaluate(() => {
     const bad = [];
     // 글자 자체가 넘치는 경우
-    for (const el of document.querySelectorAll('.cv-h, .h1, .ct-t, .ct-d, .cv-f, .cv-k, .ot-name, .ot-h, .ch-t, .cl-t, .cl-d')) {
+    for (const el of document.querySelectorAll('.cv-h, .h1, .ct-t, .ct-d, .cv-f, .cv-k, .ot-name, .ot-h, .ch-t, .cl-t, .cl-d, .ig-id')) {
       if (el.scrollWidth > el.clientWidth + 1) {
         bad.push(`${el.className}: "${el.textContent.trim()}" (${el.scrollWidth} > ${el.clientWidth})`);
       }
@@ -784,7 +869,7 @@ for (let i = 0; i < slides.length; i += 1) {
       }
     }
     // flex:1 로 늘어나는 칸은 안에서 찌그러질 뿐 body 를 늘리지 않는다
-    for (const el of document.querySelectorAll('.cv-mid, .main, .ot-app, .shot, .chat, .clips')) {
+    for (const el of document.querySelectorAll('.cv-mid, .main, .ot-app, .shot, .chat, .clips, .src, .ig')) {
       if (el.scrollHeight > el.clientHeight + 1) {
         bad.push(`${el.className} 세로 눌림 (${el.scrollHeight} > ${el.clientHeight})`);
       }
