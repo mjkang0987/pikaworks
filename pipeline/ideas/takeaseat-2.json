@@ -2,115 +2,105 @@
   "id": "takeaseat-2",
   "service": "takeaseat",
   "status": "design_done",
-  "angle": "적립금·회원권 변동이 기록으로 남는다 — \"저번에 적립 안 됐는데요\"에 답하기",
-  "caption": "\"저번에 적립 안 됐는데요\"\n\n이 말 들으면 난감하죠 😥\n\nTake a Seat는 적립금을\n정해둔 정책대로 쌓아요.\n퍼센트를 한 번 정해두면\n결제완료될 때 알아서 붙어요.\n\n회원권도 같이 관리해요.\n10회권이든 3개월권이든\n만들어서 발급해두면\n쓸 때마다 한 번씩 빼요.\n\n중요한 건 그다음이에요.\n언제 얼마가 쌓이고 빠졌는지\n고객마다 한 줄씩 남아요.\n어느 예약에서 붙은 건지도\n눌러서 바로 확인돼요.\n\n기억을 더듬을 일이\n없어지는 셈이에요 ✨\n\n프로필 링크에서\nhttps://takeaseat.co.kr 확인하세요 🔗\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯\n\n\"I didn't get my points last time.\"\n\nThat one is hard to answer from memory.\n\nTake a Seat adds points by the rule you set.\nPick a percentage once and it lands on its own\nwhen a payment is marked complete.\n\nMemberships sit next to it. Build a ten-visit\npass or a three-month one, hand it to a\ncustomer, and take one off each time they come.\nPressed it by mistake? Put it back.\n\nWhat matters is what comes after. Every change\nstays as its own line under that customer —\nwhat happened, how much, and what is left.\n\nSo the answer is on the screen instead of\nin your memory.\n\nLink in bio\nhttps://takeaseat.co.kr 🔗\n\n#TAS #적립금 #회원권 #1인샵 #pikaworks",
+  "angle": "검색 한 번에 적립금·이력·예약 조회 — 고객정보 한 곳에 모인다",
+  "caption": "검색 한 번에\n적립금・이력・예약 조회까지\n\nTake a Seat는 어느 화면에서나\n고객 검색이 가능해요.\n이름으로도, 번호 뒷자리로도요.\n\n고객정보에서\n적립금 잔액과 이력,\n예약 내역까지 조회가 가능해요.\n\n언제 얼마가 적립되고 쓰였는지\n건별로 남아요.\n\n적립은 방식 선택도 가능해요.\n결제 금액 퍼센트 자동 적립과\n선불금 충전, 둘 다 쓸 수 있어요.\n\n적립·차감을 직접 하는 것도\n고객정보에서 바로 가능해요 🙂\n\n프로필 링크에서\nhttps://takeaseat.co.kr 확인하세요 🔗\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯\n\nOne search, and it is all in one place.\n\nTake a Seat keeps customer search one tap\naway from any screen — by name, or by the\nlast digits of a phone number.\n\nOpen a customer and you get the point\nbalance, the full ledger, and the visit\nhistory: what was earned, what was spent,\nwhen, and the balance after each line.\n\nEarning has two modes and you can run\neither or both — a percentage of the paid\namount, added the moment a payment is\nmarked complete, and prepaid top-ups you\nmanage per customer.\n\nLink in bio\nhttps://takeaseat.co.kr 🔗\n\n#TAS #적립금 #고객관리 #공방운영 #pikaworks",
   "image_path": [
     "public/ig/takeaseat-2-1.png",
     "public/ig/takeaseat-2-2.png",
     "public/ig/takeaseat-2-3.png",
     "public/ig/takeaseat-2-4.png",
-    "public/ig/takeaseat-2-5.png",
-    "public/ig/takeaseat-2-6.png"
+    "public/ig/takeaseat-2-5.png"
   ],
   "image_url": "https://pikaworks.kr/ig/takeaseat-2-1.png",
   "design": {
     "cover": {
-      "kicker": "적립금·회원권",
+      "kicker": "고객정보",
       "title": [
-        "저번에 적립",
-        "안 됐는데요",
-        "이력이 답해요"
+        "적립금·이력",
+        "예약까지",
+        "검색 한 번에"
       ],
       "features": [
-        "정책대로 자동 적립",
-        "회원권 횟수 차감",
-        "고객별 변동 이력"
+        "이름·번호 검색",
+        "잔액과 이력",
+        "예약 내역까지"
       ]
     },
     "slides": [
       {
         "template": "list",
         "title": [
-          "결제만 하면",
-          "알아서 쌓여요"
+          "어느 화면에서나",
+          "고객 검색"
         ],
-        "subtitle": "퍼센트를 한 번 정해두면 그다음은 자동이에요",
+        "subtitle": "헤더에서 바로 검색할 수 있어요",
         "items": [
-          {
-            "icon": "settings",
-            "title": "퍼센트만 설정",
-            "text": "결제완료되면 그만큼 적립돼요"
-          },
-          {
-            "icon": "point",
-            "title": "수동 적립·차감",
-            "text": "필요할 땐 직접 넣고 뺄 수 있어요"
-          },
-          {
-            "icon": "revenue",
-            "title": "선불 충전도",
-            "text": "미리 충전해두고 쓸 때마다 차감"
-          }
-        ]
-      },
-      {
-        "template": "list",
-        "title": [
-          "회원권도",
-          "몇 회 남았는지"
-        ],
-        "subtitle": "횟수권·기간권을 만들어 고객에게 발급해요",
-        "items": [
-          {
-            "icon": "membership",
-            "title": "횟수·기간",
-            "text": "10회권도 3개월권도 돼요"
-          },
-          {
-            "icon": "customerAdd",
-            "title": "고객에게 발급",
-            "text": "누구 것인지 남아요"
-          },
-          {
-            "icon": "check",
-            "title": "1회씩 차감",
-            "text": "잘못 눌러도 복원할 수 있어요"
-          }
-        ]
-      },
-      {
-        "template": "list",
-        "title": [
-          "언제 얼마가",
-          "쌓였는지 그대로"
-        ],
-        "subtitle": "고객마다 한 줄씩, 남은 잔액까지 같이 남아요",
-        "items": [
-          {
-            "icon": "history",
-            "title": "한 줄씩 기록",
-            "text": "적립도 차감도 건마다 따로"
-          },
           {
             "icon": "member",
-            "title": "고객별로",
-            "text": "그 손님 것만 모아서 볼 수 있어요"
+            "title": "이름으로",
+            "text": "고객명으로 바로 찾아요"
+          },
+          {
+            "icon": "phone",
+            "title": "번호로도",
+            "text": "뒷자리만 쳐도 걸려요"
+          },
+          {
+            "icon": "guide",
+            "title": "메모로도",
+            "text": "고객 명단에선 메모까지"
+          }
+        ]
+      },
+      {
+        "template": "list",
+        "title": [
+          "고객정보 하나에",
+          "다 있어요"
+        ],
+        "subtitle": "잔액・이력・예약을 한 화면에서 봐요",
+        "items": [
+          {
+            "icon": "point",
+            "title": "적립금 잔액",
+            "text": "지금 남은 금액"
+          },
+          {
+            "icon": "history",
+            "title": "적립금 이력",
+            "text": "건별로 언제 얼마가"
           },
           {
             "icon": "booking",
-            "title": "예약과 연결",
-            "text": "어느 예약에서 붙었는지 눌러서 확인"
+            "title": "예약 내역",
+            "text": "그 손님이 언제 왔는지"
           }
         ]
       },
       {
-        "template": "statement",
+        "template": "list",
         "title": [
-          "기억 말고",
-          "기록으로"
+          "적립 방식은",
+          "골라서 써요"
         ],
-        "subtitle": "적립이 됐는지 안 됐는지 다투지 않아도 돼요",
-        "statement": "적립은 정책이 하고, 증명은 기록이 해요"
+        "subtitle": "둘 다 켜둘 수도 있어요",
+        "items": [
+          {
+            "icon": "chart",
+            "title": "퍼센트 적립",
+            "text": "결제완료 때 자동으로"
+          },
+          {
+            "icon": "point",
+            "title": "선불금 충전",
+            "text": "고객별로 충전해서 관리"
+          },
+          {
+            "icon": "create",
+            "title": "직접 적립·차감",
+            "text": "필요할 땐 손으로 조정"
+          }
+        ]
       }
     ]
   },
@@ -119,13 +109,12 @@
   "media_id": null,
   "permalink": null,
   "container_id": null,
-  "note": "캐러셀 6장으로 재제작 (2026-08-28). 적립금·회원권은 tas@99390ef 에서 동작을 확인했다. 쿠폰은 상품 등록까지만이고 발급 UI 가 없어 뺐다 — 화면 안내문도 \"발급·결제 차감은 추후 지원됩니다\" 다.",
+  "note": "2026-08-31 재작성. 앵글을 \"검색 한 번에 조회\" 로 바꿨다. 쿠폰은 발급 UI 가 없어 제외, 회원권은 고객정보에 없어 제외.",
   "image_urls": [
     "https://pikaworks.kr/ig/takeaseat-2-1.png",
     "https://pikaworks.kr/ig/takeaseat-2-2.png",
     "https://pikaworks.kr/ig/takeaseat-2-3.png",
     "https://pikaworks.kr/ig/takeaseat-2-4.png",
-    "https://pikaworks.kr/ig/takeaseat-2-5.png",
-    "https://pikaworks.kr/ig/takeaseat-2-6.png"
+    "https://pikaworks.kr/ig/takeaseat-2-5.png"
   ]
 }

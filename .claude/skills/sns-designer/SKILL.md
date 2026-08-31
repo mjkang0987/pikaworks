@@ -56,6 +56,10 @@ pikaworks 인스타그램 이미지를 만든다. 직접 그리지 않는다 —
 공용 아이콘: `chat` `bookmark` `folder` `globe` `link` `calendar` `clock`
 `users` `coin` `chart` `bell` `check` `sparkle` `lock` `phone` `ticket` `tag`
 
+**돈에는 `revenue` 도 `coin` 도 쓰지 않는다.** `revenue`(TAS 자체 세트)는 달러 `$`,
+공용 `coin` 은 엔화 `¥` 글리프다. 원화 서비스 광고에 외화 기호가 박힌다.
+금액에는 `point` 를 쓴다 — TAS 가 적립금에 실제로 쓰는 글리프다.
+
 **서비스 저장소에서 가져온 실제 아이콘이 있으면 그걸 먼저 쓴다.**
 Take a Seat 은 `assets/icons/takeaseat.json` 에 사이드바가 실제로 쓰는 26개가
 들어 있다 (`point` `membership` `coupon` `history` `customers` `booking`
