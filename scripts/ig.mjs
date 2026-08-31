@@ -106,6 +106,7 @@ const ICONS = {
   chart: '<path d="M3 21h18"/><path d="M6 17v-5M11 17V7M16 17v-8M21 17v-3"/>',
   bell: '<path d="M18 8a6 6 0 1 0-12 0c0 7-3 8-3 8h18s-3-1-3-8"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/>',
   check: '<path d="M20 6L9 17l-5-5"/>',
+  cafe: '<path d="M4 8.6h12v4.6a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5z"/><path d="M16 10h1.4a2.3 2.3 0 0 1 0 4.6H16"/><path d="M11.6 6.6c0-1.9 1.5-3.5 3.5-3.5 0 1.9-1.6 3.5-3.5 3.5z"/>',
   heart: '<path d="M20.8 5.6a5 5 0 0 0-7.1 0L12 7.3l-1.7-1.7a5 5 0 0 0-7.1 7.1L12 21.5l8.8-8.8a5 5 0 0 0 0-7.1z"/>',
   sparkle: '<path d="M12 3l2 6 6 2-6 2-2 6-2-6-6-2 6-2z"/>',
   lock: '<rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/>',
@@ -156,7 +157,6 @@ const LIMITS = {
   'chat.tag': 10,
   'chat.title': 22,
   'chat.desc': 34,
-  'mock.label': 10,
   'mock.title': 20,
   chip: 8,
 };
@@ -328,7 +328,6 @@ function slideBody(d, t, index) {
     // 게시물 한 장이라는 골격만 남기면 어디인지는 읽히고, 색과 글자는 우리
     // 것으로 그릴 수 있다. 남의 화면을 베껴 광고에 넣지 않기 위한 선이다.
     const cols = (d.mocks || []).slice(0, 2).map((m, i) => {
-      check('mock.label', m.label, `슬라이드 ${index} mocks[${i}].label`);
       check('mock.title', m.title, `슬라이드 ${index} mocks[${i}].title`);
       const inner = m.kind === 'post'
         ? `<div class="mk-head">
@@ -338,16 +337,17 @@ function slideBody(d, t, index) {
            <div class="mk-img"></div>
            <div class="mk-acts">${icon('heart', t, 34)}${icon('chat', t, 34)}${icon('link', t, 34)}</div>
            <div class="mk-cap">${esc(m.title)}</div>`
-        : `<div class="mk-row">
+        : `<div class="mk-bhead">
+             <span class="mk-cafe">${icon('cafe', t, 34)}</span>
+             <span class="mk-bar" style="width:42%"></span>
+           </div>
+           <div class="mk-row">
              <span class="mk-badge">${esc(m.meta || '')}</span>
              <span class="mk-subj">${esc(m.title)}</span>
            </div>
-           ${[88, 71, 80, 58, 76, 52].map((w) =>
+           ${[88, 71, 80, 58].map((w) =>
              `<div class="mk-bar" style="width:${w}%"></div>`).join('')}`;
-      return `<div class="mk">
-        <div class="mk-label">${esc(m.label)}</div>
-        <div class="mk-box ${m.kind === 'post' ? 'post' : 'board'}">${inner}</div>
-      </div>`;
+      return `<div class="mk ${m.kind === 'post' ? 'post' : 'board'}">${inner}</div>`;
     }).join('');
     body = `<div class="mocks">${cols}</div>`;
   } else if (d.template === 'panel') {
@@ -593,15 +593,23 @@ function css(t, fontUrl) {
   /* 두 칸 높이를 맞춘다. 게시물 목업이 더 높으므로 그쪽이 높이를 정하고
      게시판은 남는 만큼 줄 간격을 벌려 채운다. 안 맞추면 짧은 쪽 아래가 크게 빈다. */
   .mocks { display:flex; gap:34px; align-items:stretch; }
-  .mk { flex:1; min-width:0; display:flex; flex-direction:column; gap:16px; }
-  .mk-label { font-size:26px; font-weight:700; color:${t.accentInk}; letter-spacing:-.02em; }
-  .mk-box {
+  .mk {
+    flex:1; min-width:0;
     background:${t.bg}; border:2px solid ${t.chipBorder}; border-radius:22px;
     overflow:hidden; box-shadow:0 14px 34px rgba(0,0,0,.10);
   }
-  .mk-box.board {
-    flex:1; padding:30px 32px 34px;
+  .mk.board {
+    padding:30px 32px 34px;
     display:flex; flex-direction:column; justify-content:space-between;
+  }
+  .mk-bhead {
+    display:flex; align-items:center; gap:16px;
+    padding-bottom:24px; border-bottom:2px solid ${t.border};
+  }
+  .mk-cafe {
+    flex:none; width:54px; height:54px; border-radius:17px;
+    background:${t.accent}; color:${t.onAccent};
+    display:flex; align-items:center; justify-content:center;
   }
   .mk-row { display:flex; align-items:center; gap:16px; min-width:0; }
   .mk-badge {
@@ -790,7 +798,7 @@ for (let i = 0; i < slides.length; i += 1) {
   const overflow = await page.evaluate(() => {
     const bad = [];
     // 글자 자체가 넘치는 경우
-    for (const el of document.querySelectorAll('.cv-h, .h1, .ct-t, .ct-d, .cv-f, .cv-k, .ot-name, .ot-h, .ch-t, .mk-subj, .mk-name, .mk-cap, .mk-label')) {
+    for (const el of document.querySelectorAll('.cv-h, .h1, .ct-t, .ct-d, .cv-f, .cv-k, .ot-name, .ot-h, .ch-t, .mk-subj, .mk-name, .mk-cap')) {
       if (el.scrollWidth > el.clientWidth + 1) {
         bad.push(`${el.className}: "${el.textContent.trim()}" (${el.scrollWidth} > ${el.clientWidth})`);
       }
