@@ -28,53 +28,39 @@
     },
     "slides": [
       {
-        "template": "clips",
+        "template": "shot",
         "title": [
-          "목록만 훑어도",
-          "뭐가 뭔지 보여요"
+          "주소를 붙여넣으면",
+          "제목을 읽어와요"
         ],
-        "subtitle": "붙여넣으면 어떤 공구인지 읽어와요",
-        "items": [
-          {
-            "title": "봄맞이 생활용품 공동구매",
-            "domain": "blog.naver.com",
-            "tag": "진행 중"
-          },
-          {
-            "title": "베이커리 2차 공구 안내",
-            "domain": "cafe.naver.com",
-            "tag": "진행 중"
-          },
-          {
-            "title": "겨울 이불 공동구매 3차",
-            "domain": "smartstore.naver.com",
-            "tag": "마감",
-            "done": true
-          }
+        "subtitle": "제목·설명·대표 이미지를 페이지에서 가져와요",
+        "mobile": [
+          "assets/shots/cn-mobile-form.png",
+          "assets/shots/cn-mobile-result.png"
         ]
       },
       {
         "template": "list",
         "title": [
-          "진행 중인 공구만",
-          "따로 모아봐요"
+          "태그를 달아두면",
+          "모아 볼 수 있어요"
         ],
-        "subtitle": "태그를 달아두면 마감된 건 안 섞여요",
+        "subtitle": "저장은 로그인 없이 이 브라우저에 바로 돼요",
         "items": [
           {
             "icon": "tag",
-            "title": "태그로 구분",
-            "text": "진행 중과 마감을 갈라둬요"
+            "title": "태그 최대 6개",
+            "text": "쉼표로 구분해 여러 개 달아요"
           },
           {
-            "icon": "bookmark",
-            "title": "모아 보기",
-            "text": "같은 태그끼리 한 번에 꺼내요"
+            "icon": "folder",
+            "title": "같은 태그끼리",
+            "text": "내 클립에서 모아 볼 수 있어요"
           },
           {
-            "icon": "clock",
-            "title": "놓치지 않게",
-            "text": "열려 있는 공구만 남겨둬요"
+            "icon": "lock",
+            "title": "공유 카드는",
+            "text": "로그인하면 짧은 링크로 만들어져요"
           }
         ]
       },
@@ -89,8 +75,8 @@
           "tag": "ClipNote로",
           "url": "https://clipnote.co.kr/q7Kd2xB",
           "title": "봄맞이 생활용품 공동구매",
-          "domain": "blog.naver.com",
-          "desc": "3월 5일 마감 · 신청은 댓글로 남겨주세요"
+          "desc": "3월 5일 마감 · 신청은 댓글로 남겨주세요",
+          "domain": "blog.naver.com"
         }
       }
     ]
@@ -100,7 +86,7 @@
   "media_id": null,
   "permalink": null,
   "container_id": null,
-  "note": "사용자가 캡션을 직접 주고 이미지 제작을 지시(2026-08-30). 캡션은 받은 그대로 옮겼다. clipnote-2(저장·태그·카드 공유)와 뼈대가 같고 공구방 장면으로 좁힌 건이라, 겹침을 줄이려고 화면은 다르게 잡았다 — 2번은 랜딩 스크린샷 두 장, 이 건은 목록 한 장(clips)과 대화방 카드 한 장이다. clips 템플릿을 ig.mjs 에 새로 추가했다.",
+  "note": "사용자가 캡션을 직접 주고 이미지 제작을 지시(2026-08-30). 캡션은 받은 그대로다. 첫 시안은 목록·태그를 직접 그린 목업과 추상적인 문구로 채웠는데, 실제 기능 설명이 이미지에 없고 캡션에만 있다는 지적을 받아 다시 만들었다 — 2번은 실제 화면 두 장(입력 폼·결과), 3번은 화면에 적힌 그대로의 사실(태그 최대 6개·쉼표 구분·같은 태그끼리 모아 보기·저장은 로그인 없이, 공유 카드·짧은 링크는 로그인 필요)로 바꿨다. 그리려고 추가했던 clips 템플릿은 안 쓰게 되어 되돌렸다. 4번의 말풍선은 카카오톡 화면이라 촬영할 수 없어 목업으로 남는다.",
   "image_urls": [
     "https://pikaworks.kr/ig/clipnote-4-1.png",
     "https://pikaworks.kr/ig/clipnote-4-2.png",
