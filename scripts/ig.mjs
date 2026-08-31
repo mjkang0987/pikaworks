@@ -480,7 +480,9 @@ function css(t, fontUrl) {
   .sh-bar i { width:11px; height:11px; border-radius:50%; background:${t.border}; }
   .sh-pc img { display:block; width:100%; height:auto; }
   .sh-mo {
-    position:absolute; right:0; bottom:0; width:212px;
+    /* 212px 였을 때 폰 안의 UI 가 피드에서 안 읽혔다. PC 창과 겹치는 폭이
+       늘지만, 안 읽히는 폰을 놓느니 겹치는 편이 낫다. */
+    position:absolute; right:0; bottom:0; width:296px;
     border:9px solid ${t.fg}; border-radius:34px; overflow:hidden;
     background:${t.fg}; box-shadow:0 22px 46px rgba(0,0,0,.36);
   }
