@@ -106,6 +106,7 @@ const ICONS = {
   chart: '<path d="M3 21h18"/><path d="M6 17v-5M11 17V7M16 17v-8M21 17v-3"/>',
   bell: '<path d="M18 8a6 6 0 1 0-12 0c0 7-3 8-3 8h18s-3-1-3-8"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/>',
   check: '<path d="M20 6L9 17l-5-5"/>',
+  heart: '<path d="M20.8 5.6a5 5 0 0 0-7.1 0L12 7.3l-1.7-1.7a5 5 0 0 0-7.1 7.1L12 21.5l8.8-8.8a5 5 0 0 0 0-7.1z"/>',
   sparkle: '<path d="M12 3l2 6 6 2-6 2-2 6-2-6-6-2 6-2z"/>',
   lock: '<rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/>',
   phone: '<rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M11 18.5h2"/>',
@@ -155,6 +156,8 @@ const LIMITS = {
   'chat.tag': 10,
   'chat.title': 22,
   'chat.desc': 34,
+  'mock.label': 10,
+  'mock.title': 20,
   chip: 8,
 };
 
@@ -319,13 +322,41 @@ function slideBody(d, t, index) {
         </div>
       </div>
     </div>`;
+  } else if (d.template === 'mocks') {
+    // 미리보기가 잘 안 잡히는 자리 자체를 보여준다. chat 템플릿과 같은
+    // 원칙이다 — 두 서비스의 로고와 실제 UI 는 베끼지 않는다. 게시판 한 줄과
+    // 게시물 한 장이라는 골격만 남기면 어디인지는 읽히고, 색과 글자는 우리
+    // 것으로 그릴 수 있다. 남의 화면을 베껴 광고에 넣지 않기 위한 선이다.
+    const cols = (d.mocks || []).slice(0, 2).map((m, i) => {
+      check('mock.label', m.label, `슬라이드 ${index} mocks[${i}].label`);
+      check('mock.title', m.title, `슬라이드 ${index} mocks[${i}].title`);
+      const inner = m.kind === 'post'
+        ? `<div class="mk-head">
+             <div class="mk-av"></div>
+             <div class="mk-name">${esc(m.meta || '')}</div>
+           </div>
+           <div class="mk-img"></div>
+           <div class="mk-acts">${icon('heart', t, 34)}${icon('chat', t, 34)}${icon('link', t, 34)}</div>
+           <div class="mk-cap">${esc(m.title)}</div>`
+        : `<div class="mk-row">
+             <span class="mk-badge">${esc(m.meta || '')}</span>
+             <span class="mk-subj">${esc(m.title)}</span>
+           </div>
+           ${[88, 71, 80, 58, 76, 52].map((w) =>
+             `<div class="mk-bar" style="width:${w}%"></div>`).join('')}`;
+      return `<div class="mk">
+        <div class="mk-label">${esc(m.label)}</div>
+        <div class="mk-box ${m.kind === 'post' ? 'post' : 'board'}">${inner}</div>
+      </div>`;
+    }).join('');
+    body = `<div class="mocks">${cols}</div>`;
   } else if (d.template === 'panel') {
     body = `<div class="panel">${d.html || ''}</div>`;
   } else if (d.template === 'statement') {
     body = `<div class="panel stmt">${esc(d.statement || '')}</div>`;
   } else {
     throw new Error(
-      `슬라이드 ${index}: 알 수 없는 template "${d.template}" (list | panel | statement)`);
+      `슬라이드 ${index}: 알 수 없는 template "${d.template}" (list | shot | chat | mocks | panel | statement)`);
   }
 
   const chips = (d.chips || []).slice(0, 4).map((c, i) => {
@@ -558,6 +589,46 @@ function css(t, fontUrl) {
   .ch-s { font-size:25px; font-weight:600; color:${t.muted}; line-height:1.35; word-break:keep-all; }
   .ch-d { font-size:23px; font-weight:600; color:${t.accentInk}; }
 
+  /* ── 플랫폼 목업 ── 게시판 한 줄과 게시물 한 장. 골격만 맞추고 로고는 쓰지 않는다. */
+  /* 두 칸 높이를 맞춘다. 게시물 목업이 더 높으므로 그쪽이 높이를 정하고
+     게시판은 남는 만큼 줄 간격을 벌려 채운다. 안 맞추면 짧은 쪽 아래가 크게 빈다. */
+  .mocks { display:flex; gap:34px; align-items:stretch; }
+  .mk { flex:1; min-width:0; display:flex; flex-direction:column; gap:16px; }
+  .mk-label { font-size:26px; font-weight:700; color:${t.accentInk}; letter-spacing:-.02em; }
+  .mk-box {
+    background:${t.bg}; border:2px solid ${t.chipBorder}; border-radius:22px;
+    overflow:hidden; box-shadow:0 14px 34px rgba(0,0,0,.10);
+  }
+  .mk-box.board {
+    flex:1; padding:30px 32px 34px;
+    display:flex; flex-direction:column; justify-content:space-between;
+  }
+  .mk-row { display:flex; align-items:center; gap:16px; min-width:0; }
+  .mk-badge {
+    flex:none; background:${t.soft}; color:${t.softInk};
+    border-radius:10px; padding:8px 16px; font-size:22px; font-weight:700;
+  }
+  .mk-subj {
+    min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+    font-size:28px; font-weight:700; letter-spacing:-.02em;
+  }
+  .mk-bar { height:18px; border-radius:9px; background:${t.border}; }
+  .mk-head { display:flex; align-items:center; gap:16px; padding:22px 24px; }
+  .mk-av {
+    flex:none; width:54px; height:54px; border-radius:50%;
+    background:linear-gradient(135deg, ${t.accent}, #e879f9);
+  }
+  .mk-name {
+    min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+    font-size:25px; font-weight:700; letter-spacing:-.02em;
+  }
+  .mk-img { height:236px; background:linear-gradient(135deg, ${t.accent}, #e879f9); }
+  .mk-acts { display:flex; gap:20px; padding:22px 24px 0; color:${t.muted}; }
+  .mk-cap {
+    padding:16px 24px 28px; font-size:26px; font-weight:600;
+    color:${t.softInk}; letter-spacing:-.02em; line-height:1.35;
+  }
+
   .panel { background:${t.soft}; border-radius:30px; padding:42px; }
   /* 가로로 넓은 화면 조각. 세로로 긴 폰 화면(.shot-stand)과 달리 흘려보내지
      않고 본문 안에 통째로 앉힌다. 잘리면 무슨 화면인지 못 알아본다.
@@ -719,14 +790,14 @@ for (let i = 0; i < slides.length; i += 1) {
   const overflow = await page.evaluate(() => {
     const bad = [];
     // 글자 자체가 넘치는 경우
-    for (const el of document.querySelectorAll('.cv-h, .h1, .ct-t, .ct-d, .cv-f, .cv-k, .ot-name, .ot-h, .ch-t')) {
+    for (const el of document.querySelectorAll('.cv-h, .h1, .ct-t, .ct-d, .cv-f, .cv-k, .ot-name, .ot-h, .ch-t, .mk-subj, .mk-name, .mk-cap, .mk-label')) {
       if (el.scrollWidth > el.clientWidth + 1) {
         bad.push(`${el.className}: "${el.textContent.trim()}" (${el.scrollWidth} > ${el.clientWidth})`);
       }
     }
     // 배지처럼 내용에 맞춰 커지는 요소는 자기 자신은 절대 안 넘친다.
     // 넘침이 부모 행에서 일어나므로 컨테이너도 같이 재야 한다.
-    for (const el of document.querySelectorAll('.cv-top, .cv-fs, .cv-hs, .chips, .foot, .ft-app, .cards')) {
+    for (const el of document.querySelectorAll('.cv-top, .cv-fs, .cv-hs, .chips, .foot, .ft-app, .cards, .mocks')) {
       if (el.scrollWidth > el.clientWidth + 1) {
         bad.push(`${el.className} 가로 넘침 (${el.scrollWidth} > ${el.clientWidth})`);
       }
