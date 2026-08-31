@@ -33,27 +33,27 @@
           "어느 화면에서나",
           "고객 검색"
         ],
-        "subtitle": "번호 뒷자리만 쳐도 걸려요",
+        "subtitle": "이름, 전화번호, 메모 등 다양하게 검색이 가능해요",
         "pc": "assets/shots/tas-pc-search.png",
         "mobile": "assets/shots/tas-mobile-search.png"
       },
       {
         "template": "shot",
         "title": [
-          "잔액도 이력도",
-          "예약 내역도"
+          "고객 정보 확인을",
+          "한눈에"
         ],
-        "subtitle": "고객정보 한 화면에 다 있어요",
+        "subtitle": "해당 고객 정보를 한 화면에서 확인 가능해요",
         "pc": "assets/shots/tas-pc-customer.png",
         "mobile": "assets/shots/tas-mobile-customer.png"
       },
       {
         "template": "list",
         "title": [
-          "적립 방식은",
-          "골라서 써요"
+          "적립 방식도",
+          "원하는 대로"
         ],
-        "subtitle": "둘 다 켜둘 수도 있어요",
+        "subtitle": "다양한 형태의 적립 방식을 지원해요",
         "items": [
           {
             "icon": "chart",
