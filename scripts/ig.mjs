@@ -155,6 +155,8 @@ const LIMITS = {
   'chat.tag': 10,
   'chat.title': 22,
   'chat.desc': 34,
+  'clip.title': 22,
+  'clip.tag': 6,
   chip: 8,
 };
 
@@ -319,13 +321,33 @@ function slideBody(d, t, index) {
         </div>
       </div>
     </div>`;
+  } else if (d.template === 'clips') {
+    // 저장된 클립 목록. 실제 목록 한 줄의 구조(썸네일 · 제목 · 도메인)를 따른다.
+    // 썸네일은 대표 이미지가 없을 때 채워지는 그라디언트다 — 여기서 보여주려는
+    // 건 이미지가 아니라 제목이 읽힌다는 것이라 그 상태로 둔다.
+    // tag 는 목록 화면에 실제로 있는 요소가 아니라 태그를 달아둔 상태를
+    // 나타내려고 붙이는 것이므로, 태그 이야기를 하는 장에서만 준다.
+    const rows = (d.items || []).slice(0, 3).map((it, i) => {
+      check('clip.title', it.title, `슬라이드 ${index} items[${i}].title`);
+      check('clip.tag', it.tag, `슬라이드 ${index} items[${i}].tag`);
+      return `<div class="clip">
+        <div class="cl-th"></div>
+        <div class="cl-m">
+          <div class="cl-t">${esc(it.title)}</div>
+          ${it.domain ? `<div class="cl-d">${esc(it.domain)}</div>` : ''}
+        </div>
+        ${it.tag ? `<div class="cl-g${it.done ? '' : ' on'}">${esc(it.tag)}</div>` : ''}
+      </div>`;
+    }).join('');
+    body = `<div class="clips">${rows}</div>`;
   } else if (d.template === 'panel') {
     body = `<div class="panel">${d.html || ''}</div>`;
   } else if (d.template === 'statement') {
     body = `<div class="panel stmt">${esc(d.statement || '')}</div>`;
   } else {
     throw new Error(
-      `슬라이드 ${index}: 알 수 없는 template "${d.template}" (list | panel | statement)`);
+      `슬라이드 ${index}: 알 수 없는 template "${d.template}"`
+      + ' (list | clips | shot | chat | panel | statement)');
   }
 
   const chips = (d.chips || []).slice(0, 4).map((c, i) => {
@@ -558,6 +580,33 @@ function css(t, fontUrl) {
   .ch-s { font-size:25px; font-weight:600; color:${t.muted}; line-height:1.35; word-break:keep-all; }
   .ch-d { font-size:23px; font-weight:600; color:${t.accentInk}; }
 
+  /* ── 클립 목록 ── 저장해둔 것들이 목록에서 어떻게 보이는지.
+     한 줄이 썸네일·제목·도메인으로 끝나서, 훑기만 해도 무엇인지 읽힌다는
+     말을 그림으로 그대로 옮긴 것이다. 태그는 켜짐(키컬러)/꺼짐(테두리)
+     둘뿐이라 진행 중과 마감이 색 하나로 갈린다. */
+  .clips { display:flex; flex-direction:column; gap:22px; }
+  .clip {
+    background:${t.soft}; border-radius:26px;
+    padding:26px 30px; display:flex; align-items:center; gap:26px;
+  }
+  /* 대표 이미지가 없는 페이지에 채워지는 그라디언트. 말풍선 카드(.ch-thumb)와
+     같은 조합을 쓴다 — 두 장에서 다른 색이 나오면 다른 기능처럼 보인다. */
+  .cl-th {
+    flex:none; width:104px; height:104px; border-radius:22px;
+    background:linear-gradient(135deg, ${t.accent}, #e879f9);
+  }
+  .cl-m { flex:1; min-width:0; }
+  .cl-t { font-size:34px; font-weight:800; letter-spacing:-.03em; line-height:1.3; word-break:keep-all; }
+  /* 도메인은 흐린 글씨로 둔다. 실제 목록 화면도 그렇고, 보라를 여기까지
+     쓰면 한 장에 보라가 다섯 군데가 되어 태그 강조가 묻힌다. */
+  .cl-d { margin-top:10px; font-size:26px; font-weight:600; color:${t.muted}; letter-spacing:-.02em; }
+  .cl-g {
+    flex:none; font-size:24px; font-weight:700; letter-spacing:-.02em;
+    padding:12px 22px; border-radius:999px; white-space:nowrap;
+    background:${t.bg}; color:${t.muted}; border:2px solid ${t.chipBorder};
+  }
+  .cl-g.on { background:${t.accent}; color:${t.onAccent}; border-color:${t.accent}; }
+
   .panel { background:${t.soft}; border-radius:30px; padding:42px; }
   /* 가로로 넓은 화면 조각. 세로로 긴 폰 화면(.shot-stand)과 달리 흘려보내지
      않고 본문 안에 통째로 앉힌다. 잘리면 무슨 화면인지 못 알아본다.
@@ -719,20 +768,20 @@ for (let i = 0; i < slides.length; i += 1) {
   const overflow = await page.evaluate(() => {
     const bad = [];
     // 글자 자체가 넘치는 경우
-    for (const el of document.querySelectorAll('.cv-h, .h1, .ct-t, .ct-d, .cv-f, .cv-k, .ot-name, .ot-h, .ch-t')) {
+    for (const el of document.querySelectorAll('.cv-h, .h1, .ct-t, .ct-d, .cv-f, .cv-k, .ot-name, .ot-h, .ch-t, .cl-t, .cl-d')) {
       if (el.scrollWidth > el.clientWidth + 1) {
         bad.push(`${el.className}: "${el.textContent.trim()}" (${el.scrollWidth} > ${el.clientWidth})`);
       }
     }
     // 배지처럼 내용에 맞춰 커지는 요소는 자기 자신은 절대 안 넘친다.
     // 넘침이 부모 행에서 일어나므로 컨테이너도 같이 재야 한다.
-    for (const el of document.querySelectorAll('.cv-top, .cv-fs, .cv-hs, .chips, .foot, .ft-app, .cards')) {
+    for (const el of document.querySelectorAll('.cv-top, .cv-fs, .cv-hs, .chips, .foot, .ft-app, .cards, .clip')) {
       if (el.scrollWidth > el.clientWidth + 1) {
         bad.push(`${el.className} 가로 넘침 (${el.scrollWidth} > ${el.clientWidth})`);
       }
     }
     // flex:1 로 늘어나는 칸은 안에서 찌그러질 뿐 body 를 늘리지 않는다
-    for (const el of document.querySelectorAll('.cv-mid, .main, .ot-app, .shot, .chat')) {
+    for (const el of document.querySelectorAll('.cv-mid, .main, .ot-app, .shot, .chat, .clips')) {
       if (el.scrollHeight > el.clientHeight + 1) {
         bad.push(`${el.className} 세로 눌림 (${el.scrollHeight} > ${el.clientHeight})`);
       }

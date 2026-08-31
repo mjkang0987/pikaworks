@@ -8,8 +8,7 @@
     "public/ig/clipnote-4-1.png",
     "public/ig/clipnote-4-2.png",
     "public/ig/clipnote-4-3.png",
-    "public/ig/clipnote-4-4.png",
-    "public/ig/clipnote-4-5.png"
+    "public/ig/clipnote-4-4.png"
   ],
   "image_url": "https://pikaworks.kr/ig/clipnote-4-1.png",
   "design": {
@@ -28,56 +27,52 @@
     },
     "slides": [
       {
-        "template": "shot",
+        "template": "clips",
         "title": [
-          "주소를 붙여넣으면",
-          "제목을 읽어와요"
+          "붙여넣으면 제목을",
+          "읽어와 쌓여요"
         ],
-        "subtitle": "제목·설명·대표 이미지를 페이지에서 가져와요",
-        "mobile": [
-          "assets/shots/cn-mobile-form.png",
-          "assets/shots/cn-mobile-result.png"
-        ]
-      },
-      {
-        "template": "list",
-        "title": [
-          "태그를 달아두면",
-          "모아 볼 수 있어요"
-        ],
-        "subtitle": "저장은 로그인 없이 이 브라우저에 바로 돼요",
+        "subtitle": "제목·대표 이미지는 페이지에서 자동으로 가져와요",
         "items": [
           {
-            "icon": "tag",
-            "title": "태그 최대 6개",
-            "text": "쉼표로 구분해 여러 개 달아요"
+            "title": "봄맞이 생활용품 공동구매",
+            "domain": "blog.naver.com"
           },
           {
-            "icon": "folder",
-            "title": "같은 태그끼리",
-            "text": "내 클립에서 모아 볼 수 있어요"
+            "title": "베이커리 2차 공구 안내",
+            "domain": "cafe.naver.com"
           },
           {
-            "icon": "lock",
-            "title": "공유 카드는",
-            "text": "로그인하면 짧은 링크로 만들어져요"
+            "title": "겨울 이불 공동구매 3차",
+            "domain": "smartstore.naver.com"
           }
         ]
       },
       {
-        "template": "chat",
+        "template": "clips",
         "title": [
-          "공구방에 보낼 땐",
-          "카드째로"
+          "태그를 달아두면",
+          "진행·마감이 갈려요"
         ],
-        "subtitle": "주소만 가는 게 아니라 내용이 같이 가요",
-        "after": {
-          "tag": "ClipNote로",
-          "url": "https://clipnote.co.kr/q7Kd2xB",
-          "title": "봄맞이 생활용품 공동구매",
-          "desc": "3월 5일 마감 · 신청은 댓글로 남겨주세요",
-          "domain": "blog.naver.com"
-        }
+        "subtitle": "태그는 쉼표로 구분해 최대 6개까지 달아요",
+        "items": [
+          {
+            "title": "봄맞이 생활용품 공동구매",
+            "domain": "blog.naver.com",
+            "tag": "진행 중"
+          },
+          {
+            "title": "베이커리 2차 공구 안내",
+            "domain": "cafe.naver.com",
+            "tag": "진행 중"
+          },
+          {
+            "title": "겨울 이불 공동구매 3차",
+            "domain": "smartstore.naver.com",
+            "tag": "마감",
+            "done": true
+          }
+        ]
       }
     ]
   },
@@ -86,12 +81,11 @@
   "media_id": null,
   "permalink": null,
   "container_id": null,
-  "note": "사용자가 캡션을 직접 주고 이미지 제작을 지시(2026-08-30). 캡션은 받은 그대로다. 첫 시안은 목록·태그를 직접 그린 목업과 추상적인 문구로 채웠는데, 실제 기능 설명이 이미지에 없고 캡션에만 있다는 지적을 받아 다시 만들었다 — 2번은 실제 화면 두 장(입력 폼·결과), 3번은 화면에 적힌 그대로의 사실(태그 최대 6개·쉼표 구분·같은 태그끼리 모아 보기·저장은 로그인 없이, 공유 카드·짧은 링크는 로그인 필요)로 바꿨다. 그리려고 추가했던 clips 템플릿은 안 쓰게 되어 되돌렸다. 4번의 말풍선은 카카오톡 화면이라 촬영할 수 없어 목업으로 남는다. 커버 문구 교체 — 처음 문구(\"공구 링크, 주소만 쌓이나요\")는 문제만 말하고 끝나서 안에 뭐가 있는지도, 넘겨볼 이유도 없다는 지적. 전후를 한 줄에 담는 A안으로 사용자가 골랐다. 2번 슬라이드(제목이 자동으로 채워지는 화면)와 커버가 이어진다.",
+  "note": "사용자가 캡션을 직접 주고 이미지 제작을 지시(2026-08-30). 캡션은 받은 그대로다. 세 번 고쳤다. (1) 첫 시안은 공구 목업은 있는데 실제 기능 설명이 이미지에 없고 캡션에만 있었다. (2) 실제 화면 두 장으로 바꿨더니 assets/shots 가 전부 pikaworks.kr 예시 7장뿐이라, clipnote-1 2번(같은 스크린샷 두 장)·clipnote-2 3번(태그 리스트)·clipnote-1 1번(말풍선)과 세 장 모두 겹쳤다. 둘 다 8/28·8/31 발행분이다. (3) 내용 슬라이드를 2장으로 줄이고(ig.mjs:6 내용 1~N, clipnote-3·takeaseat-2·3 도 2장) 이 건만의 장면으로 다시 그렸다 — 공구 목록과 태그로 걸러본 목록. 말풍선(공유)은 clipnote-1·2 가 이미 두 번 한 이야기라 뺐고 캡션에만 남겼다. clips 템플릿을 ig.mjs 에 추가했다. 목록 한 줄은 실제 화면대로 썸네일·제목·도메인이고, 태그 알약은 목록 화면에 실제로 있는 요소가 아니라 태그를 달아둔 상태를 나타내는 것이라 태그를 말하는 장에서만 붙인다. 공구 항목은 실제 데이터가 아닌 목업이다. 커버 문구는 사용자가 A안(주소만 있던 / 공구 링크에 / 제목이 붙어요)을 골랐다. 3번은 2번과 같은 목록에 태그만 붙는 구성으로 맞췄다 — 두 줄로 걸러진 상태를 그렸더니 아래가 비었고, 같은 세 줄에 알약만 생기는 편이 차이가 한눈에 읽힌다.",
   "image_urls": [
     "https://pikaworks.kr/ig/clipnote-4-1.png",
     "https://pikaworks.kr/ig/clipnote-4-2.png",
     "https://pikaworks.kr/ig/clipnote-4-3.png",
-    "https://pikaworks.kr/ig/clipnote-4-4.png",
-    "https://pikaworks.kr/ig/clipnote-4-5.png"
+    "https://pikaworks.kr/ig/clipnote-4-4.png"
   ]
 }
