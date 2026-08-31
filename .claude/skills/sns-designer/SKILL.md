@@ -39,17 +39,54 @@ pikaworks 인스타그램 이미지를 만든다. 직접 그리지 않는다 —
 
 | 템플릿 | 언제 | 필요한 필드 |
 |---|---|---|
-| `list` | 항목 3~4개를 나열 (사용자 유형, 기능 묶음, 체크리스트) | `items[{icon,text}]` |
+| `list` | 항목 3~4개를 나열 (사용자 유형, 기능 묶음, 체크리스트) | `items[{icon,title,text}]` |
+| `shot` | **실제 서비스 화면**을 그대로 보여줄 때 | `pc`+`mobile`, 또는 `mobile`(+`wide`) |
+| `chat` | 링크 공유처럼 대화창에서 벌어지는 일 | `before`·`after` |
 | `panel` | 제품 화면을 흉내 낸 목업이 필요할 때 | `html` |
 | `statement` | 한 문장으로 승부 (오해 정정, 선언) | `statement` |
 
+**가능하면 `shot` 을 쓴다.** 도식은 우리가 그린 그림이고 스크린샷은 증거다.
+찍을 화면이 없으면 `assets/shots/SOURCE.md` 의 촬영 절차를 따른다.
+
 **항목은 3개 아니면 4개.** 2개는 허전하고 5개는 글자가 줄어 안 읽힌다.
 
-`list` 아이콘: `chat` `bookmark` `folder` `globe` `calendar` `clock` `users`
-`coin` `chart` `bell` `check` `sparkle` `lock` `phone`
+`statement` 는 **한 줄에 들어갈 만큼 짧게** 쓴다. 가운데 정렬 자동 줄바꿈이라
+길면 `돼 / 요.` 처럼 단어 중간에서 꺾인다. 길어질 것 같으면 `list` 로 바꾼다.
+
+공용 아이콘: `chat` `bookmark` `folder` `globe` `link` `calendar` `clock`
+`users` `coin` `chart` `bell` `check` `sparkle` `lock` `phone` `ticket` `tag`
+
+**돈에는 `revenue` 도 `coin` 도 쓰지 않는다.** `revenue`(TAS 자체 세트)는 달러 `$`,
+공용 `coin` 은 엔화 `¥` 글리프다. 원화 서비스 광고에 외화 기호가 박힌다.
+금액에는 `point` 를 쓴다 — TAS 가 적립금에 실제로 쓰는 글리프다.
+
+**서비스 저장소에서 가져온 실제 아이콘이 있으면 그걸 먼저 쓴다.**
+Take a Seat 은 `assets/icons/takeaseat.json` 에 사이드바가 실제로 쓰는 26개가
+들어 있다 (`point` `membership` `coupon` `history` `customers` `booking`
+`revenue` `settings` 등). 이름을 틀리면 렌더가 실패하면서 쓸 수 있는 목록을
+전부 출력하므로, 외우지 말고 한 번 틀려서 확인하면 된다.
 
 `panel` 안에서 쓸 수 있는 유틸 클래스:
 `.grid5` `.grid4` (격자) · `.cell` (흰 칸) · `.cell-on` (보라 강조) · `.cell-off` (점선 비활성)
+
+## 2-1. 장수는 규격이 아니다
+
+**정해진 장수가 없다.** 커버 1장 + 본문 N장 + 마감 1장이고, 마감은 `ig.mjs` 가
+`THEME` 에서 자동으로 만든다 (`design.outro` 를 쓰지 않는다). 상한은 10장이다
+(`MAX_SLIDES`, `publish.py` 도 같은 값으로 막는다). 즉 **3~10장** 사이는
+아무것도 안 고치고 나간다.
+
+`plan.md` 에 `takeaseat-1` 이 5장이었다는 기록이 있는데 그건 그 건의 결과지
+형식이 아니다. 실제로 그 줄을 형식으로 읽고 뒤 건들을 5장에 맞춰 만든 적이
+있다(2026-08-28). 맞추지 마라.
+
+**장수는 내용이 정한다.**
+
+- 넘길 이유가 장마다 있으면 늘린다. 채우려고 늘리면 중간에 이탈한다
+- 짧게 만들려고 줄이지 않는다. 할 말이 남았는데 5장에 욱여넣으면 각 장이 얕아진다
+- 캐러셀 슬라이드 수 통설은 7~10장이다. 5장 이하는 짧은 게시물로 읽히고
+  10장을 넘으면 스와이프 피로가 온다. 다만 이건 시장 통설이고
+  **우리 계정 데이터가 아니다** — 발행이 쌓이면 여기를 우리 수치로 바꾼다
 
 ## 3. 커버 카피 가이드
 
