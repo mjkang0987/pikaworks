@@ -34,7 +34,7 @@
           "고객 검색"
         ],
         "subtitle": "이름, 전화번호, 메모 등 다양하게 검색이 가능해요",
-        "pc": "assets/shots/tas-pc-search.png",
+        "pc": "assets/shots/tas-pc-search-crop.png",
         "mobile": "assets/shots/tas-mobile-search.png"
       },
       {
@@ -44,7 +44,7 @@
           "한눈에"
         ],
         "subtitle": "해당 고객 정보를 한 화면에서 확인 가능해요",
-        "pc": "assets/shots/tas-pc-customer.png",
+        "pc": "assets/shots/tas-pc-customer-crop.png",
         "mobile": "assets/shots/tas-mobile-customer.png"
       },
       {
