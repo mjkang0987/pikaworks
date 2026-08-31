@@ -510,7 +510,10 @@ function css(t, fontUrl) {
 
   /* ── 내용 ── 모든 내용 슬라이드가 같은 골격을 쓴다 */
   .head { min-height:186px; }
-  .h1 { font-size:64px; font-weight:800; line-height:1.26; letter-spacing:-.04em; }
+  /* 내용 슬라이드 제목. 커버(178px) 다음으로 큰 글자다 — 피드에서 축소돼도
+     제목만은 읽혀야 해서 64px 에서 올렸다. 두 줄이 .head 의 min-height(186px)
+     안에 들어가는 상한이 여기다. */
+  .h1 { font-size:72px; font-weight:800; line-height:1.26; letter-spacing:-.04em; }
   .accent { color:${t.accentInk}; }
   .sub {
     margin-top:22px; font-size:30px; font-weight:500;
