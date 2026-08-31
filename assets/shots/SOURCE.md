@@ -13,6 +13,10 @@
 | `mobile-calendar.png` | 예약 캘린더 | 390×844 @2x |
 | `mobile-customers.png` | 고객 명단 | 390×844 @2x |
 | `mobile-revenue.png` | 매출 | 390×844 @2x |
+| `tas-pc-search.png` | 헤더 고객 검색 레이어 (`5555` 입력) | 1440×900 @2x |
+| `tas-mobile-search.png` | 〃 | 390×844 @2x |
+| `tas-pc-customer.png` | 고객정보 — 적립금 잔액·이력·예약 내역 | 1440×900 @2x |
+| `tas-mobile-customer.png` | 〃 | 390×844 @2x |
 
 데스크톱은 `localStorage['aside-visible'] = true` 로 사이드바를 펼친 채
 찍는다. 메뉴가 보여야 한 장에서 무엇을 하는 서비스인지 읽힌다.
@@ -44,6 +48,54 @@
    지운다(styled-components 해시 클래스라 선택자로는 못 잡는다).
    Next 개발 배지는 셰도루트 안이라 DOM 제거가 안 먹히므로
    `next.config.mjs` 에 `devIndicators: false` 를 넣어 끈다
+
+## 촬영 스크립트 (2026-08-31 신설)
+
+`scripts/shoot-tas.mjs` 가 로그인·투어 제거·검증·촬영을 한 번에 한다.
+아래 준비가 끝난 뒤 **이 저장소에서** 실행한다 — playwright 가 여기에만 있다.
+
+```bash
+# 1. postgres 16
+/usr/lib/postgresql/16/bin/initdb -D /var/lib/pgdata -U postgres --auth=trust
+pg_ctl -D /var/lib/pgdata -o '-k /var/run/postgresql' start && createdb tas
+
+# 2. tas 클론 → client 에서 설치·스키마·시드
+git clone --depth 50 https://github.com/mjkang0987/tas.git /tmp/repo
+cd /tmp/repo/client && pnpm install && pnpm prisma:db:push && pnpm prisma:seed
+
+# 3. 세션 토큰 (client 안에서 실행해야 next-auth 가 잡힌다)
+node -e "..." > /tmp/session-token.txt   # encode({token:{userId,sub,storeId,role,onboarded}, secret:AUTH_SECRET, salt:'authjs.session-token'})
+
+# 4. next dev → 3000
+cd /tmp/repo/client && pnpm dev
+
+# 5. 촬영
+cd <이 저장소> && node scripts/shoot-tas.mjs
+```
+
+### 시드만으로는 로그인 뒤 화면이 안 나온다 — DB 를 세 군데 고쳐야 한다
+
+토큰이 유효해도 앱이 게이트를 세 번 친다. 전부 조용히 다른 화면을 보여줘서
+스크린샷만 봐서는 원인을 모른다.
+
+| 증상 | 원인 | 조치 |
+|---|---|---|
+| 약관 동의 화면 | `User.agreedTermsVersion` 이 비어 있음 | `utils/terms.ts` 의 `CURRENT_TERMS_VERSION` 값을 넣는다 |
+| 업종 선택(온보딩) 화면 | `Store.onboarded=false` | `true` + `shopType` 지정 |
+| 적립금 메뉴·값이 안 보임 | `Store.usePointSystem=false` | `true`. 정책은 `StorePointSettings` |
+
+그 밖에 촬영용으로 손본 것 — 매장명 `Default Store` → `피카 살롱`,
+시드 예약이 2~4월이라 `date + INTERVAL '124 days'` 로 현재 구간으로 이동,
+`CustomerPointHistory` 는 시드에 1건뿐이라 이철수에게 5건(충전·결제 적립·
+결제 사용·수동 적립)을 잔액이 맞아떨어지게 넣고 `Customer.points` 를 맞췄다.
+적립이 붙으려면 해당 예약에 `price` 와 `paymentCompleted` 가 있어야 한다.
+
+**브라우저가 localhost 로 못 간다.** 이 환경의 에이전트 프록시가 가로채
+`ERR_TUNNEL_CONNECTION_FAILED` 를 낸다. `chromium.launch` 에
+`proxy: {server: 'direct://'}` 와 `--no-proxy-server` 를 준다.
+
+**검색 결과는 오버레이 안에서 클릭한다.** 바깥에 같은 고객명이 있으면
+playwright 가 그쪽을 집고, 오버레이가 클릭을 가로채 타임아웃이 난다.
 
 ## 촬영할 때 반드시 확인할 것
 

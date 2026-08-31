@@ -28,54 +28,24 @@
     },
     "slides": [
       {
-        "template": "list",
+        "template": "shot",
         "title": [
           "어느 화면에서나",
           "고객 검색"
         ],
-        "subtitle": "헤더에서 바로 검색할 수 있어요",
-        "items": [
-          {
-            "icon": "member",
-            "title": "이름으로",
-            "text": "고객명으로 바로 찾아요"
-          },
-          {
-            "icon": "phone",
-            "title": "번호로도",
-            "text": "뒷자리만 쳐도 걸려요"
-          },
-          {
-            "icon": "guide",
-            "title": "메모로도",
-            "text": "고객 명단에선 메모까지"
-          }
-        ]
+        "subtitle": "번호 뒷자리만 쳐도 걸려요",
+        "pc": "assets/shots/tas-pc-search.png",
+        "mobile": "assets/shots/tas-mobile-search.png"
       },
       {
-        "template": "list",
+        "template": "shot",
         "title": [
-          "고객정보 하나에",
-          "다 있어요"
+          "잔액도 이력도",
+          "예약 내역도"
         ],
-        "subtitle": "잔액・이력・예약을 한 화면에서 봐요",
-        "items": [
-          {
-            "icon": "point",
-            "title": "적립금 잔액",
-            "text": "지금 남은 금액"
-          },
-          {
-            "icon": "history",
-            "title": "적립금 이력",
-            "text": "건별로 언제 얼마가"
-          },
-          {
-            "icon": "booking",
-            "title": "예약 내역",
-            "text": "그 손님이 언제 왔는지"
-          }
-        ]
+        "subtitle": "고객정보 한 화면에 다 있어요",
+        "pc": "assets/shots/tas-pc-customer.png",
+        "mobile": "assets/shots/tas-mobile-customer.png"
       },
       {
         "template": "list",
