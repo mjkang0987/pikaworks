@@ -349,7 +349,7 @@ function slideBody(d, t, index) {
              `<div class="mk-bar" style="width:${w}%"></div>`).join('')}`;
       return `<div class="mk ${m.kind === 'post' ? 'post' : 'board'}">${inner}</div>`;
     }).join('');
-    body = `<div class="mocks">${cols}</div>`;
+    body = `<div class="mocks${d.layout === 'tilt' ? ' tilt' : ''}">${cols}</div>`;
   } else if (d.template === 'panel') {
     body = `<div class="panel">${d.html || ''}</div>`;
   } else if (d.template === 'statement') {
@@ -635,6 +635,21 @@ function css(t, fontUrl) {
   .mk-cap {
     padding:16px 24px 28px; font-size:26px; font-weight:600;
     color:${t.softInk}; letter-spacing:-.02em; line-height:1.35;
+  }
+
+  /* 같은 각도로 눕혀 겹친다. 두 장이 한 평면 위에 놓인 것처럼 보여야
+     따로 노는 카드 두 개가 아니라 한 장면으로 읽힌다. 각도를 서로
+     다르게 주면 원근이 깨져 합성한 티가 난다. */
+  .mocks.tilt { display:block; position:relative; height:100%; perspective:1500px; }
+  .mocks.tilt .mk { position:absolute; width:54%; }
+  .mocks.tilt .mk.board {
+    left:0; top:4%; height:70%;
+    transform:rotateX(7deg) rotateY(16deg) rotateZ(-3deg);
+  }
+  .mocks.tilt .mk.post {
+    right:0; bottom:4%; z-index:2;
+    transform:rotateX(7deg) rotateY(16deg) rotateZ(-3deg) scale(.94);
+    box-shadow:0 46px 90px rgba(0,0,0,.24);
   }
 
   .panel { background:${t.soft}; border-radius:30px; padding:42px; }

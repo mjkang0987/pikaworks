@@ -82,7 +82,8 @@
             "meta": "@pikaworks",
             "title": "릴스·게시물 정보도"
           }
-        ]
+        ],
+        "layout": "tilt"
       }
     ]
   },
