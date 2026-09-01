@@ -716,8 +716,17 @@ function css(t, fontUrl) {
      .an-t 는 넘침 검사 대상에서 뺐다. 고정 상한 없이 flex 로만 줄이면
      배지가 밀려날 자리가 안 남을 때도 있어 상한을 둔다 — 그래도 안
      맞으면 배지가 카드를 넘어간다. */
+  /* 배지를 밖으로 뺀 만큼 제목이 그 폭을 그대로 쓴다 — 말줄임이 꼭
+     필요할 때만 걸리게 한다. */
+  /* 제목 줄만 inline-flex 다. flex 는 기본이 줄어들기라 badge 가
+     자리를 만들려고 제목을 계속 깎는다. inline-flex 는 내용 크기만큼만
+     상자를 잡고, flex-shrink:0 을 둘 다에 줘서 아무도 안 줄어든다 —
+     둘을 합친 폭이 카드보다 넓어지면 줄이 카드 오른쪽을 그대로
+     넘어간다. 부모 쪽에 자르는 요소가 없어야 실제로 넘어가 보인다. */
+  .title-row { display:inline-flex; max-width:none; }
+  .title-row .an-t, .title-row .an-note { flex:none; }
   .an-t {
-    flex:none; max-width:60%;
+    max-width:820px;
     font-size:38px; font-weight:800; letter-spacing:-.03em; line-height:1.3;
     white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
   }
