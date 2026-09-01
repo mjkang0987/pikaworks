@@ -158,6 +158,8 @@ const LIMITS = {
   'chat.title': 22,
   'chat.desc': 34,
   'mock.title': 20,
+  'annot.card': 30,
+  'annot.note': 16,
   chip: 8,
 };
 
@@ -350,13 +352,36 @@ function slideBody(d, t, index) {
       return `<div class="mk ${m.kind === 'post' ? 'post' : 'board'}">${inner}</div>`;
     }).join('');
     body = `<div class="mocks${d.layout === 'tilt' ? ' tilt' : ''}">${cols}</div>`;
+  } else if (d.template === 'annot') {
+    // 미리보기 카드를 실제 모양대로 한 장 그리고, 영역마다 그게 무엇인지
+    // 옆에서 가리킨다. 말로 나열하는 것보다 어디를 말하는지가 분명하다.
+    // 각 주석의 세로 위치는 카드 안 영역 높이에 맞춰 고정값으로 잡는다.
+    const c = d.card || {}, nt = d.notes || {};
+    check('annot.card', c.title, `슬라이드 ${index} card.title`);
+    const note = (key, top) => (nt[key]
+      ? (check('annot.note', nt[key], `슬라이드 ${index} notes.${key}`),
+         `<div class="an-note" style="top:${top}px"><span>${esc(nt[key])}</span></div>`)
+      : '');
+    body = `<div class="annot">
+      <div class="an-card">
+        <div class="an-img">${c.image
+          ? `<img src="${shotUrl(c.image, index, 'card.image')}" alt="">` : ''}</div>
+        <div class="an-meta">
+          <div class="an-t">${esc(c.title)}</div>
+          <div class="an-d">${esc(c.domain || t.domain)}</div>
+        </div>
+      </div>
+      <div class="an-notes">
+        ${note('image', 135)}${note('title', 336)}${note('domain', 407)}
+      </div>
+    </div>`;
   } else if (d.template === 'panel') {
     body = `<div class="panel">${d.html || ''}</div>`;
   } else if (d.template === 'statement') {
     body = `<div class="panel stmt">${esc(d.statement || '')}</div>`;
   } else {
     throw new Error(
-      `슬라이드 ${index}: 알 수 없는 template "${d.template}" (list | shot | chat | mocks | panel | statement)`);
+      `슬라이드 ${index}: 알 수 없는 template "${d.template}" (list | shot | chat | mocks | annot | panel | statement)`);
   }
 
   const chips = (d.chips || []).slice(0, 4).map((c, i) => {
@@ -655,6 +680,35 @@ function css(t, fontUrl) {
     box-shadow:0 46px 90px rgba(0,0,0,.24);
   }
 
+  /* ── 주석 달린 미리보기 카드 ── 카드를 실제 모양대로 그리고 영역마다
+     그게 무엇인지 옆에서 가리킨다. 주석의 top 은 카드 안 영역 높이에
+     맞춘 고정값이라 카드 쪽 여백·글자 크기를 바꾸면 같이 손봐야 한다. */
+  .annot { display:flex; align-items:stretch; }
+  .an-card {
+    flex:none; width:54%;
+    background:${t.bg}; border:2px solid ${t.chipBorder}; border-radius:22px;
+    overflow:hidden; box-shadow:0 18px 44px rgba(0,0,0,.12);
+  }
+  .an-img { height:270px; background:linear-gradient(135deg, ${t.accent}, #e879f9); }
+  .an-img img { display:block; width:100%; height:100%; object-fit:cover; }
+  .an-meta { padding:40px; display:flex; flex-direction:column; gap:26px; }
+  /* 실제 카드도 긴 제목은 한 줄로 자른다. 두 줄이 되면 아래 주석 위치가 어긋난다.
+     말줄임이 의도된 동작이라 .an-t 는 넘침 검사 대상에서 뺐다 — 잘려도 레이아웃을
+     밀어내지 않는다. 대신 카드 폭을 줄이면 제목이 조용히 더 잘리니 주의한다. */
+  .an-t {
+    font-size:40px; font-weight:800; letter-spacing:-.03em; line-height:1.3;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  .an-d { font-size:30px; font-weight:700; color:${t.accentInk}; }
+  .an-notes { flex:1; position:relative; }
+  .an-note {
+    position:absolute; left:0; transform:translateY(-50%);
+    display:flex; align-items:center; white-space:nowrap;
+    font-size:26px; font-weight:700; color:${t.softInk}; letter-spacing:-.02em;
+  }
+  .an-note::before { content:''; flex:none; width:46px; height:2px; background:${t.chipBorder}; }
+  .an-note span { background:${t.soft}; border-radius:12px; padding:12px 20px; }
+
   .panel { background:${t.soft}; border-radius:30px; padding:42px; }
   /* 가로로 넓은 화면 조각. 세로로 긴 폰 화면(.shot-stand)과 달리 흘려보내지
      않고 본문 안에 통째로 앉힌다. 잘리면 무슨 화면인지 못 알아본다.
@@ -816,7 +870,7 @@ for (let i = 0; i < slides.length; i += 1) {
   const overflow = await page.evaluate(() => {
     const bad = [];
     // 글자 자체가 넘치는 경우
-    for (const el of document.querySelectorAll('.cv-h, .h1, .ct-t, .ct-d, .cv-f, .cv-k, .ot-name, .ot-h, .ch-t, .mk-subj, .mk-name, .mk-cap')) {
+    for (const el of document.querySelectorAll('.cv-h, .h1, .ct-t, .ct-d, .cv-f, .cv-k, .ot-name, .ot-h, .ch-t, .mk-subj, .mk-name, .mk-cap, .an-d')) {
       if (el.scrollWidth > el.clientWidth + 1) {
         bad.push(`${el.className}: "${el.textContent.trim()}" (${el.scrollWidth} > ${el.clientWidth})`);
       }
