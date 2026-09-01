@@ -358,9 +358,13 @@ function slideBody(d, t, index) {
     // 각 주석의 세로 위치는 카드 안 영역 높이에 맞춰 고정값으로 잡는다.
     const c = d.card || {}, nt = d.notes || {};
     check('annot.card', c.title, `슬라이드 ${index} card.title`);
-    const note = (key, top) => (nt[key]
+    // 주석만 있으면 어느 영역을 가리키는지 애매하다. 영역마다 테두리를 둘러
+    // 짝을 맞춘다. 테두리와 주석의 색을 같이 가져가야 둘이 한 쌍으로 읽힌다.
+    const zone = (key, style, on) =>
+      (nt[key] ? `<div class="an-zone on-${on}" style="${style}"></div>` : '');
+    const note = (key, top, on) => (nt[key]
       ? (check('annot.note', nt[key], `슬라이드 ${index} notes.${key}`),
-         `<div class="an-note" style="top:${top}px"><span>${esc(nt[key])}</span></div>`)
+         `<div class="an-note on-${on}" style="top:${top}px">${esc(nt[key])}</div>`)
       : '');
     body = `<div class="annot">
       <div class="an-card">
@@ -370,9 +374,10 @@ function slideBody(d, t, index) {
           <div class="an-t">${esc(c.title)}</div>
           <div class="an-d">${esc(c.domain || t.domain)}</div>
         </div>
-      </div>
-      <div class="an-notes">
-        ${note('image', 135)}${note('title', 336)}${note('domain', 407)}
+        ${zone('image', 'top:14px;left:14px;right:14px;height:292px', 'img')}
+        ${zone('title', 'top:344px;left:18px;right:18px;height:65px', 'meta')}
+        ${zone('domain', 'top:421px;left:18px;right:18px;height:55px', 'meta')}
+        ${note('image', 262, 'img')}${note('title', 377, 'meta')}${note('domain', 448, 'meta')}
       </div>
     </div>`;
   } else if (d.template === 'panel') {
@@ -683,31 +688,46 @@ function css(t, fontUrl) {
   /* ── 주석 달린 미리보기 카드 ── 카드를 실제 모양대로 그리고 영역마다
      그게 무엇인지 옆에서 가리킨다. 주석의 top 은 카드 안 영역 높이에
      맞춘 고정값이라 카드 쪽 여백·글자 크기를 바꾸면 같이 손봐야 한다. */
-  .annot { display:flex; align-items:stretch; }
+  .annot { display:flex; justify-content:center; }
   .an-card {
-    flex:none; width:54%;
-    background:${t.bg}; border:2px solid ${t.chipBorder}; border-radius:22px;
-    overflow:hidden; box-shadow:0 18px 44px rgba(0,0,0,.12);
+    position:relative; width:100%;
+    background:${t.bg}; border:2px solid ${t.chipBorder}; border-radius:24px;
+    overflow:hidden; box-shadow:0 20px 50px rgba(0,0,0,.13);
   }
-  .an-img { height:270px; background:linear-gradient(135deg, ${t.accent}, #e879f9); }
-  .an-img img { display:block; width:100%; height:100%; object-fit:cover; }
-  .an-meta { padding:40px; display:flex; flex-direction:column; gap:26px; }
-  /* 실제 카드도 긴 제목은 한 줄로 자른다. 두 줄이 되면 아래 주석 위치가 어긋난다.
-     말줄임이 의도된 동작이라 .an-t 는 넘침 검사 대상에서 뺐다 — 잘려도 레이아웃을
-     밀어내지 않는다. 대신 카드 폭을 줄이면 제목이 조용히 더 잘리니 주의한다. */
+  /* OG 이미지는 1200x630 이다. 폭을 채우면 세로가 남으므로 위아래를 자른다.
+     40% 로 잡아야 로고와 아래 서비스 이름 줄이 둘 다 남는다 — 가운데로 두면
+     아래 줄이 잘린다. */
+  .an-img { height:320px; background:linear-gradient(135deg, ${t.accent}, #e879f9); }
+  .an-img img {
+    display:block; width:100%; height:100%;
+    object-fit:cover; object-position:center 40%;
+  }
+  .an-meta { padding:32px; display:flex; flex-direction:column; gap:28px; }
+  /* 오른쪽은 주석 자리다. 글이 그 아래로 들어가지 않게 폭을 묶는다.
+     실제 카드도 긴 제목은 한 줄로 자르므로 말줄임이 곧 실제 동작이다.
+     .an-t 를 넘침 검사에서 뺀 이유이기도 하다. */
   .an-t {
-    font-size:40px; font-weight:800; letter-spacing:-.03em; line-height:1.3;
+    max-width:52%; font-size:38px; font-weight:800; letter-spacing:-.03em; line-height:1.3;
     white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
   }
-  .an-d { font-size:30px; font-weight:700; color:${t.accentInk}; }
-  .an-notes { flex:1; position:relative; }
+  .an-d { font-size:30px; font-weight:700; color:${t.accentInk}; line-height:1.3; }
+  /* 주석은 카드 위에 얹는다. 이미지 위는 무슨 사진이 오든 읽혀야 하므로
+     키컬러 면에 흰 글자로 못박고, 흰 바탕인 아래쪽은 연보라 면을 쓴다. */
   .an-note {
-    position:absolute; left:0; transform:translateY(-50%);
-    display:flex; align-items:center; white-space:nowrap;
-    font-size:26px; font-weight:700; color:${t.softInk}; letter-spacing:-.02em;
+    position:absolute; right:26px; transform:translateY(-50%);
+    white-space:nowrap; border-radius:13px; padding:11px 20px;
+    font-size:26px; font-weight:700; letter-spacing:-.02em;
   }
-  .an-note::before { content:''; flex:none; width:46px; height:2px; background:${t.chipBorder}; }
-  .an-note span { background:${t.soft}; border-radius:12px; padding:12px 20px; }
+  .an-note.on-img {
+    background:#ffffff; color:${t.strong};
+    box-shadow:0 8px 22px rgba(0,0,0,.28);
+  }
+  .an-note.on-meta { background:${t.soft}; color:${t.softInk}; }
+  /* 영역 테두리. 이미지 위는 무슨 사진이 오든 보이도록 흰색으로, 흰 바탕인
+     아래쪽은 키컬러로 두른다. 각 테두리 안에 그 영역의 주석이 들어간다. */
+  .an-zone { position:absolute; border:3px dashed; border-radius:15px; pointer-events:none; }
+  .an-zone.on-img { border-color:rgba(255,255,255,.92); }
+  .an-zone.on-meta { border-color:${t.accent}; }
 
   .panel { background:${t.soft}; border-radius:30px; padding:42px; }
   /* 가로로 넓은 화면 조각. 세로로 긴 폰 화면(.shot-stand)과 달리 흘려보내지
