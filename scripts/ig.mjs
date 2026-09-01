@@ -358,20 +358,17 @@ function slideBody(d, t, index) {
     // 각 주석의 세로 위치는 카드 안 영역 높이에 맞춰 고정값으로 잡는다.
     const c = d.card || {}, nt = d.notes || {};
     check('annot.card', c.title, `슬라이드 ${index} card.title`);
-    const note = (key, on) => (nt[key]
+    const note = (key, row) => (nt[key]
       ? (check('annot.note', nt[key], `슬라이드 ${index} notes.${key}`),
-         `<div class="an-note on-${on}">${esc(nt[key])}</div>`)
+         `<div class="an-note" style="grid-row:${row}">${esc(nt[key])}</div>`)
       : '');
     body = `<div class="annot">
-      <div class="an-card">
-        <div class="an-img">${c.image
-          ? `<img src="${shotUrl(c.image, index, 'card.image')}" alt="">` : ''}
-          ${note('image', 'img')}</div>
-        <div class="an-meta">
-          <div class="an-row"><div class="an-t">${esc(c.title)}</div>${note('title', 'meta')}</div>
-          <div class="an-row"><div class="an-d">${esc(c.domain || t.domain)}</div>${note('domain', 'meta')}</div>
-        </div>
-      </div>
+      <div class="an-frame"></div>
+      <div class="an-img">${c.image
+        ? `<img src="${shotUrl(c.image, index, 'card.image')}" alt="">` : ''}</div>
+      <div class="an-t">${esc(c.title)}</div>
+      <div class="an-d">${esc(c.domain || t.domain)}</div>
+      ${note('image', 1)}${note('title', 2)}${note('domain', 3)}
     </div>`;
   } else if (d.template === 'panel') {
     body = `<div class="panel">${d.html || ''}</div>`;
@@ -681,47 +678,45 @@ function css(t, fontUrl) {
   /* ── 주석 달린 미리보기 카드 ── 카드를 실제 모양대로 그리고 영역마다
      그게 무엇인지 옆에서 가리킨다. 주석의 top 은 카드 안 영역 높이에
      맞춘 고정값이라 카드 쪽 여백·글자 크기를 바꾸면 같이 손봐야 한다. */
-  .annot { display:flex; justify-content:center; }
-  .an-card {
-    /* 폭은 이미지 비율(1200:630)로 계산한 세로가 본문 칸(655px)에 들어가는
-       선에서 정한다. 100%% 면 카드가 612px 이 되어 넘친다. */
-    position:relative; width:92%;
+  /* 카드와 주석을 한 격자에 놓는다. 카드 조각이 왼쪽 칸, 그 조각을 가리키는
+     주석이 같은 줄 오른쪽 칸이다. 좌표를 박지 않아도 줄이 알아서 맞는다.
+     카드 배경은 왼쪽 칸 세 줄에 걸친 판(.an-frame)이 대신 그린다. */
+  .annot { display:grid; grid-template-columns:74% 1fr; column-gap:34px; align-items:center; }
+  .an-frame {
+    grid-column:1; grid-row:1 / 4;
     background:${t.bg}; border:2px solid ${t.chipBorder}; border-radius:24px;
-    overflow:hidden; box-shadow:0 20px 50px rgba(0,0,0,.13);
+    box-shadow:0 20px 50px rgba(0,0,0,.13);
   }
-  /* OG 이미지는 1200x630 이다. 폭을 채우면 세로가 남으므로 위아래를 자른다.
-     40% 로 잡아야 로고와 아래 서비스 이름 줄이 둘 다 남는다 — 가운데로 두면
-     아래 줄이 잘린다. */
-  /* OG 이미지는 1200x630 이다. 칸을 그 비율로 잡아 잘리는 데 없이 그대로 싣는다.
-     카드 폭은 그 비율로 계산한 세로가 본문 칸에 들어가는 선에서 정한다. */
+  /* OG 이미지는 1200x630 이다. 칸을 그 비율로 잡아 잘리는 데 없이 그대로 싣는다. */
   .an-img {
-    position:relative; aspect-ratio:1200/630;
+    grid-column:1; grid-row:1; z-index:1; margin:2px 2px 0;
+    aspect-ratio:1200/630; overflow:hidden; border-radius:22px 22px 0 0;
     background:linear-gradient(135deg, ${t.accent}, #e879f9);
   }
   .an-img img { display:block; width:100%; height:100%; object-fit:cover; }
-  .an-meta { padding:30px 32px; display:flex; flex-direction:column; gap:22px; }
-  /* 주석은 각 행에 같이 놓는다. 좌표를 박아 두면 글자 크기나 비율을 바꿀 때마다
-     따로 손봐야 하고, 한 번 어긋나면 엉뚱한 영역을 가리킨다. */
-  .an-row { display:flex; align-items:center; justify-content:space-between; gap:24px; }
   /* 실제 카드도 긴 제목은 한 줄로 자른다. 말줄임이 의도된 동작이라
      .an-t 는 넘침 검사 대상에서 뺐다. */
   .an-t {
-    flex:1; min-width:0;
+    grid-column:1; grid-row:2; z-index:1; padding:30px 32px 0;
     font-size:38px; font-weight:800; letter-spacing:-.03em; line-height:1.3;
     white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
   }
-  .an-d { font-size:30px; font-weight:700; color:${t.accentInk}; line-height:1.3; }
-  /* 배경이 다르므로 이미지 위와 흰 바탕 위의 색을 따로 둔다. 영역을 테두리로
-     두르는 것도 해봤는데 점선이 카드보다 눈에 띄어서 뺐다. */
+  .an-d {
+    grid-column:1; grid-row:3; z-index:1; padding:14px 32px 32px;
+    font-size:30px; font-weight:700; color:${t.accentInk}; line-height:1.3;
+  }
+  /* 주석은 카드 밖 오른쪽 칸에 둔다. 안에 넣으면 카드 제목이 그만큼 잘린다.
+     칸이 좁으므로 줄바꿈을 허용하되 keep-all 로 낱말 중간에서 끊지 않는다. */
   .an-note {
-    flex:none; white-space:nowrap; border-radius:13px; padding:11px 20px;
+    grid-column:2; justify-self:start;
+    display:flex; align-items:center;
     font-size:26px; font-weight:700; letter-spacing:-.02em;
+    color:${t.softInk}; word-break:keep-all; line-height:1.35;
   }
-  .an-note.on-img {
-    position:absolute; right:26px; bottom:22px;
-    background:#ffffff; color:${t.strong}; box-shadow:0 8px 22px rgba(0,0,0,.28);
+  .an-note::before {
+    content:''; flex:none; width:30px; height:2px; margin-right:14px;
+    background:${t.chipBorder};
   }
-  .an-note.on-meta { background:${t.soft}; color:${t.softInk}; }
 
   .panel { background:${t.soft}; border-radius:30px; padding:42px; }
   /* 가로로 넓은 화면 조각. 세로로 긴 폰 화면(.shot-stand)과 달리 흘려보내지
