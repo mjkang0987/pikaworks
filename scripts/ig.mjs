@@ -362,21 +362,20 @@ function slideBody(d, t, index) {
       ? (check('annot.note', nt[key], `슬라이드 ${index} notes.${key}`),
          `<div class="an-note on-${on}">${esc(nt[key])}</div>`)
       : '');
-    // 배지가 카드 오른쪽 테두리에 걸쳐 반은 카드 안, 반은 밖으로 나가게
-    // 얹는다. 완전히 밖으로 빼면 카드와 상관없는 낱말표처럼 떠 보이고,
-    // 완전히 안에 넣으면 그만큼 카드 내용을 밀어낸다. 걸치면 둘 다 산다.
+    // 이미지·링크 배지는 카드 안에 그대로 얹는다. 자리가 항상 있으니
+    // 자연스럽게 담긴다. 제목 배지만 다르다 — 제목 길이가 매번 달라
+    // 자리가 있을 때도 없을 때도 있다. 정해진 비율로 절반씩 걸치게
+    // 강제하지 않고, 줄에 안 들어가면 카드 오른쪽으로 흘러넘치게 둔다.
     body = `<div class="an-card">
-      <div class="an-zone">
-        <div class="an-img">${c.image
-          ? `<img src="${shotUrl(c.image, index, 'card.image')}" alt="">` : ''}</div>
-        ${note('image', 'img')}
-      </div>
+      <div class="an-img">${c.image
+        ? `<img src="${shotUrl(c.image, index, 'card.image')}" alt="">` : ''}
+        ${note('image', 'img')}</div>
       <div class="an-meta">
-        <div class="an-zone">
+        <div class="an-row title-row">
           <div class="an-t">${esc(c.title)}</div>
           ${note('title', 'meta')}
         </div>
-        <div class="an-zone">
+        <div class="an-row">
           <div class="an-d">${esc(c.domain || t.domain)}</div>
           ${note('domain', 'meta')}
         </div>
@@ -695,41 +694,42 @@ function css(t, fontUrl) {
      카드 배경은 왼쪽 칸 세 줄에 걸친 판(.an-frame)이 대신 그린다. */
   /* 카드 폭을 줄여 오른쪽에 배지가 걸칠 여유를 둔다. 100%%로 꽉 채우면
      걸친 절반이 슬라이드 바깥으로 잘려 나간다. */
+  /* 카드를 왼쪽으로 붙이고 오른쪽에 여백을 남긴다. 제목 배지가 자리가
+     없을 때 그 여백으로 흘러넘친다. 폭을 100%%로 채우면 넘칠 자리가
+     없어 슬라이드 캔버스 밖에서 잘린다. */
   .an-card {
-    width:80%; background:${t.bg}; border:2px solid ${t.chipBorder}; border-radius:24px;
+    width:86%; background:${t.bg}; border:2px solid ${t.chipBorder}; border-radius:24px;
     box-shadow:0 20px 50px rgba(0,0,0,.13);
   }
   /* OG 이미지는 1200x630 이다. 칸을 그 비율로 잡아 잘리는 데 없이 그대로 싣는다.
      2px 인셋은 카드 테두리 두께다 — 딱 맞춰야 이미지 모서리가 카드 테두리
      안쪽 곡률과 겹쳐서 카드가 한 장으로 보인다. */
   .an-img {
-    margin:2px 2px 0; aspect-ratio:1200/630; overflow:hidden;
+    position:relative; margin:2px 2px 0; aspect-ratio:1200/630; overflow:hidden;
     border-radius:22px 22px 0 0;
     background:linear-gradient(135deg, ${t.accent}, #e879f9);
   }
   .an-img img { display:block; width:100%; height:100%; object-fit:cover; }
   .an-meta { padding:28px 32px 30px; display:flex; flex-direction:column; gap:20px; }
-  /* 각 영역을 이 상자 하나로 감싼다 — 배지가 이 상자의 오른쪽 가장자리에
-     걸치므로, 카드 테두리와 같은 위치여야 걸치는 자리가 카드 자체의
-     가장자리로 읽힌다. 텍스트에는 별도 안쪽 여백을 주지 않는다. */
-  .an-zone { position:relative; }
+  .an-row { display:flex; align-items:center; gap:16px; }
   /* 실제 카드도 긴 제목은 한 줄로 자른다. 말줄임이 의도된 동작이라
-     .an-t 는 넘침 검사 대상에서 뺐다. */
+     .an-t 는 넘침 검사 대상에서 뺐다. 고정 상한 없이 flex 로만 줄이면
+     배지가 밀려날 자리가 안 남을 때도 있어 상한을 둔다 — 그래도 안
+     맞으면 배지가 카드를 넘어간다. */
   .an-t {
-    max-width:78%; font-size:38px; font-weight:800; letter-spacing:-.03em; line-height:1.3;
+    flex:none; max-width:60%;
+    font-size:38px; font-weight:800; letter-spacing:-.03em; line-height:1.3;
     white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
   }
-  .an-d { font-size:30px; font-weight:700; color:${t.accentInk}; line-height:1.3; }
-  /* 배지는 그 영역 상자의 오른쪽 가장자리 — 곧 카드의 오른쪽 테두리 —
-     에 걸친다. translate 50%%로 정확히 절반이 안, 절반이 밖이다.
-     이미지 위는 무슨 사진이 오든 읽히도록 흰 바탕, 흰 카드 위는
-     연보라 바탕을 쓴다. */
+  .an-d { flex:none; font-size:30px; font-weight:700; color:${t.accentInk}; line-height:1.3; }
   .an-note {
-    position:absolute; top:50%; right:0; transform:translate(50%, -50%); z-index:2;
-    white-space:nowrap; border-radius:13px; padding:11px 20px;
+    flex:none; white-space:nowrap; border-radius:13px; padding:11px 20px;
     font-size:26px; font-weight:700; letter-spacing:-.02em;
   }
+  /* 이미지 위 배지는 사진 안쪽 모서리에 그대로 얹는다 — 카드를 벗어나지
+     않는다. 무슨 사진이 오든 읽히도록 흰 바탕을 쓴다. */
   .an-note.on-img {
+    position:absolute; right:20px; bottom:20px;
     background:#ffffff; color:${t.strong}; box-shadow:0 8px 22px rgba(0,0,0,.28);
   }
   .an-note.on-meta { background:${t.soft}; color:${t.softInk}; }
