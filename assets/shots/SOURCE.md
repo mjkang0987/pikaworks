@@ -17,6 +17,26 @@
 | `tas-mobile-search.png` | 〃 | 390×844 @2x |
 | `tas-pc-customer.png` | 고객정보 — 적립금 잔액·이력·예약 내역 | 1440×900 @2x |
 | `tas-mobile-customer.png` | 〃 | 390×844 @2x |
+| `tas-mobile-book-pick.png` | 고객 공개 예약 페이지(`/book/{slug}`) — 수업·시간 선택, 하단 예약 요약 | 390×844 @2x |
+| `tas-mobile-book-done.png` | 〃 — 예약 신청 완료("확정대기") 화면 | 390×844 @2x |
+| `tas-mobile-book-en.png` | 〃 영문(`?lang=en`) — 담당자·날짜·수업 선택 UI | 390×844 @2x |
+| `tas-pc-calendar-pending.png` | 오너 캘린더(일별) — 방금 들어온 예약이 "확정대기" 배지로 표시된 상태 | 1440×900 @2x |
+
+## 촬영 조건 (2026-09-01, tas@a1de49b)
+
+이전 세 화면(검색·고객정보)과 달리 **고객 공개 예약 페이지 + 오너 캘린더의 확정대기 상태**를
+찍은 것이라, 로컬에 DB를 세우고 실제로 예약 하나를 접수시켜야 했다.
+
+1. postgres 16 기동 → `tas` DB 생성 → `pnpm prisma:db:push && pnpm prisma:seed`
+2. `Store.useOnlineBooking=true`, `bookingSlug='pika-salon'`, `onboarded=true` 로 갱신하고
+   `StoreBookingSettings`(연락처 필수) 행을 추가해야 공개 예약 페이지가 열린다
+3. 시드 서비스가 전부 헤어샵 메뉴(커트·펌 등)라 TAS 마케팅이 피하는 "뷰티 소구"로 보여서,
+   앞의 3개만 `원데이 클래스`·`정기 클래스(4회)`·`체험 클래스`로 이름을 바꿔 찍었다
+4. Playwright로 공개 예약 페이지에서 실제로 예약을 하나 접수(`POST /api/book/{slug}/reserve`) —
+   `reserve.ts` 가 신규 예약도 `status='requested'` 로 만든다는 걸 이 과정에서 코드로 확인했고,
+   그 실제 상태가 오너 캘린더에 "확정대기" 배지로 뜨는 걸 그대로 찍었다(꾸민 상태가 아니다)
+5. `next.config.mjs` 에 `devIndicators: false` 를 임시로 추가하고(이 클론에만, 커밋 대상 아님),
+   캘린더 화면의 dev 전용 AD 플레이스홀더는 `killAds()` 패턴으로 제거
 
 데스크톱은 `localStorage['aside-visible'] = true` 로 사이드바를 펼친 채
 찍는다. 메뉴가 보여야 한 장에서 무엇을 하는 서비스인지 읽힌다.

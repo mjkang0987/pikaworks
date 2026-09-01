@@ -8,7 +8,8 @@
     "public/ig/takeaseat-3-1.png",
     "public/ig/takeaseat-3-2.png",
     "public/ig/takeaseat-3-3.png",
-    "public/ig/takeaseat-3-4.png"
+    "public/ig/takeaseat-3-4.png",
+    "public/ig/takeaseat-3-5.png"
   ],
   "image_url": "https://pikaworks.kr/ig/takeaseat-3-1.png",
   "design": {
@@ -26,43 +27,32 @@
     },
     "slides": [
       {
-        "template": "panel",
+        "template": "shot",
         "title": [
           "매장 시간 보고",
           "직접 골라요"
         ],
         "subtitle": "영업시간이랑 찬 자리는 빼고 보여줘요",
-        "html": "<div class=\"grid5\"><div class=\"cell\"><small>화</small>25</div><div class=\"cell cell-on\"><small>수</small>26</div><div class=\"cell\"><small>목</small>27</div><div class=\"cell\"><small>금</small>28</div><div class=\"cell\"><small>토</small>29</div></div><div class=\"grid4\"><div class=\"cell\">10:00</div><div class=\"cell cell-off\">10:30</div><div class=\"cell\">11:00</div><div class=\"cell cell-off\">11:30</div></div><div class=\"grid4\"><div class=\"cell cell-off\">13:00</div><div class=\"cell cell-on\">13:30</div><div class=\"cell\">14:00</div><div class=\"cell\">14:30</div></div>",
-        "chips": [
-          "한국어",
-          "English",
-          "日本語",
-          "中文"
-        ]
+        "mobile": "assets/shots/tas-mobile-book-pick.png"
       },
       {
-        "template": "list",
+        "template": "shot",
         "title": [
           "고르면 캘린더에",
-          "바로 올라와요"
+          "확정대기로 떠요"
         ],
-        "items": [
-          {
-            "icon": "calendar",
-            "title": "캘린더에 바로",
-            "text": "확정은 눌러서 해요"
-          },
-          {
-            "icon": "bell",
-            "title": "알림으로 모임",
-            "text": "예약·변경·취소 요청 한곳에"
-          },
-          {
-            "icon": "globe",
-            "title": "외국인 손님도",
-            "text": "링크만 보내면 끝이에요"
-          }
-        ]
+        "subtitle": "확정은 사장님이 눌러서 해요",
+        "pc": "assets/shots/tas-pc-calendar-pending.png",
+        "mobile": "assets/shots/tas-mobile-book-done.png"
+      },
+      {
+        "template": "shot",
+        "title": [
+          "외국인 손님도",
+          "4개 언어로 예약"
+        ],
+        "subtitle": "링크만 보내면 끝이에요",
+        "mobile": "assets/shots/tas-mobile-book-en.png"
       }
     ],
     "outro": {
@@ -80,6 +70,7 @@
     "https://pikaworks.kr/ig/takeaseat-3-1.png",
     "https://pikaworks.kr/ig/takeaseat-3-2.png",
     "https://pikaworks.kr/ig/takeaseat-3-3.png",
-    "https://pikaworks.kr/ig/takeaseat-3-4.png"
+    "https://pikaworks.kr/ig/takeaseat-3-4.png",
+    "https://pikaworks.kr/ig/takeaseat-3-5.png"
   ]
 }
