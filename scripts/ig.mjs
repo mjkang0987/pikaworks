@@ -277,7 +277,7 @@ function slideBody(d, t, index) {
             <div class="sh-bar"><i></i><i></i><i></i></div>
             <img src="${shotUrl(d.pc, index, 'pc')}" alt="">
           </div>
-          <div class="sh-mo"><img src="${shotUrl(d.mobile, index, 'mobile')}" alt=""></div>
+          <div class="sh-mo"><img src="${shotUrl(d.mobile, index, 'mobile')}" alt=""><div class="sh-mo-fade"></div></div>
         </div>`
       : '';
     if (!d.pc && d.wide) {
@@ -559,11 +559,17 @@ function css(t, fontUrl) {
     /* 높이를 폰 화면 전체(가로 360px 기준 약 780px)로 두면 다른 슬라이드의
        shot-stand 처럼 위쪽 절반만 보여주는 느낌과 안 맞는다. 박스를 낮게
        고정하고 overflow:hidden 으로 아래를 잘라 상단만 보이게 한다. */
-    position:absolute; right:0; bottom:0; width:360px; height:400px;
+    position:absolute; right:0; bottom:0; width:440px; height:480px;
     border:9px solid ${t.fg}; border-radius:34px; overflow:hidden;
     background:${t.fg}; box-shadow:0 22px 46px rgba(0,0,0,.36);
   }
   .sh-mo img { display:block; width:100%; height:auto; border-radius:26px; }
+  /* 잘려나간 아래쪽이 갑자기 끊긴 티가 나지 않도록, shot-stand 의 shot-fade 와
+     같은 방식으로 폰 배경색(bezel)으로 서서히 사라지게 한다. */
+  .sh-mo-fade {
+    position:absolute; left:0; right:0; bottom:0; height:160px;
+    background:linear-gradient(to bottom, transparent, ${t.fg} 85%);
+  }
   /* 크기는 그대로 두고 좌우 자리만 뒤집는다 — PC 창을 오른쪽에, 폰을 왼쪽에 두고 싶을 때.
      헤드라인은 항상 왼쪽 정렬로 짧게 흐르다 보니 이미지 묶음(사실상 오른쪽 전용 공간)과
      겹치지 않았을 뿐이다 — 이미지만 뒤집고 글은 그대로 두면 글이 왼쪽으로 넘어온 폰과
