@@ -358,10 +358,6 @@ function slideBody(d, t, index) {
     // 각 주석의 세로 위치는 카드 안 영역 높이에 맞춰 고정값으로 잡는다.
     const c = d.card || {}, nt = d.notes || {};
     check('annot.card', c.title, `슬라이드 ${index} card.title`);
-    // 주석만 있으면 어느 영역을 가리키는지 애매하다. 영역마다 테두리를 둘러
-    // 짝을 맞춘다. 테두리와 주석의 색을 같이 가져가야 둘이 한 쌍으로 읽힌다.
-    const zone = (key, style, on) =>
-      (nt[key] ? `<div class="an-zone on-${on}" style="${style}"></div>` : '');
     const note = (key, top, on) => (nt[key]
       ? (check('annot.note', nt[key], `슬라이드 ${index} notes.${key}`),
          `<div class="an-note on-${on}" style="top:${top}px">${esc(nt[key])}</div>`)
@@ -374,9 +370,6 @@ function slideBody(d, t, index) {
           <div class="an-t">${esc(c.title)}</div>
           <div class="an-d">${esc(c.domain || t.domain)}</div>
         </div>
-        ${zone('image', 'top:14px;left:14px;right:14px;height:292px', 'img')}
-        ${zone('title', 'top:344px;left:18px;right:18px;height:65px', 'meta')}
-        ${zone('domain', 'top:421px;left:18px;right:18px;height:55px', 'meta')}
         ${note('image', 262, 'img')}${note('title', 377, 'meta')}${note('domain', 448, 'meta')}
       </div>
     </div>`;
@@ -711,8 +704,9 @@ function css(t, fontUrl) {
     white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
   }
   .an-d { font-size:30px; font-weight:700; color:${t.accentInk}; line-height:1.3; }
-  /* 주석은 카드 위에 얹는다. 이미지 위는 무슨 사진이 오든 읽혀야 하므로
-     키컬러 면에 흰 글자로 못박고, 흰 바탕인 아래쪽은 연보라 면을 쓴다. */
+  /* 주석은 카드 위에 얹는다. 영역을 테두리로 두르는 것도 해봤는데 점선이
+     카드보다 눈에 띄어서 뺐다. 자리만으로 어느 영역인지 읽힌다. 배경이
+     다르므로 이미지 위와 흰 바탕 위의 색을 따로 둔다. */
   .an-note {
     position:absolute; right:26px; transform:translateY(-50%);
     white-space:nowrap; border-radius:13px; padding:11px 20px;
@@ -723,11 +717,6 @@ function css(t, fontUrl) {
     box-shadow:0 8px 22px rgba(0,0,0,.28);
   }
   .an-note.on-meta { background:${t.soft}; color:${t.softInk}; }
-  /* 영역 테두리. 이미지 위는 무슨 사진이 오든 보이도록 흰색으로, 흰 바탕인
-     아래쪽은 키컬러로 두른다. 각 테두리 안에 그 영역의 주석이 들어간다. */
-  .an-zone { position:absolute; border:3px dashed; border-radius:15px; pointer-events:none; }
-  .an-zone.on-img { border-color:rgba(255,255,255,.92); }
-  .an-zone.on-meta { border-color:${t.accent}; }
 
   .panel { background:${t.soft}; border-radius:30px; padding:42px; }
   /* 가로로 넓은 화면 조각. 세로로 긴 폰 화면(.shot-stand)과 달리 흘려보내지
