@@ -155,6 +155,11 @@ const LIMITS = {
   'chat.tag': 10,
   'chat.title': 22,
   'chat.desc': 34,
+  'clip.title': 22,
+  'clip.tag': 6,
+  'post.name': 12,
+  'post.overlay': 9,
+  'post.caption': 24,
   chip: 8,
 };
 
@@ -319,13 +324,79 @@ function slideBody(d, t, index) {
         </div>
       </div>
     </div>`;
+  } else if (d.template === 'source') {
+    // 원본 게시물 → 클립 카드. 공구 글은 인스타에 올라오는 경우가 많은데
+    // 남의 계정 게시물을 가져다 쓸 수 없어서 더미로 그린다.
+    // 말풍선(chat)에서 카카오톡을 베끼지 않은 것과 같은 선을 지킨다 —
+    // 로고·브랜드색은 안 가져오고 게시물의 구조(프로필 · 사진 · 반응 · 캡션)만
+    // 빌린다. 사진 자리는 공구 글이 실제로 그러듯 이미지 위에 글자를 얹는다.
+    const po = d.post || {}, cd = d.card || {};
+    check('post.name', po.name, `슬라이드 ${index} post.name`);
+    (po.overlay || []).forEach((l, i) =>
+      check('post.overlay', l, `슬라이드 ${index} post.overlay[${i}]`));
+    check('post.caption', po.caption, `슬라이드 ${index} post.caption`);
+    check('chat.title', cd.title, `슬라이드 ${index} card.title`);
+    if (cd.desc) check('chat.desc', cd.desc, `슬라이드 ${index} card.desc`);
+    const heart = '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 6.6a5 5 0 0 0-7.1 0L12 8.3l-1.7-1.7a5 5 0 1 0-7.1 7.1L12 22l8.8-8.3a5 5 0 0 0 0-7.1z"/></svg>';
+    body = `<div class="src">
+      <div class="ig">
+        <div class="ig-top">
+          <div class="ig-av"></div>
+          <div class="ig-id">${esc(po.name || '')}</div>
+        </div>
+        <div class="ig-img"><span>${(po.overlay || []).map(esc).join('<br>')}</span></div>
+        <div class="ig-act">
+          <i>${heart}${esc(po.likes || '')}</i>
+          <i>${icon('chat', t, 26)}${esc(po.comments || '')}</i>
+        </div>
+        <div class="ig-cap"><b>${esc(po.name || '')}</b> ${esc(po.caption || '')}</div>
+      </div>
+      <div class="src-arrow">→</div>
+      <div class="prev">
+        <div class="pv-th"><span>${(po.overlay || []).map(esc).join('<br>')}</span></div>
+        <div class="pv-m">
+          <div class="pv-t">${esc(cd.title || '')}</div>
+          <div class="pv-d">${esc(cd.domain || t.domain)}</div>
+          ${(cd.tags || []).length ? `<div class="pv-tags">${
+            cd.tags.slice(0, 4).map((g, i) => {
+              check('clip.tag', g, `슬라이드 ${index} card.tags[${i}]`);
+              return `<span class="pv-g">${esc(g)}</span>`;
+            }).join('')
+          }</div>` : ''}
+        </div>
+      </div>
+    </div>`;
+  } else if (d.template === 'clips') {
+    // 저장된 클립 목록. 한 줄의 구조는 source 템플릿의 미리보기와 같다 —
+    // 실제 화면에서 둘이 같은 컴포넌트 모양이고, 두 장을 넘길 때 같은 줄이
+    // 늘어난 것으로 읽혀야 한다.
+    const rows = (d.items || []).slice(0, 3).map((it, i) => {
+      check('clip.title', it.title, `슬라이드 ${index} items[${i}].title`);
+      (it.overlay || []).forEach((l, j) =>
+        check('post.overlay', l, `슬라이드 ${index} items[${i}].overlay[${j}]`));
+      const tags = (it.tags || []).slice(0, 4).map((g, j) => {
+        check('clip.tag', g, `슬라이드 ${index} items[${i}].tags[${j}]`);
+        return `<span class="pv-g">${esc(g)}</span>`;
+      }).join('');
+      return `<div class="clip">
+        <div class="pv-th${i ? ` g${i + 1}` : ''}"><span>${
+          (it.overlay || []).map(esc).join('<br>')}</span></div>
+        <div class="pv-m">
+          <div class="pv-t">${esc(it.title)}</div>
+          ${it.domain ? `<div class="pv-d">${esc(it.domain)}</div>` : ''}
+          ${tags ? `<div class="pv-tags">${tags}</div>` : ''}
+        </div>
+      </div>`;
+    }).join('');
+    body = `<div class="clips">${rows}</div>`;
   } else if (d.template === 'panel') {
     body = `<div class="panel">${d.html || ''}</div>`;
   } else if (d.template === 'statement') {
     body = `<div class="panel stmt">${esc(d.statement || '')}</div>`;
   } else {
     throw new Error(
-      `슬라이드 ${index}: 알 수 없는 template "${d.template}" (list | panel | statement)`);
+      `슬라이드 ${index}: 알 수 없는 template "${d.template}"`
+      + ' (list | clips | source | shot | chat | panel | statement)');
   }
 
   const chips = (d.chips || []).slice(0, 4).map((c, i) => {
@@ -443,7 +514,10 @@ function css(t, fontUrl) {
 
   /* ── 내용 ── 모든 내용 슬라이드가 같은 골격을 쓴다 */
   .head { min-height:186px; }
-  .h1 { font-size:64px; font-weight:800; line-height:1.26; letter-spacing:-.04em; }
+  /* 내용 슬라이드 제목. 커버(178px) 다음으로 큰 글자다 — 피드에서 축소돼도
+     제목만은 읽혀야 해서 64px 에서 올렸다. 두 줄이 .head 의 min-height(186px)
+     안에 들어가는 상한이 여기다. */
+  .h1 { font-size:72px; font-weight:800; line-height:1.26; letter-spacing:-.04em; }
   .accent { color:${t.accentInk}; }
   .sub {
     margin-top:22px; font-size:30px; font-weight:500;
@@ -559,6 +633,90 @@ function css(t, fontUrl) {
   .ch-t { font-size:31px; font-weight:800; letter-spacing:-.03em; line-height:1.25;  word-break:keep-all; }
   .ch-s { font-size:25px; font-weight:600; color:${t.muted}; line-height:1.35; word-break:keep-all; }
   .ch-d { font-size:23px; font-weight:600; color:${t.accentInk}; }
+
+  /* ── 원본 게시물 → 카드 ── 게시물의 구조만 빌린다. 로고도 브랜드색도
+     안 쓴다. 계정 이름은 라틴 핸들(@…)이 아니라 한글로 둬서 실재하는
+     계정으로 오해될 여지를 없앤다. */
+  .src { display:flex; align-items:center; justify-content:center; gap:22px; height:100%; }
+  .ig {
+    flex:none; width:376px; background:${t.bg};
+    border:2px solid ${t.border}; border-radius:24px; overflow:hidden;
+    box-shadow:0 18px 44px rgba(0,0,0,.10);
+  }
+  .ig-top { display:flex; align-items:center; gap:14px; padding:18px 20px; }
+  .ig-av {
+    flex:none; width:50px; height:50px; border-radius:50%;
+    background:linear-gradient(135deg, #fbbf24, #fb7185);
+  }
+  .ig-id { font-size:25px; font-weight:800; letter-spacing:-.03em; }
+  .ig-img {
+    height:290px; display:flex; align-items:center; justify-content:center;
+    background:linear-gradient(135deg, #6366f1, #a855f7 55%, #e879f9);
+  }
+  .ig-img span {
+    color:#fff; font-size:42px; font-weight:800; line-height:1.18;
+    letter-spacing:-.03em; text-align:center; text-shadow:0 2px 14px rgba(0,0,0,.3);
+  }
+  .ig-act { display:flex; align-items:center; gap:22px; padding:16px 20px 0; }
+  .ig-act i {
+    display:flex; align-items:center; gap:8px; font-style:normal;
+    font-size:22px; font-weight:700; color:${t.muted};
+  }
+  .ig-cap {
+    padding:12px 20px 22px; font-size:22px; font-weight:600;
+    color:${t.muted}; line-height:1.4; letter-spacing:-.02em;
+  }
+  .ig-cap b { color:${t.fg}; font-weight:800; }
+  .src-arrow { flex:none; font-size:44px; font-weight:800; color:${t.accentInk}; }
+  /* 저장 결과는 가로형 한 줄이다 — 정사각 썸네일 · 제목 · 호스트 · 태그.
+     세로 카드(이미지 크게 + 글 아래)는 공유했을 때 뜨는 그림이고 거기엔
+     태그가 안 붙는다. 태그가 보이는 건 이 줄뿐이라 이 모양으로 그린다.
+     (clipnote main f121a32 — HomeClient 클립 미리보기 · ClipsClient 목록) */
+  .prev {
+    flex:none; width:512px; background:${t.bg};
+    border:2px solid ${t.chipBorder}; border-radius:24px;
+    padding:28px 30px; display:flex; align-items:flex-start; gap:24px;
+    box-shadow:0 18px 44px rgba(0,0,0,.10);
+  }
+  /* 썸네일은 게시물 사진과 같은 그림이어야 한다 — 대표 이미지를 그대로
+     불러온다는 말이 그림으로 읽히는 지점이 여기다. */
+  .pv-th {
+    flex:none; width:124px; height:124px; border-radius:20px;
+    display:flex; align-items:center; justify-content:center;
+    background:linear-gradient(135deg, #6366f1, #a855f7 55%, #e879f9);
+  }
+  /* 실제 앱도 대표 이미지가 없으면 프리셋 중에서 고른다 — 목록 세 줄이
+     같은 색이면 한 사람이 찍어낸 목업처럼 보인다. */
+  .pv-th.g2 { background:linear-gradient(135deg, #0ea5e9, #6366f1 55%, #a855f7); }
+  .pv-th.g3 { background:linear-gradient(135deg, #fb7185, #f97316 55%, #fbbf24); }
+  .pv-th span {
+    color:#fff; font-size:19px; font-weight:800; line-height:1.2;
+    letter-spacing:-.03em; text-align:center; text-shadow:0 2px 10px rgba(0,0,0,.3);
+    padding:0 6px;
+  }
+  .pv-m { flex:1; min-width:0; }
+  .pv-t { font-size:32px; font-weight:800; letter-spacing:-.03em; line-height:1.3; word-break:keep-all; }
+  .pv-d { margin-top:9px; font-size:25px; font-weight:600; color:${t.muted}; letter-spacing:-.02em; }
+  /* 여러 개가 한 줄에 눕는 모양이라, 태그를 여럿 달 수 있다는 게
+     3번을 보기 전에 여기서 이미 읽힌다. */
+  .pv-tags { margin-top:14px; display:flex; flex-wrap:wrap; gap:10px; }
+  .pv-g {
+    background:${t.soft}; color:${t.softInk};
+    font-size:21px; font-weight:700; letter-spacing:-.02em;
+    padding:8px 16px; border-radius:999px; white-space:nowrap;
+  }
+
+  /* ── 클립 목록 ── 저장해둔 것들이 목록에서 어떻게 보이는지.
+     한 줄이 썸네일 · 제목 · 호스트 · 태그로 끝난다. source 템플릿의
+     미리보기와 같은 모양이라 두 장이 한 화면의 앞뒤로 읽힌다. */
+  .clips { display:flex; flex-direction:column; gap:18px; }
+  .clip {
+    background:${t.soft}; border-radius:26px;
+    padding:22px 26px; display:flex; align-items:flex-start; gap:24px;
+  }
+  /* 줄 배경이 이미 연보라라, 태그 알약까지 연보라면 알약이 사라지고 글자만
+     남는다. 줄 안에서는 알약을 바탕색으로 뒤집는다. */
+  .clip .pv-g { background:${t.bg}; }
 
   .panel { background:${t.soft}; border-radius:30px; padding:42px; }
   /* 가로로 넓은 화면 조각. 세로로 긴 폰 화면(.shot-stand)과 달리 흘려보내지
@@ -721,20 +879,20 @@ for (let i = 0; i < slides.length; i += 1) {
   const overflow = await page.evaluate(() => {
     const bad = [];
     // 글자 자체가 넘치는 경우
-    for (const el of document.querySelectorAll('.cv-h, .h1, .ct-t, .ct-d, .cv-f, .cv-k, .ot-name, .ot-h, .ch-t')) {
+    for (const el of document.querySelectorAll('.cv-h, .h1, .ct-t, .ct-d, .cv-f, .cv-k, .ot-name, .ot-h, .ch-t, .ig-id, .pv-d')) {
       if (el.scrollWidth > el.clientWidth + 1) {
         bad.push(`${el.className}: "${el.textContent.trim()}" (${el.scrollWidth} > ${el.clientWidth})`);
       }
     }
     // 배지처럼 내용에 맞춰 커지는 요소는 자기 자신은 절대 안 넘친다.
     // 넘침이 부모 행에서 일어나므로 컨테이너도 같이 재야 한다.
-    for (const el of document.querySelectorAll('.cv-top, .cv-fs, .cv-hs, .chips, .foot, .ft-app, .cards')) {
+    for (const el of document.querySelectorAll('.cv-top, .cv-fs, .cv-hs, .chips, .foot, .ft-app, .cards, .clip, .pv-tags')) {
       if (el.scrollWidth > el.clientWidth + 1) {
         bad.push(`${el.className} 가로 넘침 (${el.scrollWidth} > ${el.clientWidth})`);
       }
     }
     // flex:1 로 늘어나는 칸은 안에서 찌그러질 뿐 body 를 늘리지 않는다
-    for (const el of document.querySelectorAll('.cv-mid, .main, .ot-app, .shot, .chat')) {
+    for (const el of document.querySelectorAll('.cv-mid, .main, .ot-app, .shot, .chat, .clips, .src, .ig, .prev')) {
       if (el.scrollHeight > el.clientHeight + 1) {
         bad.push(`${el.className} 세로 눌림 (${el.scrollHeight} > ${el.clientHeight})`);
       }
