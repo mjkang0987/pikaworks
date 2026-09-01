@@ -358,17 +358,29 @@ function slideBody(d, t, index) {
     // 각 주석의 세로 위치는 카드 안 영역 높이에 맞춰 고정값으로 잡는다.
     const c = d.card || {}, nt = d.notes || {};
     check('annot.card', c.title, `슬라이드 ${index} card.title`);
-    const note = (key, row) => (nt[key]
+    const note = (key, on) => (nt[key]
       ? (check('annot.note', nt[key], `슬라이드 ${index} notes.${key}`),
-         `<div class="an-note" style="grid-row:${row}">${esc(nt[key])}</div>`)
+         `<div class="an-note on-${on}">${esc(nt[key])}</div>`)
       : '');
-    body = `<div class="annot">
-      <div class="an-frame"></div>
-      <div class="an-img">${c.image
-        ? `<img src="${shotUrl(c.image, index, 'card.image')}" alt="">` : ''}</div>
-      <div class="an-t">${esc(c.title)}</div>
-      <div class="an-d">${esc(c.domain || t.domain)}</div>
-      ${note('image', 1)}${note('title', 2)}${note('domain', 3)}
+    // 배지가 카드 오른쪽 테두리에 걸쳐 반은 카드 안, 반은 밖으로 나가게
+    // 얹는다. 완전히 밖으로 빼면 카드와 상관없는 낱말표처럼 떠 보이고,
+    // 완전히 안에 넣으면 그만큼 카드 내용을 밀어낸다. 걸치면 둘 다 산다.
+    body = `<div class="an-card">
+      <div class="an-zone">
+        <div class="an-img">${c.image
+          ? `<img src="${shotUrl(c.image, index, 'card.image')}" alt="">` : ''}</div>
+        ${note('image', 'img')}
+      </div>
+      <div class="an-meta">
+        <div class="an-zone">
+          <div class="an-t">${esc(c.title)}</div>
+          ${note('title', 'meta')}
+        </div>
+        <div class="an-zone">
+          <div class="an-d">${esc(c.domain || t.domain)}</div>
+          ${note('domain', 'meta')}
+        </div>
+      </div>
     </div>`;
   } else if (d.template === 'panel') {
     body = `<div class="panel">${d.html || ''}</div>`;
@@ -681,42 +693,46 @@ function css(t, fontUrl) {
   /* 카드와 주석을 한 격자에 놓는다. 카드 조각이 왼쪽 칸, 그 조각을 가리키는
      주석이 같은 줄 오른쪽 칸이다. 좌표를 박지 않아도 줄이 알아서 맞는다.
      카드 배경은 왼쪽 칸 세 줄에 걸친 판(.an-frame)이 대신 그린다. */
-  .annot { display:grid; grid-template-columns:74% 1fr; column-gap:34px; align-items:center; }
-  .an-frame {
-    grid-column:1; grid-row:1 / 4;
-    background:${t.bg}; border:2px solid ${t.chipBorder}; border-radius:24px;
+  /* 카드 폭을 줄여 오른쪽에 배지가 걸칠 여유를 둔다. 100%%로 꽉 채우면
+     걸친 절반이 슬라이드 바깥으로 잘려 나간다. */
+  .an-card {
+    width:80%; background:${t.bg}; border:2px solid ${t.chipBorder}; border-radius:24px;
     box-shadow:0 20px 50px rgba(0,0,0,.13);
   }
-  /* OG 이미지는 1200x630 이다. 칸을 그 비율로 잡아 잘리는 데 없이 그대로 싣는다. */
+  /* OG 이미지는 1200x630 이다. 칸을 그 비율로 잡아 잘리는 데 없이 그대로 싣는다.
+     2px 인셋은 카드 테두리 두께다 — 딱 맞춰야 이미지 모서리가 카드 테두리
+     안쪽 곡률과 겹쳐서 카드가 한 장으로 보인다. */
   .an-img {
-    grid-column:1; grid-row:1; z-index:1; margin:2px 2px 0;
-    aspect-ratio:1200/630; overflow:hidden; border-radius:22px 22px 0 0;
+    margin:2px 2px 0; aspect-ratio:1200/630; overflow:hidden;
+    border-radius:22px 22px 0 0;
     background:linear-gradient(135deg, ${t.accent}, #e879f9);
   }
   .an-img img { display:block; width:100%; height:100%; object-fit:cover; }
+  .an-meta { padding:28px 32px 30px; display:flex; flex-direction:column; gap:20px; }
+  /* 각 영역을 이 상자 하나로 감싼다 — 배지가 이 상자의 오른쪽 가장자리에
+     걸치므로, 카드 테두리와 같은 위치여야 걸치는 자리가 카드 자체의
+     가장자리로 읽힌다. 텍스트에는 별도 안쪽 여백을 주지 않는다. */
+  .an-zone { position:relative; }
   /* 실제 카드도 긴 제목은 한 줄로 자른다. 말줄임이 의도된 동작이라
      .an-t 는 넘침 검사 대상에서 뺐다. */
   .an-t {
-    grid-column:1; grid-row:2; z-index:1; padding:30px 32px 0;
-    font-size:38px; font-weight:800; letter-spacing:-.03em; line-height:1.3;
+    max-width:78%; font-size:38px; font-weight:800; letter-spacing:-.03em; line-height:1.3;
     white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
   }
-  .an-d {
-    grid-column:1; grid-row:3; z-index:1; padding:14px 32px 32px;
-    font-size:30px; font-weight:700; color:${t.accentInk}; line-height:1.3;
-  }
-  /* 주석은 카드 밖 오른쪽 칸에 둔다. 안에 넣으면 카드 제목이 그만큼 잘린다.
-     칸이 좁으므로 줄바꿈을 허용하되 keep-all 로 낱말 중간에서 끊지 않는다. */
+  .an-d { font-size:30px; font-weight:700; color:${t.accentInk}; line-height:1.3; }
+  /* 배지는 그 영역 상자의 오른쪽 가장자리 — 곧 카드의 오른쪽 테두리 —
+     에 걸친다. translate 50%%로 정확히 절반이 안, 절반이 밖이다.
+     이미지 위는 무슨 사진이 오든 읽히도록 흰 바탕, 흰 카드 위는
+     연보라 바탕을 쓴다. */
   .an-note {
-    grid-column:2; justify-self:start;
-    display:flex; align-items:center;
+    position:absolute; top:50%; right:0; transform:translate(50%, -50%); z-index:2;
+    white-space:nowrap; border-radius:13px; padding:11px 20px;
     font-size:26px; font-weight:700; letter-spacing:-.02em;
-    color:${t.softInk}; word-break:keep-all; line-height:1.35;
   }
-  .an-note::before {
-    content:''; flex:none; width:30px; height:2px; margin-right:14px;
-    background:${t.chipBorder};
+  .an-note.on-img {
+    background:#ffffff; color:${t.strong}; box-shadow:0 8px 22px rgba(0,0,0,.28);
   }
+  .an-note.on-meta { background:${t.soft}; color:${t.softInk}; }
 
   .panel { background:${t.soft}; border-radius:30px; padding:42px; }
   /* 가로로 넓은 화면 조각. 세로로 긴 폰 화면(.shot-stand)과 달리 흘려보내지
