@@ -20,11 +20,12 @@
 | `tas-mobile-book-pick.png` | 고객 공개 예약 페이지(`/book/{slug}`) — 수업·시간 선택, 하단 예약 요약 | 390×844 @2x |
 | `tas-mobile-book-done.png` | 〃 — 예약 신청 완료("확정대기") 화면 | 390×844 @2x |
 | `tas-mobile-book-en.png` | 〃 영문(`?lang=en`) — 담당자·날짜·수업 선택 UI | 390×844 @2x |
-| `tas-pc-calendar-pending.png` | 오너 캘린더(일별) — 방금 들어온 예약이 "확정대기" 배지로 표시된 상태 | 1440×900 @2x |
+| `tas-pc-calendar-pending.png` | 오너 캘린더(일별) — 방금 들어온 예약이 "확정대기" 배지로 표시된 상태 (현재 슬라이드엔 미사용, 보관용) | 1440×900 @2x |
+| `tas-pc-notification-bell.png` | 오너 헤더의 예약 알림 벨을 클릭해 연 패널 — 대기 중 신청 목록 + 수락·거절 버튼, 캘린더 일부와 함께 크롭 | 762×450 @2x (크롭) |
 
 ## 촬영 조건 (2026-09-01, tas@a1de49b)
 
-이전 세 화면(검색·고객정보)과 달리 **고객 공개 예약 페이지 + 오너 캘린더의 확정대기 상태**를
+이전 세 화면(검색·고객정보)과 달리 **고객 공개 예약 페이지 + 오너 알림 벨의 확정대기 상태**를
 찍은 것이라, 로컬에 DB를 세우고 실제로 예약 하나를 접수시켜야 했다.
 
 1. postgres 16 기동 → `tas` DB 생성 → `pnpm prisma:db:push && pnpm prisma:seed`
@@ -32,11 +33,18 @@
    `StoreBookingSettings`(연락처 필수) 행을 추가해야 공개 예약 페이지가 열린다
 3. 시드 서비스가 전부 헤어샵 메뉴(커트·펌 등)라 TAS 마케팅이 피하는 "뷰티 소구"로 보여서,
    앞의 3개만 `원데이 클래스`·`정기 클래스(4회)`·`체험 클래스`로 이름을 바꿔 찍었다
-4. Playwright로 공개 예약 페이지에서 실제로 예약을 하나 접수(`POST /api/book/{slug}/reserve`) —
+4. Playwright로 공개 예약 페이지에서 실제로 예약을 여러 건 접수(`POST /api/book/{slug}/reserve`) —
    `reserve.ts` 가 신규 예약도 `status='requested'` 로 만든다는 걸 이 과정에서 코드로 확인했고,
-   그 실제 상태가 오너 캘린더에 "확정대기" 배지로 뜨는 걸 그대로 찍었다(꾸민 상태가 아니다)
+   그 실제 상태가 헤더의 예약 알림 벨(`BookingRequestNotification.tsx`)을 열면 뜨는 걸 그대로
+   찍었다(꾸민 상태가 아니다). 벨+패널만 크게 보이도록 두 요소의 bounding box 를 합쳐 클립했다
 5. `next.config.mjs` 에 `devIndicators: false` 를 임시로 추가하고(이 클론에만, 커밋 대상 아님),
    캘린더 화면의 dev 전용 AD 플레이스홀더는 `killAds()` 패턴으로 제거
+6. **폰트** — TAS 는 웹폰트를 안 싣고 OS 에 설치된 한글 폰트(Pretendard 우선, 없으면
+   Malgun Gothic 등)에 기댄다(`styles/fontStack.ts`). 이 샌드박스엔 한글 폰트가 전혀 없어
+   Chromium이 중국어 폰트(문泉驛)로 폴백해 글자가 이질적으로 나왔다 — pikaworks 가 이미 갖고
+   있는 `assets/fonts/PretendardVariable.woff2` 를 ttf 로 변환해 시스템 폰트로 설치하고
+   나서(`fc-cache`) 다시 찍었다. **TAS 화면을 다시 찍을 일이 있으면 먼저 `fc-list | grep -i
+   pretendard` 로 설치돼 있는지 확인할 것** — 없으면 같은 폴백이 재발한다
 
 데스크톱은 `localStorage['aside-visible'] = true` 로 사이드바를 펼친 채
 찍는다. 메뉴가 보여야 한 장에서 무엇을 하는 서비스인지 읽힌다.

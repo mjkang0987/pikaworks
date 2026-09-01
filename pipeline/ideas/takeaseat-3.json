@@ -38,11 +38,11 @@
       {
         "template": "shot",
         "title": [
-          "고르면 캘린더에",
-          "확정대기로 떠요"
+          "예약 신청은",
+          "알림으로 떠요"
         ],
-        "subtitle": "확정은 사장님이 눌러서 해요",
-        "pc": "assets/shots/tas-pc-calendar-pending.png",
+        "subtitle": "수락하면 그때 확정돼요",
+        "pc": "assets/shots/tas-pc-notification-bell.png",
         "mobile": "assets/shots/tas-mobile-book-done.png"
       },
       {
