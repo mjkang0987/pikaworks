@@ -559,7 +559,7 @@ function css(t, fontUrl) {
     /* 실제 내용(예약 요약·CTA 버튼)은 원본 스크린샷 위쪽 40% 안에서 끝난다.
        shot-stand 비율(70%)을 그대로 쓰면 내용 없는 흰 여백이 페이드 전까지
        길게 남는다 — 내용 바로 아래에서 짧게 페이드가 시작하도록 더 낮춘다. */
-    position:absolute; right:0; bottom:0; width:480px; height:480px;
+    position:absolute; right:0; bottom:0; width:480px; height:560px;
     border:9px solid ${t.bg}; border-radius:34px; overflow:hidden;
     background:${t.bg}; box-shadow:0 22px 46px rgba(0,0,0,.36);
   }
@@ -569,7 +569,7 @@ function css(t, fontUrl) {
      bezel 을 t.fg(밝은 값)로 뒀을 땐 흰 스크린샷 위에서 페이드가 안 보였다 —
      bezel 자체를 t.bg 로 바꿔 페이드 도착점과 맞췄다. */
   .sh-mo-fade {
-    position:absolute; left:0; right:0; bottom:0; height:150px;
+    position:absolute; left:0; right:0; bottom:0; height:170px;
     background:linear-gradient(to bottom, transparent, ${t.bg} 85%);
   }
   /* 크기는 그대로 두고 좌우 자리만 뒤집는다 — PC 창을 오른쪽에, 폰을 왼쪽에 두고 싶을 때.
