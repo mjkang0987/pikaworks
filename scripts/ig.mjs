@@ -698,7 +698,7 @@ function css(t, fontUrl) {
      없을 때 그 여백으로 흘러넘친다. 폭을 100%%로 채우면 넘칠 자리가
      없어 슬라이드 캔버스 밖에서 잘린다. */
   .an-card {
-    width:86%; margin:0 auto; background:${t.bg}; border:2px solid ${t.chipBorder}; border-radius:24px;
+    width:86%; margin-left:2%; background:${t.bg}; border:2px solid ${t.chipBorder}; border-radius:24px;
     box-shadow:0 20px 50px rgba(0,0,0,.13);
   }
   /* OG 이미지는 1200x630 이다. 칸을 그 비율로 잡아 잘리는 데 없이 그대로 싣는다.
