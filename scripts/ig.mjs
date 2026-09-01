@@ -358,19 +358,19 @@ function slideBody(d, t, index) {
     // 각 주석의 세로 위치는 카드 안 영역 높이에 맞춰 고정값으로 잡는다.
     const c = d.card || {}, nt = d.notes || {};
     check('annot.card', c.title, `슬라이드 ${index} card.title`);
-    const note = (key, top, on) => (nt[key]
+    const note = (key, on) => (nt[key]
       ? (check('annot.note', nt[key], `슬라이드 ${index} notes.${key}`),
-         `<div class="an-note on-${on}" style="top:${top}px">${esc(nt[key])}</div>`)
+         `<div class="an-note on-${on}">${esc(nt[key])}</div>`)
       : '');
     body = `<div class="annot">
       <div class="an-card">
         <div class="an-img">${c.image
-          ? `<img src="${shotUrl(c.image, index, 'card.image')}" alt="">` : ''}</div>
+          ? `<img src="${shotUrl(c.image, index, 'card.image')}" alt="">` : ''}
+          ${note('image', 'img')}</div>
         <div class="an-meta">
-          <div class="an-t">${esc(c.title)}</div>
-          <div class="an-d">${esc(c.domain || t.domain)}</div>
+          <div class="an-row"><div class="an-t">${esc(c.title)}</div>${note('title', 'meta')}</div>
+          <div class="an-row"><div class="an-d">${esc(c.domain || t.domain)}</div>${note('domain', 'meta')}</div>
         </div>
-        ${note('image', 262, 'img')}${note('title', 377, 'meta')}${note('domain', 448, 'meta')}
       </div>
     </div>`;
   } else if (d.template === 'panel') {
@@ -683,38 +683,43 @@ function css(t, fontUrl) {
      맞춘 고정값이라 카드 쪽 여백·글자 크기를 바꾸면 같이 손봐야 한다. */
   .annot { display:flex; justify-content:center; }
   .an-card {
-    position:relative; width:100%;
+    /* 폭은 이미지 비율(1200:630)로 계산한 세로가 본문 칸(655px)에 들어가는
+       선에서 정한다. 100%% 면 카드가 612px 이 되어 넘친다. */
+    position:relative; width:92%;
     background:${t.bg}; border:2px solid ${t.chipBorder}; border-radius:24px;
     overflow:hidden; box-shadow:0 20px 50px rgba(0,0,0,.13);
   }
   /* OG 이미지는 1200x630 이다. 폭을 채우면 세로가 남으므로 위아래를 자른다.
      40% 로 잡아야 로고와 아래 서비스 이름 줄이 둘 다 남는다 — 가운데로 두면
      아래 줄이 잘린다. */
-  .an-img { height:320px; background:linear-gradient(135deg, ${t.accent}, #e879f9); }
-  .an-img img {
-    display:block; width:100%; height:100%;
-    object-fit:cover; object-position:center 40%;
+  /* OG 이미지는 1200x630 이다. 칸을 그 비율로 잡아 잘리는 데 없이 그대로 싣는다.
+     카드 폭은 그 비율로 계산한 세로가 본문 칸에 들어가는 선에서 정한다. */
+  .an-img {
+    position:relative; aspect-ratio:1200/630;
+    background:linear-gradient(135deg, ${t.accent}, #e879f9);
   }
-  .an-meta { padding:32px; display:flex; flex-direction:column; gap:28px; }
-  /* 오른쪽은 주석 자리다. 글이 그 아래로 들어가지 않게 폭을 묶는다.
-     실제 카드도 긴 제목은 한 줄로 자르므로 말줄임이 곧 실제 동작이다.
-     .an-t 를 넘침 검사에서 뺀 이유이기도 하다. */
+  .an-img img { display:block; width:100%; height:100%; object-fit:cover; }
+  .an-meta { padding:30px 32px; display:flex; flex-direction:column; gap:22px; }
+  /* 주석은 각 행에 같이 놓는다. 좌표를 박아 두면 글자 크기나 비율을 바꿀 때마다
+     따로 손봐야 하고, 한 번 어긋나면 엉뚱한 영역을 가리킨다. */
+  .an-row { display:flex; align-items:center; justify-content:space-between; gap:24px; }
+  /* 실제 카드도 긴 제목은 한 줄로 자른다. 말줄임이 의도된 동작이라
+     .an-t 는 넘침 검사 대상에서 뺐다. */
   .an-t {
-    max-width:52%; font-size:38px; font-weight:800; letter-spacing:-.03em; line-height:1.3;
+    flex:1; min-width:0;
+    font-size:38px; font-weight:800; letter-spacing:-.03em; line-height:1.3;
     white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
   }
   .an-d { font-size:30px; font-weight:700; color:${t.accentInk}; line-height:1.3; }
-  /* 주석은 카드 위에 얹는다. 영역을 테두리로 두르는 것도 해봤는데 점선이
-     카드보다 눈에 띄어서 뺐다. 자리만으로 어느 영역인지 읽힌다. 배경이
-     다르므로 이미지 위와 흰 바탕 위의 색을 따로 둔다. */
+  /* 배경이 다르므로 이미지 위와 흰 바탕 위의 색을 따로 둔다. 영역을 테두리로
+     두르는 것도 해봤는데 점선이 카드보다 눈에 띄어서 뺐다. */
   .an-note {
-    position:absolute; right:26px; transform:translateY(-50%);
-    white-space:nowrap; border-radius:13px; padding:11px 20px;
+    flex:none; white-space:nowrap; border-radius:13px; padding:11px 20px;
     font-size:26px; font-weight:700; letter-spacing:-.02em;
   }
   .an-note.on-img {
-    background:#ffffff; color:${t.strong};
-    box-shadow:0 8px 22px rgba(0,0,0,.28);
+    position:absolute; right:26px; bottom:22px;
+    background:#ffffff; color:${t.strong}; box-shadow:0 8px 22px rgba(0,0,0,.28);
   }
   .an-note.on-meta { background:${t.soft}; color:${t.softInk}; }
 
