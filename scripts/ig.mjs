@@ -556,10 +556,12 @@ function css(t, fontUrl) {
   .sh-mo {
     /* 212px 였을 때 폰 안의 UI 가 피드에서 안 읽혔다. PC 창과 겹치는 폭이
        늘지만, 안 읽히는 폰을 놓느니 겹치는 편이 낫다. */
-    /* 높이를 폰 화면 전체(가로 360px 기준 약 780px)로 두면 다른 슬라이드의
-       shot-stand 처럼 위쪽 절반만 보여주는 느낌과 안 맞는다. 박스를 낮게
-       고정하고 overflow:hidden 으로 아래를 잘라 상단만 보이게 한다. */
-    position:absolute; right:0; bottom:0; width:440px; height:480px;
+    /* shot-stand(다른 슬라이드의 모바일 단독 카드)와 같은 비율로 자른다 —
+       거긴 800px 짜리 이미지를 560px 창(70%)에 담고 아래 200px(35.7%)를
+       페이드로 지운다. 폭 기준인 sh-mo 에 그 비율을 그대로 옮겨서, 자연
+       높이(약 1040px)의 70% 인 728px 을 보여주고 그중 260px 을 페이드한다.
+       내용(예약 요약·CTA 버튼)이 위쪽 절반 안에 있어 이 비율이면 안 잘린다. */
+    position:absolute; right:0; bottom:0; width:480px; height:728px;
     border:9px solid ${t.bg}; border-radius:34px; overflow:hidden;
     background:${t.bg}; box-shadow:0 22px 46px rgba(0,0,0,.36);
   }
@@ -569,7 +571,7 @@ function css(t, fontUrl) {
      bezel 을 t.fg(밝은 값)로 뒀을 땐 흰 스크린샷 위에서 페이드가 안 보였다 —
      bezel 자체를 t.bg 로 바꿔 페이드 도착점과 맞췄다. */
   .sh-mo-fade {
-    position:absolute; left:0; right:0; bottom:0; height:160px;
+    position:absolute; left:0; right:0; bottom:0; height:260px;
     background:linear-gradient(to bottom, transparent, ${t.bg} 85%);
   }
   /* 크기는 그대로 두고 좌우 자리만 뒤집는다 — PC 창을 오른쪽에, 폰을 왼쪽에 두고 싶을 때.
