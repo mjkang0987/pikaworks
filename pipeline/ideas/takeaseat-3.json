@@ -43,7 +43,8 @@
         ],
         "subtitle": "수락하면 그때 확정돼요",
         "pc": "assets/shots/tas-pc-notification-bell.png",
-        "mobile": "assets/shots/tas-mobile-book-done.png"
+        "mobile": "assets/shots/tas-mobile-book-done.png",
+        "mirror": true
       },
       {
         "template": "shot",

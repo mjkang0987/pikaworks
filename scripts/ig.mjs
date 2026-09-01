@@ -404,7 +404,7 @@ function slideBody(d, t, index) {
     return `<span class="chip">${esc(c)}</span>`;
   }).join('');
 
-  return `<section class="s body${overlay && !Array.isArray(d.mobile) ? ' split' : ''}">
+  return `<section class="s body${overlay && !Array.isArray(d.mobile) ? ' split' : ''}${d.mirror ? ' mirror' : ''}">
     <div class="head">${heading}</div>
     ${d.subtitle ? `<div class="sub">${esc(d.subtitle)}</div>` : ''}
     <div class="main">
@@ -561,9 +561,13 @@ function css(t, fontUrl) {
     background:${t.fg}; box-shadow:0 22px 46px rgba(0,0,0,.36);
   }
   .sh-mo img { display:block; width:100%; height:auto; border-radius:26px; }
-  /* 크기는 그대로 두고 좌우 자리만 뒤집는다 — PC 창을 오른쪽에, 폰을 왼쪽에 두고 싶을 때 */
+  /* 크기는 그대로 두고 좌우 자리만 뒤집는다 — PC 창을 오른쪽에, 폰을 왼쪽에 두고 싶을 때.
+     헤드라인은 항상 왼쪽 정렬로 짧게 흐르다 보니 이미지 묶음(사실상 오른쪽 전용 공간)과
+     겹치지 않았을 뿐이다 — 이미지만 뒤집고 글은 그대로 두면 글이 왼쪽으로 넘어온 폰과
+     부딪힌다. 그래서 슬라이드 전체(.s.mirror)에서 헤드라인도 같이 오른쪽 정렬한다. */
   .shot.mirror .sh-pc { left:auto; right:0; }
   .shot.mirror .sh-mo { right:auto; left:0; }
+  .s.mirror .head, .s.mirror .sub { text-align:right; }
   /* 화면 일부를 잘라 온 것이라 기기 베젤을 두르지 않는다 —
      전체 화면이 아닌데 폰처럼 보이면 실제와 다른 인상을 준다. */
   /* 화면을 오른쪽에 크게 세운다. 칸 안에 맞추면 세로가 긴 폰 화면이
