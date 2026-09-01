@@ -272,7 +272,7 @@ function slideBody(d, t, index) {
     // pc 가 없으면 모바일 한 장만 크게 놓는다. ClipNote 처럼 모바일에서만
     // 쓰는 화면을 PC 창틀에 끼우면 실제와 다른 인상을 준다.
     body = d.pc
-      ? `<div class="shot">
+      ? `<div class="shot${d.mirror ? ' mirror' : ''}">
           <div class="sh-pc">
             <div class="sh-bar"><i></i><i></i><i></i></div>
             <img src="${shotUrl(d.pc, index, 'pc')}" alt="">
@@ -561,6 +561,9 @@ function css(t, fontUrl) {
     background:${t.fg}; box-shadow:0 22px 46px rgba(0,0,0,.36);
   }
   .sh-mo img { display:block; width:100%; height:auto; border-radius:26px; }
+  /* 크기는 그대로 두고 좌우 자리만 뒤집는다 — PC 창을 오른쪽에, 폰을 왼쪽에 두고 싶을 때 */
+  .shot.mirror .sh-pc { left:auto; right:0; }
+  .shot.mirror .sh-mo { right:auto; left:0; }
   /* 화면 일부를 잘라 온 것이라 기기 베젤을 두르지 않는다 —
      전체 화면이 아닌데 폰처럼 보이면 실제와 다른 인상을 준다. */
   /* 화면을 오른쪽에 크게 세운다. 칸 안에 맞추면 세로가 긴 폰 화면이
