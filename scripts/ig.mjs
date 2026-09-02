@@ -280,7 +280,7 @@ function slideBody(d, t, index) {
           <div class="sh-mo">
             <img src="${shotUrl(d.mobile, index, 'mobile')}" alt="">
             <div class="sh-mo-fade"></div>
-            ${d.mobileLabel ? `<div class="sh-mo-top"><span class="sh-tag sh-tag-mo">${esc(d.mobileLabel)}</span></div>` : ''}
+            ${d.mobileLabel ? `<span class="sh-tag sh-tag-mo">${esc(d.mobileLabel)}</span>` : ''}
           </div>
         </div>`
       : '';
@@ -565,30 +565,29 @@ function css(t, fontUrl) {
   .sh-mo {
     /* 212px 였을 때 폰 안의 UI 가 피드에서 안 읽혔다. PC 창과 겹치는 폭이
        늘지만, 안 읽히는 폰을 놓느니 겹치는 편이 낫다. */
-    /* 실제 내용(예약 요약·CTA 버튼)은 원본 스크린샷 위쪽 40% 안에서 끝난다.
-       shot-stand 비율(70%)을 그대로 쓰면 내용 없는 흰 여백이 페이드 전까지
-       길게 남는다 — 내용 바로 아래에서 짧게 페이드가 시작하도록 더 낮춘다. */
-    position:absolute; right:0; bottom:0; width:480px; height:560px;
+    /* 이미지 자체를 내용 끝(버튼 아래 여백)까지만 잘라서 준비해 두고,
+       칸은 그 실제 높이보다 조금 더 크게 잡는다 — 이미지를 자르지 않고
+       그대로 다 보여준 다음, 칸의 남는 아래쪽만 배경색으로 채워 페이드가
+       내용을 가리지 않고 여백 위에서만 자연스럽게 사라지게 한다. */
+    position:absolute; right:0; bottom:0; width:480px; height:540px;
     border:9px solid ${t.bg}; border-radius:34px; overflow:hidden;
     background:${t.bg}; box-shadow:0 22px 46px rgba(0,0,0,.36);
   }
   .sh-mo img { display:block; width:100%; height:auto; border-radius:26px; }
-  /* 잘려나간 아래쪽이 갑자기 끊긴 티가 나지 않도록, shot-stand 의 shot-fade 와
-     같은 방식으로 슬라이드 배경색(bezel과 같은 값)으로 서서히 사라지게 한다.
+  /* 이미지 실제 높이 아래로 남는 칸(배경색 여백)이 슬라이드 배경과 자연스럽게
+     이어지도록, shot-stand 의 shot-fade 와 같은 방식으로 서서히 사라지게 한다.
      bezel 을 t.fg(밝은 값)로 뒀을 땐 흰 스크린샷 위에서 페이드가 안 보였다 —
      bezel 자체를 t.bg 로 바꿔 페이드 도착점과 맞췄다. */
   .sh-mo-fade {
-    position:absolute; left:0; right:0; bottom:0; height:170px;
+    position:absolute; left:0; right:0; bottom:0; height:130px;
     background:linear-gradient(to bottom, transparent, ${t.bg} 85%);
   }
-  .sh-mo-top {
-    /* 원본 스크린샷 맨 위(가게 이름 등)가 배지 밑으로 비쳐 보였다 —
-       배지 뒤에 프레임과 같은 색 스크림을 깔아 완전히 덮는다. */
-    position:absolute; left:0; right:0; top:0; height:56px; z-index:1;
-    display:flex; align-items:center; padding:0 12px;
-    background:${t.bg};
-  }
-  .sh-tag-mo { margin-left:0; padding:5px 14px; border-radius:100px;
+  /* 라벨은 화면 위쪽(원본 스크린샷 안 상호명 등과 겹치는 자리)이 아니라,
+     이미지 아래 남는 배경 여백(페이드 위) 에 얹는다 — 상단에 별도 바를
+     추가하지 않고 배지만으로 해결한다. */
+  .sh-tag-mo {
+    position:absolute; left:14px; bottom:16px; z-index:1;
+    padding:5px 14px; border-radius:100px;
     background:${t.strong}; color:#fff; font-size:16px; font-weight:700;
     letter-spacing:-.01em; white-space:nowrap;
   }
