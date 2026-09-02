@@ -20,16 +20,6 @@
     },
     "slides": [
       {
-        "template": "panel",
-        "title": [
-          "메타태그 없는 링크도",
-          "그대로 추가하면"
-        ],
-        "subtitle": "카페・블로그・인스타 뭐든",
-        "plain": true,
-        "html": "<div style=\"max-width:700px;margin:0 auto\"><div class=\"ch-tag\" style=\"font-size:32px;margin-bottom:14px\">추가할 링크</div><div class=\"ch-bub\" style=\"font-size:32px;padding:22px 30px;margin-bottom:20px\">cafe.naver.com/f-club/128821</div><div class=\"ch-none\" style=\"min-height:360px;font-size:34px\">카페 이름만 떠요</div></div>"
-      },
-      {
         "template": "shot",
         "title": [
           "URL만 붙이면",
@@ -79,8 +69,7 @@
     "public/ig/clipnote-5-2.png",
     "public/ig/clipnote-5-3.png",
     "public/ig/clipnote-5-4.png",
-    "public/ig/clipnote-5-5.png",
-    "public/ig/clipnote-5-6.png"
+    "public/ig/clipnote-5-5.png"
   ],
   "image_url": "https://pikaworks.kr/ig/clipnote-5-1.png",
   "image_urls": [
@@ -88,7 +77,6 @@
     "https://pikaworks.kr/ig/clipnote-5-2.png",
     "https://pikaworks.kr/ig/clipnote-5-3.png",
     "https://pikaworks.kr/ig/clipnote-5-4.png",
-    "https://pikaworks.kr/ig/clipnote-5-5.png",
-    "https://pikaworks.kr/ig/clipnote-5-6.png"
+    "https://pikaworks.kr/ig/clipnote-5-5.png"
   ]
 }
