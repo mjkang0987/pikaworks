@@ -22,22 +22,22 @@
       {
         "template": "panel",
         "title": [
-          "링크만 저장해두면",
-          "카페 이름만 남아요"
+          "메타태그 없는 링크도",
+          "그대로 추가하면"
         ],
-        "subtitle": "나중엔 뭐였는지 가물가물해요",
+        "subtitle": "카페・블로그・인스타 뭐든",
         "plain": true,
-        "html": "<div style=\"max-width:700px;margin:0 auto\"><div class=\"ch-tag\" style=\"font-size:32px;margin-bottom:14px\">주소만 저장하면</div><div class=\"ch-bub\" style=\"font-size:32px;padding:22px 30px;margin-bottom:20px\">cafe.naver.com/f-club/128821</div><div class=\"ch-none\" style=\"min-height:360px;font-size:34px\">카페 이름만 떠요</div></div>"
+        "html": "<div style=\"max-width:700px;margin:0 auto\"><div class=\"ch-tag\" style=\"font-size:32px;margin-bottom:14px\">추가할 링크</div><div class=\"ch-bub\" style=\"font-size:32px;padding:22px 30px;margin-bottom:20px\">cafe.naver.com/f-club/128821</div><div class=\"ch-none\" style=\"min-height:360px;font-size:34px\">카페 이름만 떠요</div></div>"
       },
       {
         "template": "chat",
         "title": [
-          "ClipNote에 저장하면",
-          "실제 제목이 붙어요"
+          "내 클립에는",
+          "이렇게 저장돼요"
         ],
-        "subtitle": "다음에 봐도 바로 알아봐요",
+        "subtitle": "메타태그가 없어도 제목이 붙어요",
         "after": {
-          "tag": "ClipNote에",
+          "tag": "내 클립에",
           "url": "clipnote.co.kr/m3Tn9pQ",
           "title": "제주 게스트하우스 후기",
           "domain": "cafe.naver.com"
