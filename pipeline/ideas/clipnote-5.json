@@ -20,6 +20,31 @@
     },
     "slides": [
       {
+        "template": "list",
+        "title": [
+          "이거 직접 정리해서",
+          "관리하고 계신가요?"
+        ],
+        "subtitle": "카페・인스타・블로그에 흩어진 정보",
+        "items": [
+          {
+            "icon": "link",
+            "title": "네이버 카페",
+            "text": "숙소 정보 찾을 때"
+          },
+          {
+            "icon": "phone",
+            "title": "인스타그램",
+            "text": "맛집・관광지 찾을 때"
+          },
+          {
+            "icon": "globe",
+            "title": "블로그",
+            "text": "코스・정보 찾을 때"
+          }
+        ]
+      },
+      {
         "template": "shot",
         "title": [
           "URL만 붙이면",
@@ -70,7 +95,8 @@
     "public/ig/clipnote-5-2.png",
     "public/ig/clipnote-5-3.png",
     "public/ig/clipnote-5-4.png",
-    "public/ig/clipnote-5-5.png"
+    "public/ig/clipnote-5-5.png",
+    "public/ig/clipnote-5-6.png"
   ],
   "image_url": "https://pikaworks.kr/ig/clipnote-5-1.png",
   "image_urls": [
@@ -78,6 +104,7 @@
     "https://pikaworks.kr/ig/clipnote-5-2.png",
     "https://pikaworks.kr/ig/clipnote-5-3.png",
     "https://pikaworks.kr/ig/clipnote-5-4.png",
-    "https://pikaworks.kr/ig/clipnote-5-5.png"
+    "https://pikaworks.kr/ig/clipnote-5-5.png",
+    "https://pikaworks.kr/ig/clipnote-5-6.png"
   ]
 }
