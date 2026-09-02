@@ -22,22 +22,22 @@
       {
         "template": "panel",
         "title": [
-          "카톡으로 보내면",
-          "카페 이름만 떠요"
+          "링크만 저장해두면",
+          "카페 이름만 남아요"
         ],
-        "subtitle": "받는 사람은 뭔지 알 수가 없어요",
+        "subtitle": "나중엔 뭐였는지 가물가물해요",
         "plain": true,
-        "html": "<div style=\"max-width:700px;margin:0 auto\"><div class=\"ch-tag\" style=\"font-size:32px;margin-bottom:14px\">카톡으로</div><div class=\"ch-bub\" style=\"font-size:32px;padding:22px 30px;margin-bottom:20px\">cafe.naver.com/f-club/128821</div><div class=\"ch-none\" style=\"min-height:360px;font-size:34px\">카페 이름만 떠요</div></div>"
+        "html": "<div style=\"max-width:700px;margin:0 auto\"><div class=\"ch-tag\" style=\"font-size:32px;margin-bottom:14px\">주소만 저장하면</div><div class=\"ch-bub\" style=\"font-size:32px;padding:22px 30px;margin-bottom:20px\">cafe.naver.com/f-club/128821</div><div class=\"ch-none\" style=\"min-height:360px;font-size:34px\">카페 이름만 떠요</div></div>"
       },
       {
         "template": "chat",
         "title": [
-          "ClipNote로 보내면",
+          "ClipNote에 저장하면",
           "실제 제목이 붙어요"
         ],
-        "subtitle": "무슨 글인지 바로 알 수 있어요",
+        "subtitle": "다음에 봐도 바로 알아봐요",
         "after": {
-          "tag": "ClipNote로",
+          "tag": "ClipNote에",
           "url": "clipnote.co.kr/m3Tn9pQ",
           "title": "제주 게스트하우스 후기",
           "domain": "cafe.naver.com"
