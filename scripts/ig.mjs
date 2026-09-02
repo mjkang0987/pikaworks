@@ -287,8 +287,11 @@ function slideBody(d, t, index) {
       body = `<div class="shot-wide"><img src="${shotUrl(d.mobile, index, 'mobile')}" alt=""></div>`;
     } else if (!d.pc) {
       const shots = Array.isArray(d.mobile) ? d.mobile.slice(0, 2) : [d.mobile];
+      // imgHeight: 이 슬라이드만 크기를 키우고 싶을 때. 기본 800px(.shot-stand img)을
+      // 인라인 스타일로 덮어써서 다른 shot 슬라이드에는 영향을 주지 않는다.
+      const sizeStyle = d.imgHeight ? ` style="height:${d.imgHeight}px"` : '';
       overlay = `<div class="shot-stand${shots.length > 1 ? ' pair' : ''}">${
-        shots.map((m, i) => `<img src="${shotUrl(m, index, `mobile[${i}]`)}" alt="">`).join('')
+        shots.map((m, i) => `<img src="${shotUrl(m, index, `mobile[${i}]`)}" alt=""${sizeStyle}>`).join('')
       }<div class="shot-fade"></div></div>`;
     }
   } else if (d.template === 'chat') {

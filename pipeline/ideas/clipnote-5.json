@@ -26,7 +26,8 @@
           "제목·이미지 자동"
         ],
         "subtitle": "따로 입력할 거 없어요",
-        "mobile": "assets/shots/cn-mobile-form.png"
+        "mobile": "assets/shots/cn-mobile-form.png",
+        "imgHeight": 880
       },
       {
         "template": "clips",
