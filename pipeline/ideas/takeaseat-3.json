@@ -44,8 +44,8 @@
         "subtitle": "수락하면 그때 확정돼요",
         "pc": "assets/shots/tas-pc-notification-bell.png",
         "mobile": "assets/shots/tas-mobile-book-done-crop.png",
-        "pcLabel": "매장",
-        "mobileLabel": "고객",
+        "pcLabel": "매장용",
+        "mobileLabel": "고객용",
         "mirror": true
       },
       {
