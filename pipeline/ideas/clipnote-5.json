@@ -30,18 +30,23 @@
         "html": "<div style=\"max-width:700px;margin:0 auto\"><div class=\"ch-tag\" style=\"font-size:32px;margin-bottom:14px\">추가할 링크</div><div class=\"ch-bub\" style=\"font-size:32px;padding:22px 30px;margin-bottom:20px\">cafe.naver.com/f-club/128821</div><div class=\"ch-none\" style=\"min-height:360px;font-size:34px\">카페 이름만 떠요</div></div>"
       },
       {
-        "template": "chat",
+        "template": "clips",
         "title": [
           "내 클립에는",
           "이렇게 저장돼요"
         ],
         "subtitle": "메타태그가 없어도 제목이 붙어요",
-        "after": {
-          "tag": "내 클립에",
-          "url": "clipnote.co.kr/m3Tn9pQ",
-          "title": "제주 게스트하우스 후기",
-          "domain": "cafe.naver.com"
-        }
+        "items": [
+          {
+            "title": "제주 게스트하우스 후기",
+            "domain": "cafe.naver.com",
+            "overlay": [
+              "게스트하우스",
+              "숙소 후기"
+            ],
+            "tags": []
+          }
+        ]
       },
       {
         "template": "panel",
