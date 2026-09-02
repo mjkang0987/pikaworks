@@ -20,76 +20,32 @@
     },
     "slides": [
       {
-        "template": "source",
+        "template": "chat",
         "title": [
-          "인스타 맛집 게시물도",
-          "제목·사진이 그대로"
+          "카페 링크는 원래",
+          "이름만 뜨는데"
         ],
-        "subtitle": "카페 글도, 블로그 글도 똑같이 읽어와요",
-        "post": {
-          "name": "제주밥집",
-          "overlay": [
-            "애월 흑돼지집",
-            "웨이팅 꿀팁"
-          ],
-          "caption": "웨이팅 꿀팁 · 예약법 공유",
-          "likes": "482",
-          "comments": "57"
+        "subtitle": "ClipNote로 보내면 실제 제목이 붙어요",
+        "before": {
+          "tag": "카톡으로",
+          "url": "cafe.naver.com/f-club/128821",
+          "note": "카페 이름만 떠요"
         },
-        "card": {
-          "title": "애월 흑돼지집 웨이팅 꿀팁",
-          "domain": "instagram.com",
-          "tags": [
-            "제주",
-            "맛집"
-          ]
+        "after": {
+          "tag": "ClipNote로",
+          "url": "clipnote.co.kr/m3Tn9pQ",
+          "title": "제주 게스트하우스 후기",
+          "domain": "cafe.naver.com"
         }
       },
       {
-        "template": "clips",
+        "template": "panel",
         "title": [
-          "「제주」 태그 하나로",
-          "출처 달라도 모여요"
+          "다른 곳에서 왔어도",
+          "태그 하나로 모여요"
         ],
-        "subtitle": "카페・인스타・블로그, 한 목록에",
-        "items": [
-          {
-            "title": "제주 게스트하우스 후기",
-            "domain": "cafe.naver.com",
-            "overlay": [
-              "게스트하우스",
-              "숙소 후기"
-            ],
-            "tags": [
-              "제주",
-              "숙소"
-            ]
-          },
-          {
-            "title": "애월 흑돼지집 웨이팅",
-            "domain": "instagram.com",
-            "overlay": [
-              "애월 흑돼지집",
-              "웨이팅 꿀팁"
-            ],
-            "tags": [
-              "제주",
-              "맛집"
-            ]
-          },
-          {
-            "title": "제주 3박4일 코스 정리",
-            "domain": "blog.naver.com",
-            "overlay": [
-              "3박4일",
-              "코스 정리"
-            ],
-            "tags": [
-              "제주",
-              "코스"
-            ]
-          }
-        ]
+        "subtitle": "출처가 달라도 태그만 같으면 돼요",
+        "html": "<div style=\"display:flex;gap:16px;margin-bottom:20px\"><div class=\"cell\" style=\"flex:1\"><small>숙소</small>카페</div><div class=\"cell\" style=\"flex:1\"><small>맛집</small>인스타</div><div class=\"cell\" style=\"flex:1\"><small>정보</small>블로그</div></div><div style=\"text-align:center;font-size:48px;font-weight:800;color:#7c5cfc;line-height:1;margin:4px 0 20px\">↓</div><div class=\"cell cell-on\" style=\"font-size:46px;padding:36px 8px\">제주</div>"
       }
     ]
   },
@@ -98,7 +54,7 @@
   "media_id": null,
   "permalink": null,
   "container_id": null,
-  "note": "사용자가 캡션을 직접 주고 이미지 제작을 지시(2026-09-02). 한국어 본문은 받은 그대로다. 두 가지를 보완했다. (1) 기존 발행 4건이 전부 한국어+영어 병기 구조라 영어 번역을 추가하고, 해시태그는 병기 구조 관례대로 영어 본문 뒤 맨 끝으로 옮겼다(원문은 한국어 본문 바로 뒤에 있었다) — 문장 내용은 바꾸지 않았다. (2) 사실 확인 — clipnote main 을 클론해 lib/adapters/naver-cafe.ts·naver.ts 를 읽었다. '카페 글은 카페 이름만 뜨고'는 m.cafe 모바일 공유 링크가 generic stub(\"네이버 카페\")만 주는 실제 동작과 일치하고(isGenericCafeTitle), '블로그는 제목도 안 따라오죠'도 네이버 블로그 본문이 iframe(PostView)으로 그려져 바깥 HTML만으로는 제목을 못 얻는다는 어댑터 주석과 일치한다. 발행 전 포지셔닝 문서(pipeline/positioning.md)의 '타겟 아님 — 링크를 모으는 사람 / 저장 앱과 안 싸운다'와 이번 캡션(순수 저장·태그 아카이빙, 공유 언급 없음)이 부딪히는 것 같아 사용자에게 확인했고, 저장·태그 기능을 애초에 만든 이유가 그 사람들을 위해서라는 답을 받아 원문 그대로 진행했다. 이미지 — 실사 스크린샷에 여행 다중 소스 태그 장면이 없어 clipnote-4 방식대로 목업 두 장을 새로 그렸다. 1번(source)은 맛집=인스타 축을 붙여넣기→카드 구조로, 2번(clips)은 카페・인스타・블로그 세 도메인이 「제주」 태그로 한 목록에 모이는 장면으로 그렸다 — 캡션의 핵심 문장을 그대로 시각화한 것이다. 계정명은 실재 계정으로 오해되지 않게 한글 더미(제주밥집)로 두었고, 로고·브랜드색은 가져오지 않았다(clipnote-4와 같은 기준). scheduled_at 은 비워뒀다 — 다른 대기 건과의 발행 간격은 /sns-queue 단계에서 사람이 정한다.",
+  "note": "사용자가 캡션을 직접 주고 이미지 제작을 지시(2026-09-02). 한국어 본문은 받은 그대로다. 두 가지를 보완했다. (1) 기존 발행 4건이 전부 한국어+영어 병기 구조라 영어 번역을 추가하고, 해시태그는 병기 구조 관례대로 영어 본문 뒤 맨 끝으로 옮겼다(원문은 한국어 본문 바로 뒤에 있었다) — 문장 내용은 바꾸지 않았다. (2) 사실 확인 — clipnote main 을 클론해 lib/adapters/naver-cafe.ts·naver.ts 를 읽었다. '카페 글은 카페 이름만 뜨고'는 m.cafe 모바일 공유 링크가 generic stub(\"네이버 카페\")만 주는 실제 동작과 일치하고(isGenericCafeTitle), '블로그는 제목도 안 따라오죠'도 네이버 블로그 본문이 iframe(PostView)으로 그려져 바깥 HTML만으로는 제목을 못 얻는다는 어댑터 주석과 일치한다. 발행 전 포지셔닝 문서(pipeline/positioning.md)의 '타겟 아님 — 링크를 모으는 사람 / 저장 앱과 안 싸운다'와 이번 캡션(순수 저장·태그 아카이빙, 공유 언급 없음)이 부딪히는 것 같아 사용자에게 확인했고, 저장·태그 기능을 애초에 만든 이유가 그 사람들을 위해서라는 답을 받아 원문 그대로 진행했다. 이미지 — 실사 스크린샷에 여행 다중 소스 태그 장면이 없어 clipnote-4 방식대로 목업 두 장을 새로 그렸다. 1번(source)은 맛집=인스타 축을 붙여넣기→카드 구조로, 2번(clips)은 카페・인스타・블로그 세 도메인이 「제주」 태그로 한 목록에 모이는 장면으로 그렸다 — 캡션의 핵심 문장을 그대로 시각화한 것이다. 계정명은 실재 계정으로 오해되지 않게 한글 더미(제주밥집)로 두었고, 로고·브랜드색은 가져오지 않았다(clipnote-4와 같은 기준). scheduled_at 은 비워뒀다 — 다른 대기 건과의 발행 간격은 /sns-queue 단계에서 사람이 정한다. 재작업(2026-09-02) — 사용자가 2·3번이 clipnote-4의 source·clips 템플릿을 색·문구만 바꿔 재탕한 것 같다고 지적했고, 실제로 그랬다(그림 짜임새가 clipnote-4와 거의 동일). 두 슬라이드를 clipnote-4와 겹치지 않는 새 구성으로 다시 그렸다. 2번은 chat 템플릿에 before·after 를 처음으로 함께 써서(기존 clipnote-1은 after만 썼다) 카페 링크가 카톡에서는 이름만 뜨는 것과 ClipNote로 보내면 실제 제목이 붙는 것을 나란히 비교했다 — 캡션의 '카페 글은 카페 이름만 뜨고'를 그대로 그림으로 옮긴 것이다. 3번은 panel 템플릿(ClipNote 게시물에서는 처음 사용, 지금까지 takeaseat-3만 씀)에 커스텀 도식을 넣어 캡션 첫 줄('숙소는 카페, 맛집은 인스타, 정보는 블로그')을 그대로 세 칸으로 얹고 화살표로 '제주' 태그 하나로 모이는 것을 보여준다. 색상 #7c5cfc 는 정적 값으로 하드코딩했다 — panel html은 JSON 문자열이라 렌더 시점의 테마 변수(t.accent)를 참조할 수 없고, 이 게시물은 clipnote 테마로만 렌더되므로 고정값이 안전하다.",
   "image_path": [
     "public/ig/clipnote-5-1.png",
     "public/ig/clipnote-5-2.png",
