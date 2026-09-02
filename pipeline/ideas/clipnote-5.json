@@ -1,7 +1,7 @@
 {
   "id": "clipnote-5",
   "service": "clipnote",
-  "status": "image_ok",
+  "status": "scheduled",
   "angle": "여행 준비하며 카페・인스타・블로그에 흩어진 링크를 「제주」 태그로 한곳에 — 태그 아카이빙",
   "caption": "숙소는 카페, 맛집은 인스타 ✈️\n\n정보는 블로그에 있고요.\n여행 하나 준비하는데\n링크가 세 군데에 흩어져요.\n\n하필 이 세 곳이\n미리보기가 잘 안 잡히는 곳이에요.\n카페 글은 카페 이름만 뜨고\n블로그는 제목도 안 따라오죠.\n\nClipNote에 붙여넣으면\n제목과 대표 이미지를 읽어와\n카드로 저장돼요.\n안 열어봐도 뭔지 알아요.\n\n태그를 「제주」로 달아두면\n카페에서 온 것도\n인스타에서 온 것도\n한 곳에 모여요 🗂️\n\n프로필 링크에서\nhttps://clipnote.co.kr 확인하세요 🔗\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯\n\nAccommodation tips come from a cafe post, food spots from\nInstagram ✈️\n\nand the rest of the info lives in a blog. Planning one trip\nand the links end up scattered across three different places.\n\nAnd of course, those are exactly the three places that never\npreview well. A cafe post shows nothing but the cafe's name,\nand a blog post won't even carry its title over.\n\nPaste them into ClipNote and it reads the title and the cover\nimage for you, then keeps it as a card. You know what it is\nwithout opening it.\n\nTag them all \"Jeju\" and the ones from a cafe and the ones\nfrom Instagram land in the same place 🗂️\n\nLink in bio: https://clipnote.co.kr 🔗\n\n#ClipNote #링크저장 #여행준비 #태그정리 #pikaworks",
   "design": {
@@ -111,7 +111,7 @@
       }
     ]
   },
-  "scheduled_at": null,
+  "scheduled_at": "2026-09-07",
   "published_at": null,
   "media_id": null,
   "permalink": null,
