@@ -27,7 +27,7 @@
         ],
         "subtitle": "따로 입력할 거 없어요",
         "mobile": "assets/shots/cn-mobile-form.png",
-        "imgHeight": 880
+        "imgHeight": 960
       },
       {
         "template": "clips",
