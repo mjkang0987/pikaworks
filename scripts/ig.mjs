@@ -556,10 +556,11 @@ function css(t, fontUrl) {
     background:${t.soft}; border-bottom:2px solid ${t.border};
   }
   .sh-bar i { width:11px; height:11px; border-radius:50%; background:${t.border}; }
+  /* 배지 상자 대신 워터마크처럼 — 배경/테두리 없이 반투명한 글자만 얹는다. */
   .sh-tag {
-    margin-left:auto; padding:5px 14px; border-radius:100px;
-    background:${t.strong}; color:#fff; font-size:16px; font-weight:700;
-    letter-spacing:-.01em; white-space:nowrap;
+    margin-left:auto; font-size:16px; font-weight:800; letter-spacing:-.01em;
+    color:rgba(255,255,255,.55); text-shadow:0 1px 3px rgba(0,0,0,.35);
+    white-space:nowrap;
   }
   .sh-pc img { display:block; width:100%; height:auto; }
   .sh-mo {
@@ -586,10 +587,10 @@ function css(t, fontUrl) {
      이미지 아래 남는 배경 여백(페이드 위) 에 얹는다 — 상단에 별도 바를
      추가하지 않고 배지만으로 해결한다. */
   .sh-tag-mo {
-    position:absolute; left:14px; bottom:16px; z-index:1;
-    padding:5px 14px; border-radius:100px;
-    background:${t.strong}; color:#fff; font-size:16px; font-weight:700;
-    letter-spacing:-.01em; white-space:nowrap;
+    position:absolute; left:16px; bottom:16px; z-index:1;
+    font-size:16px; font-weight:800; letter-spacing:-.01em;
+    color:rgba(255,255,255,.55); text-shadow:0 1px 3px rgba(0,0,0,.35);
+    white-space:nowrap;
   }
   /* 크기는 그대로 두고 좌우 자리만 뒤집는다 — PC 창을 오른쪽에, 폰을 왼쪽에 두고 싶을 때.
      헤드라인은 항상 왼쪽 정렬로 짧게 흐르다 보니 이미지 묶음(사실상 오른쪽 전용 공간)과
