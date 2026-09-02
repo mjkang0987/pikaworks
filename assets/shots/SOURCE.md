@@ -139,6 +139,7 @@ playwright 가 그쪽을 집고, 오버레이가 클릭을 가로채 타임아�
 | `cn-og-card.png` | `/api/og` 가 실제로 뱉은 공유 카드 이미지 | 1200×630 |
 | `cn-mobile-list-crop.png` | 위 목록에서 "ClipNote란?" 절을 뺀 것 | 780×380 |
 | `cn-mobile-card-crop.png` | 위 공유 카드에서 상단 로그인 안내 바를 뺀 것 | 740×572 |
+| `cn-mobile-form-crop.png` | `cn-mobile-form.png`에서 헤더+URL+제목 필드만 남기고 태그·버튼·공유 카드 미리보기를 뺀 것 (clipnote-5, `wide` 레이아웃으로 크게 보이려고 만듦) | 780×560 |
 
 `cn-mobile-form.png`·`cn-mobile-result.png` 두 장이 clipnote-1 슬라이드 3 에
 나란히 들어간다. 같은 페이지를 스크롤 위치만 달리해 두 번 찍은 것이다 —
