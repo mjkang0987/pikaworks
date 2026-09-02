@@ -559,7 +559,7 @@ function css(t, fontUrl) {
   /* 배지 상자 대신 워터마크처럼 — 배경/테두리 없이 반투명한 글자만 얹는다. */
   .sh-tag {
     margin-left:auto; font-size:16px; font-weight:800; letter-spacing:-.01em;
-    color:rgba(255,255,255,.55); text-shadow:0 1px 3px rgba(0,0,0,.35);
+    color:rgba(255,255,255,.55);
     white-space:nowrap;
   }
   .sh-pc img { display:block; width:100%; height:auto; }
@@ -589,7 +589,7 @@ function css(t, fontUrl) {
   .sh-tag-mo {
     position:absolute; left:16px; bottom:16px; z-index:1;
     font-size:16px; font-weight:800; letter-spacing:-.01em;
-    color:rgba(255,255,255,.55); text-shadow:0 1px 3px rgba(0,0,0,.35);
+    color:rgba(255,255,255,.55);
     white-space:nowrap;
   }
   /* 크기는 그대로 두고 좌우 자리만 뒤집는다 — PC 창을 오른쪽에, 폰을 왼쪽에 두고 싶을 때.
