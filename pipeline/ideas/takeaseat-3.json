@@ -1,7 +1,7 @@
 {
   "id": "takeaseat-3",
   "service": "takeaseat",
-  "status": "scheduled",
+  "status": "published",
   "angle": "손님이 직접 고르는 온라인 예약 페이지",
   "caption": "손님이 매장 시간을 직접 보고 골라요 🗓️\n\n영업시간 밖이랑 이미 찬 자리를 빼고\n지금 진짜 가능한 시간만 보여요.\n\n손님이 고르면 캘린더에 확정대기로 바로 떠요.\n새 예약도 변경·취소 요청도 알림으로 모여서\n시술 중엔 그냥 두고 손 비었을 때 확인하면 돼요 ✨\n\n한국어·영어·일본어·중국어까지 지원해서\n외국인 손님한테도 링크만 보내면 끝이에요 🌏\n\n로그인하고 설정에서 온라인 예약 기능을 켜기만 하면 바로 쓸 수 있어요.\n\n👉 takeaseat.co.kr\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯\n\nYour customers see your real openings and pick one themselves 🗓️\n\nClosed hours and booked slots are left out,\nso only the times you can actually take show up.\n\nWhen they pick, it lands on your calendar right away, marked pending.\nNew bookings, changes, and cancel requests all collect as notifications.\nLeave them while you're with a client, check when you're free ✨\n\nAvailable in Korean, English, Japanese, and Chinese,\nso the same link works for any customer 🌏\n\nLog in and turn on online booking in settings to start.\n\n👉 takeaseat.co.kr\n\n#TAS #온라인예약 #예약알림 #공방운영 #pikaworks",
   "image_path": [
@@ -64,10 +64,10 @@
     }
   },
   "scheduled_at": "2026-09-03",
-  "published_at": null,
-  "media_id": null,
-  "permalink": null,
-  "container_id": null,
+  "published_at": "2026-09-03",
+  "media_id": "17869531572602233",
+  "permalink": "https://www.instagram.com/p/DczYyQslk-2/",
+  "container_id": "18112878715928088",
   "note": "캐러셀로 재제작 (2026-08-25)",
   "image_urls": [
     "https://pikaworks.kr/ig/takeaseat-3-1.png",
