@@ -390,7 +390,9 @@ function slideBody(d, t, index) {
     }).join('');
     body = `<div class="clips">${rows}</div>`;
   } else if (d.template === 'panel') {
-    body = `<div class="panel">${d.html || ''}</div>`;
+    // plain: 배경을 채울 그림(카톡 대화 등 자체 배경이 있는 구성)을 올릴 때
+    // 연보라 패널 배경이 겹쳐 보이는 것을 막는다.
+    body = `<div class="panel${d.plain ? ' plain' : ''}">${d.html || ''}</div>`;
   } else if (d.template === 'statement') {
     body = `<div class="panel stmt">${esc(d.statement || '')}</div>`;
   } else {
@@ -719,6 +721,7 @@ function css(t, fontUrl) {
   .clip .pv-g { background:${t.bg}; }
 
   .panel { background:${t.soft}; border-radius:30px; padding:42px; }
+  .panel.plain { background:${t.bg}; padding:0; }
   /* 가로로 넓은 화면 조각. 세로로 긴 폰 화면(.shot-stand)과 달리 흘려보내지
      않고 본문 안에 통째로 앉힌다. 잘리면 무슨 화면인지 못 알아본다.
 
