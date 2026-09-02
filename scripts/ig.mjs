@@ -274,10 +274,14 @@ function slideBody(d, t, index) {
     body = d.pc
       ? `<div class="shot${d.mirror ? ' mirror' : ''}">
           <div class="sh-pc">
-            <div class="sh-bar"><i></i><i></i><i></i></div>
+            <div class="sh-bar"><i></i><i></i><i></i>${d.pcLabel ? `<span class="sh-tag">${esc(d.pcLabel)}</span>` : ''}</div>
             <img src="${shotUrl(d.pc, index, 'pc')}" alt="">
           </div>
-          <div class="sh-mo"><img src="${shotUrl(d.mobile, index, 'mobile')}" alt=""><div class="sh-mo-fade"></div></div>
+          <div class="sh-mo">
+            <img src="${shotUrl(d.mobile, index, 'mobile')}" alt="">
+            <div class="sh-mo-fade"></div>
+            ${d.mobileLabel ? `<div class="sh-mo-top"><span class="sh-tag sh-tag-mo">${esc(d.mobileLabel)}</span></div>` : ''}
+          </div>
         </div>`
       : '';
     if (!d.pc && d.wide) {
@@ -552,6 +556,11 @@ function css(t, fontUrl) {
     background:${t.soft}; border-bottom:2px solid ${t.border};
   }
   .sh-bar i { width:11px; height:11px; border-radius:50%; background:${t.border}; }
+  .sh-tag {
+    margin-left:auto; padding:5px 14px; border-radius:100px;
+    background:${t.strong}; color:#fff; font-size:16px; font-weight:700;
+    letter-spacing:-.01em; white-space:nowrap;
+  }
   .sh-pc img { display:block; width:100%; height:auto; }
   .sh-mo {
     /* 212px 였을 때 폰 안의 UI 가 피드에서 안 읽혔다. PC 창과 겹치는 폭이
@@ -571,6 +580,17 @@ function css(t, fontUrl) {
   .sh-mo-fade {
     position:absolute; left:0; right:0; bottom:0; height:170px;
     background:linear-gradient(to bottom, transparent, ${t.bg} 85%);
+  }
+  .sh-mo-top {
+    /* 원본 스크린샷 맨 위(가게 이름 등)가 배지 밑으로 비쳐 보였다 —
+       배지 뒤에 프레임과 같은 색 스크림을 깔아 완전히 덮는다. */
+    position:absolute; left:0; right:0; top:0; height:56px; z-index:1;
+    display:flex; align-items:center; padding:0 12px;
+    background:${t.bg};
+  }
+  .sh-tag-mo { margin-left:0; padding:5px 14px; border-radius:100px;
+    background:${t.strong}; color:#fff; font-size:16px; font-weight:700;
+    letter-spacing:-.01em; white-space:nowrap;
   }
   /* 크기는 그대로 두고 좌우 자리만 뒤집는다 — PC 창을 오른쪽에, 폰을 왼쪽에 두고 싶을 때.
      헤드라인은 항상 왼쪽 정렬로 짧게 흐르다 보니 이미지 묶음(사실상 오른쪽 전용 공간)과
