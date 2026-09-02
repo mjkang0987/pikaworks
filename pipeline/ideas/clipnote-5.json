@@ -30,6 +30,15 @@
         "html": "<div style=\"max-width:700px;margin:0 auto\"><div class=\"ch-tag\" style=\"font-size:32px;margin-bottom:14px\">추가할 링크</div><div class=\"ch-bub\" style=\"font-size:32px;padding:22px 30px;margin-bottom:20px\">cafe.naver.com/f-club/128821</div><div class=\"ch-none\" style=\"min-height:360px;font-size:34px\">카페 이름만 떠요</div></div>"
       },
       {
+        "template": "shot",
+        "title": [
+          "URL만 붙이면",
+          "제목·이미지 자동"
+        ],
+        "subtitle": "따로 입력할 거 없어요",
+        "mobile": "assets/shots/cn-mobile-form.png"
+      },
+      {
         "template": "clips",
         "title": [
           "내 클립에는",
@@ -70,7 +79,8 @@
     "public/ig/clipnote-5-2.png",
     "public/ig/clipnote-5-3.png",
     "public/ig/clipnote-5-4.png",
-    "public/ig/clipnote-5-5.png"
+    "public/ig/clipnote-5-5.png",
+    "public/ig/clipnote-5-6.png"
   ],
   "image_url": "https://pikaworks.kr/ig/clipnote-5-1.png",
   "image_urls": [
@@ -78,6 +88,7 @@
     "https://pikaworks.kr/ig/clipnote-5-2.png",
     "https://pikaworks.kr/ig/clipnote-5-3.png",
     "https://pikaworks.kr/ig/clipnote-5-4.png",
-    "https://pikaworks.kr/ig/clipnote-5-5.png"
+    "https://pikaworks.kr/ig/clipnote-5-5.png",
+    "https://pikaworks.kr/ig/clipnote-5-6.png"
   ]
 }
