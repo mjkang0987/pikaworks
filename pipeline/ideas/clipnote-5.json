@@ -70,6 +70,24 @@
               "숙소 후기"
             ],
             "tags": []
+          },
+          {
+            "title": "제주 3박4일 코스",
+            "domain": "blog.naver.com",
+            "overlay": [
+              "3박4일",
+              "코스 정리"
+            ],
+            "tags": []
+          },
+          {
+            "title": "애월 흑돼지집 웨이팅",
+            "domain": "instagram.com",
+            "overlay": [
+              "애월 흑돼지집",
+              "웨이팅 꿀팁"
+            ],
+            "tags": []
           }
         ]
       },
