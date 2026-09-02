@@ -20,17 +20,21 @@
     },
     "slides": [
       {
+        "template": "panel",
+        "title": [
+          "카톡으로 보내면",
+          "카페 이름만 떠요"
+        ],
+        "subtitle": "받는 사람은 뭔지 알 수가 없어요",
+        "html": "<div style=\"max-width:700px;margin:0 auto\"><div class=\"ch-tag\" style=\"font-size:32px;margin-bottom:14px\">카톡으로</div><div class=\"ch-bub\" style=\"font-size:32px;padding:22px 30px;margin-bottom:20px\">cafe.naver.com/f-club/128821</div><div class=\"ch-none\" style=\"min-height:360px;font-size:34px\">카페 이름만 떠요</div></div>"
+      },
+      {
         "template": "chat",
         "title": [
-          "카페 링크는 원래",
-          "이름만 뜨는데"
+          "ClipNote로 보내면",
+          "실제 제목이 붙어요"
         ],
-        "subtitle": "ClipNote로 보내면 실제 제목이 붙어요",
-        "before": {
-          "tag": "카톡으로",
-          "url": "cafe.naver.com/f-club/128821",
-          "note": "카페 이름만 떠요"
-        },
+        "subtitle": "무슨 글인지 바로 알 수 있어요",
         "after": {
           "tag": "ClipNote로",
           "url": "clipnote.co.kr/m3Tn9pQ",
@@ -59,13 +63,15 @@
     "public/ig/clipnote-5-1.png",
     "public/ig/clipnote-5-2.png",
     "public/ig/clipnote-5-3.png",
-    "public/ig/clipnote-5-4.png"
+    "public/ig/clipnote-5-4.png",
+    "public/ig/clipnote-5-5.png"
   ],
   "image_url": "https://pikaworks.kr/ig/clipnote-5-1.png",
   "image_urls": [
     "https://pikaworks.kr/ig/clipnote-5-1.png",
     "https://pikaworks.kr/ig/clipnote-5-2.png",
     "https://pikaworks.kr/ig/clipnote-5-3.png",
-    "https://pikaworks.kr/ig/clipnote-5-4.png"
+    "https://pikaworks.kr/ig/clipnote-5-4.png",
+    "https://pikaworks.kr/ig/clipnote-5-5.png"
   ]
 }
