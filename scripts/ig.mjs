@@ -566,30 +566,26 @@ function css(t, fontUrl) {
   .sh-mo {
     /* 212px 였을 때 폰 안의 UI 가 피드에서 안 읽혔다. PC 창과 겹치는 폭이
        늘지만, 안 읽히는 폰을 놓느니 겹치는 편이 낫다. */
-    /* 이미지 자체를 내용 끝(버튼 아래 여백)까지만 잘라서 준비해 두고,
-       칸은 그 실제 높이보다 조금 더 크게 잡는다 — 이미지를 자르지 않고
-       그대로 다 보여준 다음, 칸의 남는 아래쪽만 배경색으로 채워 페이드가
-       내용을 가리지 않고 여백 위에서만 자연스럽게 사라지게 한다. */
-    position:absolute; right:0; bottom:0; width:480px; height:540px;
+    /* 이미지 자체를 내용 끝(버튼 아래 여백)까지만 잘라서 준비해 뒀다.
+       칸을 이미지 실제 비율보다 크게 잡으면 남는 자리가 검게 떠 보여서
+       (까만 테두리처럼 보임), 칸 높이를 이미지 실제 비율에 맞춘다. */
+    position:absolute; right:0; bottom:0; width:480px; height:444px;
     border:9px solid ${t.bg}; border-radius:34px; overflow:hidden;
     background:${t.bg}; box-shadow:0 22px 46px rgba(0,0,0,.36);
   }
   .sh-mo img { display:block; width:100%; height:auto; border-radius:26px; }
-  /* 이미지 실제 높이 아래로 남는 칸(배경색 여백)이 슬라이드 배경과 자연스럽게
-     이어지도록, shot-stand 의 shot-fade 와 같은 방식으로 서서히 사라지게 한다.
-     bezel 을 t.fg(밝은 값)로 뒀을 땐 흰 스크린샷 위에서 페이드가 안 보였다 —
-     bezel 자체를 t.bg 로 바꿔 페이드 도착점과 맞췄다. */
+  /* 잘린 아래쪽 흰 여백이 프레임 모서리에서 갑자기 끊기지 않도록 살짝만
+     그림자를 준다 — 버튼을 가리면 안 되니 얕게. */
   .sh-mo-fade {
-    position:absolute; left:0; right:0; bottom:0; height:130px;
-    background:linear-gradient(to bottom, transparent, ${t.bg} 85%);
+    position:absolute; left:0; right:0; bottom:0; height:36px;
+    background:linear-gradient(to bottom, transparent, rgba(0,0,0,.12));
   }
-  /* 라벨은 화면 위쪽(원본 스크린샷 안 상호명 등과 겹치는 자리)이 아니라,
-     이미지 아래 남는 배경 여백(페이드 위) 에 얹는다 — 상단에 별도 바를
-     추가하지 않고 배지만으로 해결한다. */
+  /* 라벨은 이미지 안 실제 여백(버튼 아래 흰 바탕) 위에 얹는다 — 배경이
+     흰색이라 밝은 글자 대신 짙은 색 워터마크로 얹는다. */
   .sh-tag-mo {
-    position:absolute; left:16px; bottom:16px; z-index:1;
+    position:absolute; left:16px; bottom:12px; z-index:1;
     font-size:16px; font-weight:800; letter-spacing:-.01em;
-    color:rgba(255,255,255,.55);
+    color:rgba(0,0,0,.4);
     white-space:nowrap;
   }
   /* 크기는 그대로 두고 좌우 자리만 뒤집는다 — PC 창을 오른쪽에, 폰을 왼쪽에 두고 싶을 때.
