@@ -273,8 +273,9 @@ function slideBody(d, t, index) {
     // 쓰는 화면을 PC 창틀에 끼우면 실제와 다른 인상을 준다.
     body = d.pc
       ? `<div class="shot${d.mirror ? ' mirror' : ''}">
+          ${d.pcLabel ? `<span class="sh-tag">${esc(d.pcLabel)}</span>` : ''}
           <div class="sh-pc">
-            <div class="sh-bar"><i></i><i></i><i></i>${d.pcLabel ? `<span class="sh-tag">${esc(d.pcLabel)}</span>` : ''}</div>
+            <div class="sh-bar"><i></i><i></i><i></i></div>
             <img src="${shotUrl(d.pc, index, 'pc')}" alt="">
           </div>
           <div class="sh-mo">
@@ -556,12 +557,16 @@ function css(t, fontUrl) {
     background:${t.soft}; border-bottom:2px solid ${t.border};
   }
   .sh-bar i { width:11px; height:11px; border-radius:50%; background:${t.border}; }
-  /* 배지 상자 대신 워터마크처럼 — 배경/테두리 없이 반투명한 글자만 얹는다. */
+  /* 매장 라벨은 프레임 밖(위)에, 프레임의 왼쪽 끝에 맞춰 글자만 놓는다 —
+     프레임 안에 넣으면 overflow:hidden 에 잘려서 sh-pc 형제로 뺐다. */
   .sh-tag {
-    margin-left:auto; font-size:16px; font-weight:800; letter-spacing:-.01em;
-    color:rgba(255,255,255,.55);
-    white-space:nowrap;
+    position:absolute; left:0; top:-40px;
+    font-size:17px; font-weight:800; letter-spacing:-.01em;
+    color:${t.softInk}; white-space:nowrap;
   }
+  /* .sh-tag-mo 도 sh-tag 클래스를 같이 쓰지만 .sh-mo 안쪽(자손)에 있으므로
+     직계 자식 선택자로 매장 라벨(.shot 의 직계 자식)만 짚는다. */
+  .shot.mirror > .sh-tag { left:calc(100% - 812px); }
   .sh-pc img { display:block; width:100%; height:auto; }
   .sh-mo {
     /* 212px 였을 때 폰 안의 UI 가 피드에서 안 읽혔다. PC 창과 겹치는 폭이
@@ -580,12 +585,13 @@ function css(t, fontUrl) {
     position:absolute; left:0; right:0; bottom:0; height:36px;
     background:linear-gradient(to bottom, transparent, rgba(0,0,0,.12));
   }
-  /* 라벨은 이미지 안 실제 여백(버튼 아래 흰 바탕) 위에 얹는다 — 배경이
-     흰색이라 밝은 글자 대신 짙은 색 워터마크로 얹는다. */
+  /* 고객 라벨은 프레임 안, 오른쪽 위에 — 실제 화면 내용(왼쪽 정렬된 상호명·
+     제목)이 없는 빈자리라 배지를 올려도 가리는 게 없다. */
   .sh-tag-mo {
-    position:absolute; left:16px; bottom:12px; z-index:1;
+    position:absolute; left:auto; top:14px; right:14px; z-index:1;
+    padding:6px 16px; border-radius:100px;
+    background:#efebff; color:#6526d9;
     font-size:16px; font-weight:800; letter-spacing:-.01em;
-    color:rgba(0,0,0,.4);
     white-space:nowrap;
   }
   /* 크기는 그대로 두고 좌우 자리만 뒤집는다 — PC 창을 오른쪽에, 폰을 왼쪽에 두고 싶을 때.
