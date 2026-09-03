@@ -12,6 +12,7 @@
 
 | 날짜 | 서비스 | 앵글 | 링크 |
 |---|---|---|---|
+| 2026-09-04 | clipnote | 여기저기서 받은 공구 링크를 카드로 모아 태그로 진행·마감 가르기 — 공구방 | [보기](https://www.instagram.com/p/Dc18SdqFdWb/) |
 | 2026-09-03 | takeaseat | 손님이 직접 고르는 온라인 예약 페이지 | [보기](https://www.instagram.com/p/DczYyQslk-2/) |
 | 2026-09-01 | takeaseat | 검색 한 번에 적립금·이력·예약 조회 — 고객정보 한 곳에 모인다 | [보기](https://www.instagram.com/p/DcuOTL_lP2e/) |
 | 2026-08-31 | clipnote | 저장하고 태그로 정리, 꺼낼 땐 카드째 공유 — 아카이빙 | [보기](https://www.instagram.com/p/DcrpH8tjrPg/) |
