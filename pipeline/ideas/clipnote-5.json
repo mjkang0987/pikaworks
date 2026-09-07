@@ -1,0 +1,16 @@
+{
+  "id": "clipnote-5",
+  "service": "clipnote",
+  "status": "proposed",
+  "angle": "재우고 켠 폰 속 링크, 뭐였는지 몰라도 카드로 남아 있다 — 육아맘",
+  "caption": "애 재우고 폰 켰는데\n아까 그 링크 어디 갔지 🍼\n\n나중에 보려고 킵해둔 링크,\n주소만 덩그러니 남아 있으면\n열어보기 전엔 뭐였는지\n기억이 안 나죠.\n\n클립노트(ClipNote)에 붙여넣으면\n그 페이지의 제목・설명・대표 이미지를\n알아서 읽어와 카드로 만들어요.\n제목 칸은 안 써도 채워져요.\n\n태그도 선택이라\n바쁘면 붙여넣고 저장만 눌러도 돼요.\n쓸 말을 고르느라\n멈출 일이 없어요.\n\n짧은 공유 링크는\n로그인하면 만들어져요.\n\n프로필 링크에서\nhttps://clipnote.co.kr 확인하세요 🔗\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯\n\nYou finally get the baby down, pick up your phone, and the link you meant to read is a bare URL in a chat thread.\n\nNo title. No picture. No idea what it was.\n\nPaste it into ClipNote and it reads the page for you — headline, description, cover image — and keeps it as a card you can recognize at a glance.\n\nThe title field fills itself. Tags are optional. On a busy evening you can paste, tap save, and be done, one-handed, without picking a single word.\n\nSign in when you want a short link to share.\n\nProfile link → https://clipnote.co.kr 🔗\n\n#ClipNote #링크저장 #공유카드 #육아맘 #pikaworks",
+  "image_path": null,
+  "image_url": null,
+  "design": null,
+  "scheduled_at": null,
+  "published_at": null,
+  "media_id": null,
+  "permalink": null,
+  "container_id": null,
+  "note": "사용자가 완성된 캡션을 그대로 제공(2026-09-07) — 한글판·영문판·해시태그까지 SKILL.md 7절 형식(후킹 1줄+이모지 1개 → 본문 문단들 → 로그인 조건 → CTA → 구분선 10개 → 영문 재작성(직역 아님) → 해시태그 5개, 브랜드/기능/기능/독자층/pikaworks 슬롯)에 정확히 맞춰 받았다. 캡션은 받은 그대로 옮겼고 임의로 고치지 않았다.\n\n중복 확인: 핵심 메커니즘(붙여넣으면 제목·설명·대표 이미지를 자동으로 읽어와 카드화)은 이미 clipnote-1(8/28 발행, \"밋밋한 링크를 제목·대표 이미지 카드로 — 핵심 가치 소개\")이 다뤘고 clipnote-2 커버 칩에도 \"제목·이미지 자동\"이 있다. 이번 앵글은 같은 메커니즘을 \"아기 재우고 폰 켰는데 아까 그 링크가 뭐였는지 기억이 안 난다\"는 육아 상황(육아맘 페르소나)으로 프레이밍하고, 제목 칸 자동완성·태그는 선택·원핸드 저장이라는 디테일을 더했다. 겹치는지 애매하면 겹치는 것으로 보는 게 원칙이라, 승인 전에 이 겹침을 사람이 직접 확인해야 한다고 판단해 status는 proposed로 두었다(approved는 사람만 쓰는 값).\n\n글자수 점검(SKILL.md 7절 표, 공백 제외): 한국어 파트 213자로 하한(250자)에 못 미친다. 영어 파트 432자(390~620자 범위 내), 해시태그 5개(브랜드 1·기능 2·독자층 1·pikaworks 1), 구분선 10개(U+23AF)는 규정과 일치한다. 문구를 임의로 늘리지 않고 그대로 두었으니 승인 시 이 점만 참고."
+}
