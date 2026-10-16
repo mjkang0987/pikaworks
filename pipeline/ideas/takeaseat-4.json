@@ -1,0 +1,16 @@
+{
+  "id": "takeaseat-4",
+  "service": "takeaseat",
+  "status": "proposed",
+  "angle": "공방·연습실·세차도 되는 예약 관리 — 업종을 고르면 화면 용어가 그 업종 말로 바뀐다",
+  "caption": "예약 프로그램, 다 미용실용이더라고요 🪑\n\n공방은 선생님과 수업,\n세차장은 기사님과 작업,\n연습실은 룸과 이용.\n같은 예약인데 부르는 말이 달라요.\n\nTake a Seat은 업종을 고르면\n화면 속 말이 그 업종 말로 바뀌어요.\n예약 캘린더도,\n손님이 보는 예약 페이지도요.\n\n공방·연습실·세차·상담까지 25개 업종.\n업종은 설정에서 언제든 바꿀 수 있고,\n가입 없이 게스트로 먼저 써볼 수 있어요.\n\n프로필 링크에서\nhttps://takeaseat.co.kr\n확인해 보세요 🔗\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯\n\nEvery booking tool seems made for hair salons. 🪑\n\nBut a craft studio runs on teachers and classes.\nA car wash runs on technicians and jobs.\nA practice room runs on rooms, not stylists.\n\nTake a Seat lets you pick your type of business,\nand the words on screen follow —\nin your booking calendar\nand on the page your customers book from.\n\n25 business types, from workshops and studios\nto car care and counseling.\nYou can switch anytime in settings.\n\nCheck it out via the link in our profile:\nhttps://takeaseat.co.kr 🔗\n\n#TAS #예약관리 #고객관리 #공방운영 #pikaworks",
+  "image_path": null,
+  "image_url": null,
+  "design": null,
+  "scheduled_at": null,
+  "published_at": null,
+  "media_id": null,
+  "permalink": null,
+  "container_id": null,
+  "note": "2026-10-16 제안·채택. 근거: tas main 5f58e2c labels.ts (25개 업종, 카테고리별 담당자·서비스 라벨). 업종별 화면 촬영 필요 — assets/shots 는 헤어샵 시드뿐"
+}
