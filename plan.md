@@ -51,10 +51,14 @@
 
 1. [x] 8/27 `takeaseat-1` · 8/28 `clipnote-1` 자동 발행 완료.
    `pipeline/history.md` 발행 완료 표에도 자동으로 들어갔다
-2. **큐 보충** — 대기 3건(`clipnote-3`, `takeaseat-3`, 그리고 `takeaseat-2` 는
-   재작성 완료)이 캐러셀 이전 구성이라 다시 만들어야 한다.
-   장수를 맞추는 작업이 아니다 — 내용이 몇 장을 필요로 하는지가 정한다
-   (`sns-designer/SKILL.md` 2-1절)
+2. [x] 9/1~9/4 `takeaseat-2`·`takeaseat-3`·`clipnote-2`·`clipnote-4` 발행 완료.
+   `clipnote-3` 은 반려(`history.md`). **2026-10-16 기준 큐가 비어 있다**
+3. [x] `sns-designer/SKILL.md` 를 `ig.mjs`·발행 이미지 기준으로 동기화 (2026-10-16) —
+   1절이 ClipNote 흰 테마만 적고 있어 TAS 블랙 테마와 어긋났고, `source`·`clips`
+   템플릿이 빠져 있었다
+4. **큐 보충 (진행 중)** — 2026-10-16 아이디어 제안. TAS 「공방·연습실·세차도 되는
+   예약 관리」(업종별 용어 전환) 채택. 다음: 캡션 작성 → `takeaseat-4` `proposed`
+   → 사람 승인 → 업종별 화면 촬영(현재 `assets/shots/` 는 전부 헤어샵 시드라 없음)
 
 ## 아직 안 정한 것
 
