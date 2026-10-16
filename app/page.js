@@ -153,7 +153,7 @@ export default function Home() {
               <h2 className="text-2xl font-black tracking-tight text-ink sm:text-3xl">
                 블로그 최신 글
               </h2>
-              <p className="mt-2 text-sm text-muted">경제·부동산·IT 인사이트</p>
+              <p className="mt-2 text-sm text-muted">부동산 계산기·시장 정리·실전 가이드</p>
             </div>
             <a
               href="https://blog.pikaworks.kr"
