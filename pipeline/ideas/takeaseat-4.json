@@ -1,16 +1,108 @@
 {
   "id": "takeaseat-4",
   "service": "takeaseat",
-  "status": "approved",
+  "status": "design_done",
   "angle": "공방·연습실·세차도 되는 예약 관리 — 업종을 고르면 화면 용어가 바뀌고, 손님 예약 규칙(간격·사전 시간·예약 가능 일수·담당자 선택)도 가게에 맞춘다",
   "caption": "공방·연습실·세차도 되는 예약 관리 🪑\n\n공방은 선생님과 수업,\n세차장은 기사와 작업,\n연습실은 룸과 이용.\n업종을 고르면 화면 속 호칭이 바뀌어요.\n\n말만 바뀌는 게 아니에요.\n손님 예약 규칙도 가게 리듬에 맞춰요.\n・예약 시간 간격 10·15·20·30·60분\n・최소 몇 분 전까지 받을지\n・며칠 앞까지 열어둘지\n・손님이 담당자를 고를지\n\n예약 페이지엔 열어둘 서비스만 올려 두면\n손님이 묻지 않고 바로 시간을 골라요.\n\n프로필 링크에서\nhttps://takeaseat.co.kr\n확인해 보세요 🔗\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯\n\nA booking tool for studios, car washes and more. 🪑\n\nA craft studio runs on teachers and classes.\nA car wash runs on technicians and jobs.\nPick your business type in Take a Seat,\nand the words on screen follow.\n\nIt's not just the words.\nYour booking rules fit your pace, too:\n・slots every 10, 15, 20, 30 or 60 minutes\n・how far ahead a booking must come in\n・how many days out customers can book\n・whether customers pick their own staff\n\nChoose which services show on your booking page,\nand customers pick a time without having to ask.\n\nLink in profile:\nhttps://takeaseat.co.kr 🔗\n\n#TAS #예약관리 #온라인예약 #공방운영 #pikaworks",
-  "image_path": null,
-  "image_url": null,
-  "design": null,
+  "image_path": [
+    "public/ig/takeaseat-4-1.png",
+    "public/ig/takeaseat-4-2.png",
+    "public/ig/takeaseat-4-3.png",
+    "public/ig/takeaseat-4-4.png",
+    "public/ig/takeaseat-4-5.png",
+    "public/ig/takeaseat-4-6.png",
+    "public/ig/takeaseat-4-7.png"
+  ],
+  "image_url": "https://pikaworks.kr/ig/takeaseat-4-1.png",
+  "design": {
+    "cover": {
+      "kicker": "업종 맞춤 예약",
+      "title": [
+        "공방·연습실",
+        "세차장도",
+        "예약 받아요"
+      ],
+      "features": [
+        "업종별 호칭",
+        "예약 규칙 설정",
+        "노출 서비스 선택"
+      ]
+    },
+    "slides": [
+      {
+        "template": "shot",
+        "title": [
+          "공방이면",
+          "선생님·수업으로"
+        ],
+        "subtitle": "메뉴도, 손님 예약 화면도 공방 말로 바뀌어요",
+        "pc": "assets/shots/tas-craft-pc.png",
+        "mobile": "assets/shots/tas-craft-mobile.png",
+        "pcLabel": "매장용",
+        "mobileLabel": "고객용",
+        "mirror": true
+      },
+      {
+        "template": "shot",
+        "title": [
+          "세차장이면",
+          "기사·작업으로"
+        ],
+        "subtitle": "업종만 고르면 호칭이 따라 바뀌어요",
+        "pc": "assets/shots/tas-carwash-pc.png",
+        "mobile": "assets/shots/tas-carwash-mobile.png",
+        "pcLabel": "매장용",
+        "mobileLabel": "고객용",
+        "mirror": true
+      },
+      {
+        "template": "shot",
+        "title": [
+          "연습실이면",
+          "룸·이용으로"
+        ],
+        "subtitle": "25개 업종 중에서 우리 가게를 고르면 돼요",
+        "pc": "assets/shots/tas-practice-pc.png",
+        "mobile": "assets/shots/tas-practice-mobile.png",
+        "pcLabel": "매장용",
+        "mobileLabel": "고객용",
+        "mirror": true
+      },
+      {
+        "template": "shot",
+        "title": [
+          "예약 규칙도",
+          "가게 리듬대로"
+        ],
+        "subtitle": "간격·사전 예약 시간·예약 가능 일수를 정해요",
+        "mobile": "assets/shots/tas-booking-rules.png",
+        "wide": true
+      },
+      {
+        "template": "shot",
+        "title": [
+          "열어둘 수업만",
+          "예약 페이지에"
+        ],
+        "subtitle": "체크한 것만 손님 예약 화면에 보여요",
+        "mobile": "assets/shots/tas-booking-services-crop.png",
+        "wide": true
+      }
+    ]
+  },
   "scheduled_at": null,
   "published_at": null,
   "media_id": null,
   "permalink": null,
   "container_id": null,
-  "note": "2026-10-16 제안·채택. 근거: tas main 5f58e2c labels.ts (25개 업종, 카테고리별 담당자·서비스 라벨). 업종별 화면 촬영 필요 — assets/shots 는 헤어샵 시드뿐 / 2026-10-16 보강: 고객 예약 설정(BookingManageSection — 간격 10·15·20·30·60분, 최소 사전 예약 시간, 최대 예약 가능 일수, 담당자 선택 허용) + 슬롯 계산(availability.ts: 영업시간−기존 예약−담당자 스케줄−서비스 소요). 설정 화면 촬영 필요 / QA 반영: 예약 페이지는 안 맞는 시간을 숨기지 않고 '마감' 비활성 표시(BookingPickers.tsx:161) → '~만 보여줘요' 삭제. 설정 화면의 '담당자 선택' 체크박스·온보딩 등은 업종 라벨이 아닌 고정 문구 — 촬영 프레임 주의"
+  "note": "2026-10-16 제안·채택. 근거: tas main 5f58e2c labels.ts (25개 업종, 카테고리별 담당자·서비스 라벨). 업종별 화면 촬영 필요 — assets/shots 는 헤어샵 시드뿐 / 2026-10-16 보강: 고객 예약 설정(BookingManageSection — 간격 10·15·20·30·60분, 최소 사전 예약 시간, 최대 예약 가능 일수, 담당자 선택 허용) + 슬롯 계산(availability.ts: 영업시간−기존 예약−담당자 스케줄−서비스 소요). 설정 화면 촬영 필요 / QA 반영: 예약 페이지는 안 맞는 시간을 숨기지 않고 '마감' 비활성 표시(BookingPickers.tsx:161) → '~만 보여줘요' 삭제. 설정 화면의 '담당자 선택' 체크박스·온보딩 등은 업종 라벨이 아닌 고정 문구 — 촬영 프레임 주의",
+  "image_urls": [
+    "https://pikaworks.kr/ig/takeaseat-4-1.png",
+    "https://pikaworks.kr/ig/takeaseat-4-2.png",
+    "https://pikaworks.kr/ig/takeaseat-4-3.png",
+    "https://pikaworks.kr/ig/takeaseat-4-4.png",
+    "https://pikaworks.kr/ig/takeaseat-4-5.png",
+    "https://pikaworks.kr/ig/takeaseat-4-6.png",
+    "https://pikaworks.kr/ig/takeaseat-4-7.png"
+  ]
 }
