@@ -197,12 +197,18 @@ export default async function ProductPage({ params }) {
                     <figure
                       className={`sm:col-span-3 ${i % 2 === 1 ? 'sm:order-2' : ''}`}
                     >
-                      <img
-                        src={g.src}
-                        alt={`${name} ${g.title} 화면`}
-                        loading="lazy"
-                        className="w-full rounded-[var(--radius-card)] border border-border bg-white shadow-[0_18px_50px_-28px_rgba(28,28,30,0.45)]"
-                      />
+                      <picture>
+                        {/* 폰에서는 세로 모바일 화면을 보여준다 */}
+                        {g.mobileSrc && (
+                          <source media="(max-width: 639px)" srcSet={g.mobileSrc} />
+                        )}
+                        <img
+                          src={g.src}
+                          alt={`${name} ${g.title} 화면`}
+                          loading="lazy"
+                          className="w-full rounded-[var(--radius-card)] border border-border bg-white shadow-[0_18px_50px_-28px_rgba(28,28,30,0.45)] max-sm:mx-auto max-sm:max-w-[17.5rem]"
+                        />
+                      </picture>
                     </figure>
                     <div className="sm:col-span-2">
                       <span
