@@ -30,7 +30,7 @@
 - [x] 홈에 무료 부동산 계산기 섹션 + 헤더·푸터 계산기 링크 (PR #29)
 - [x] 블로그 소개 문구를 현재 블로그(부동산 계산기, 주 3회)에 맞춤. `DESCRIPTION` 교체
 - [x] 제품 스크린샷 전부 재촬영 — 운영 사이트에서 찍어 Next.js 개발 버튼 제거. Take a Seat 은 게스트 모드 localStorage(`takeaseat.local-db.v1`)에 가상 데이터를 넣어 찍는다
-- [x] 화면 미리보기에 모바일 스크린샷(`mobileSrc`, `public/shots/*/m/`) 추가 — 640px 미만에서 `<picture>` 로 교체
+- [x] 화면 미리보기에 모바일 스크린샷(`mobileSrc`, `public/shots/*/m/`) 추가 — PC 화면 옆에 높이를 맞춰 나란히
 
 ## takeaseat-1 발행 준비 상태
 
