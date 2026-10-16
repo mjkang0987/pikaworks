@@ -197,18 +197,27 @@ export default async function ProductPage({ params }) {
                     <figure
                       className={`sm:col-span-3 ${i % 2 === 1 ? 'sm:order-2' : ''}`}
                     >
-                      <picture>
-                        {/* 폰에서는 세로 모바일 화면을 보여준다 */}
-                        {g.mobileSrc && (
-                          <source media="(max-width: 639px)" srcSet={g.mobileSrc} />
-                        )}
+                      {/* PC·모바일 두 벌이면 높이를 맞춰 나란히 (열 비율 = 1280/800 : 390/844) */}
+                      <div
+                        className={
+                          g.mobileSrc ? 'grid grid-cols-[1.6fr_0.462fr] items-start gap-3' : ''
+                        }
+                      >
                         <img
                           src={g.src}
-                          alt={`${name} ${g.title} 화면`}
+                          alt={`${name} ${g.title} PC 화면`}
                           loading="lazy"
-                          className="w-full rounded-[var(--radius-card)] border border-border bg-white shadow-[0_18px_50px_-28px_rgba(28,28,30,0.45)] max-sm:mx-auto max-sm:max-w-[17.5rem]"
+                          className="w-full rounded-[var(--radius-card)] border border-border bg-white shadow-[0_18px_50px_-28px_rgba(28,28,30,0.45)]"
                         />
-                      </picture>
+                        {g.mobileSrc && (
+                          <img
+                            src={g.mobileSrc}
+                            alt={`${name} ${g.title} 모바일 화면`}
+                            loading="lazy"
+                            className="w-full rounded-[var(--radius-card)] border border-border bg-white shadow-[0_18px_50px_-28px_rgba(28,28,30,0.45)]"
+                          />
+                        )}
+                      </div>
                     </figure>
                     <div className="sm:col-span-2">
                       <span
