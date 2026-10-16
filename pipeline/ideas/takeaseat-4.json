@@ -25,7 +25,7 @@
       "features": [
         "업종별 호칭",
         "예약 규칙 설정",
-        "노출 서비스 선택"
+        "보일 서비스 고르기"
       ]
     },
     "slides": [
@@ -61,7 +61,7 @@
           "연습실이면",
           "룸·이용으로"
         ],
-        "subtitle": "25개 업종 중에서 우리 가게를 고르면 돼요",
+        "subtitle": "25개 업종 중에서 우리 가게 업종을 고르면 돼요",
         "pc": "assets/shots/tas-practice-pc.png",
         "mobile": "assets/shots/tas-practice-mobile.png",
         "pcLabel": "매장용",
@@ -74,7 +74,7 @@
           "예약 규칙도",
           "가게 리듬대로"
         ],
-        "subtitle": "간격·사전 예약 시간·예약 가능 일수를 정해요",
+        "subtitle": "간격·최소 사전 예약 시간·최대 예약 가능 일수를 정해요",
         "mobile": "assets/shots/tas-booking-rules.png",
         "wide": true
       },
