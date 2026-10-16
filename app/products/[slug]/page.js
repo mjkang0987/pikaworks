@@ -193,47 +193,39 @@ export default async function ProductPage({ params }) {
             <ul className="flex flex-col gap-14 sm:gap-20">
               {gallery.map((g, i) => (
                 <Reveal as="li" key={g.src}>
-                  <div className="grid grid-cols-1 items-center gap-6 sm:grid-cols-5 sm:gap-10">
-                    <figure
-                      className={`sm:col-span-3 ${i % 2 === 1 ? 'sm:order-2' : ''}`}
+                  <div className="mx-auto max-w-2xl text-center">
+                    <span
+                      className="text-xs font-bold tracking-[0.12em]"
+                      style={{ color: accent }}
                     >
-                      {/* PC·모바일 두 벌이면 높이를 맞춰 나란히 (열 비율 = 1280/800 : 390/844) */}
-                      <div
-                        className={
-                          g.mobileSrc ? 'grid grid-cols-[1.6fr_0.462fr] items-start gap-3' : ''
-                        }
-                      >
-                        <img
-                          src={g.src}
-                          alt={`${name} ${g.title} PC 화면`}
-                          loading="lazy"
-                          className="w-full rounded-[var(--radius-card)] border border-border bg-white shadow-[0_18px_50px_-28px_rgba(28,28,30,0.45)]"
-                        />
-                        {g.mobileSrc && (
-                          <img
-                            src={g.mobileSrc}
-                            alt={`${name} ${g.title} 모바일 화면`}
-                            loading="lazy"
-                            className="w-full rounded-[var(--radius-card)] border border-border bg-white shadow-[0_18px_50px_-28px_rgba(28,28,30,0.45)]"
-                          />
-                        )}
-                      </div>
-                    </figure>
-                    <div className="sm:col-span-2">
-                      <span
-                        className="text-xs font-bold tracking-[0.12em]"
-                        style={{ color: accent }}
-                      >
-                        {String(i + 1).padStart(2, '0')}
-                      </span>
-                      <h3 className="mt-2 text-lg font-bold tracking-tight text-ink">
-                        {g.title}
-                      </h3>
-                      <p className="mt-3 break-keep text-sm leading-relaxed text-muted">
-                        {g.desc}
-                      </p>
-                    </div>
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
+                    <h3 className="mt-2 text-lg font-bold tracking-tight text-ink">
+                      {g.title}
+                    </h3>
+                    <p className="mt-3 break-keep text-sm leading-relaxed text-muted">
+                      {g.desc}
+                    </p>
                   </div>
+                  {/* PC·모바일 두 벌이면 휴대폰 틀이 PC 화면 오른쪽 끝을 4%만 덮고 아래로 살짝 내려온다 */}
+                  <figure className={`relative mt-8 ${g.mobileSrc ? 'pb-[6%]' : ''}`}>
+                    <img
+                      src={g.src}
+                      alt={`${name} ${g.title} PC 화면`}
+                      loading="lazy"
+                      className={`${g.mobileSrc ? 'w-[83%]' : 'w-full'} rounded-[var(--radius-card)] border border-border bg-white shadow-[0_18px_50px_-28px_rgba(28,28,30,0.45)]`}
+                    />
+                    {g.mobileSrc && (
+                      <div className="absolute bottom-0 right-0 w-[21%] rounded-[14%/6.5%] bg-ink p-[0.8%] shadow-[0_24px_60px_-20px_rgba(28,28,30,0.7)] ring-1 ring-black/10">
+                        <img
+                          src={g.mobileSrc}
+                          alt={`${name} ${g.title} 모바일 화면`}
+                          loading="lazy"
+                          className="w-full rounded-[11%/5%] bg-white"
+                        />
+                      </div>
+                    )}
+                  </figure>
                 </Reveal>
               ))}
             </ul>
