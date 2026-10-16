@@ -203,7 +203,7 @@ Next.js 16 정적 export(`output: 'export'`). `main` 에 push 하면 `deploy.yml
 - `app/data/products.js` — 제품 3개(`clipnote`·`takeaseat`·`blog`)의 소개·기능·FAQ·스크린샷.
   홈 카드와 상세 페이지가 모두 여기서 읽는다. 서비스 저장소의 사본이라 뒤처질 수 있다
 - `public/shots/` — 제품 스크린샷. `<slug>.png` 는 홈 카드·상세 대표(1280×800 @2x),
-  `<slug>/*.png` 는 갤러리(1280×800), `<slug>/m/*.png` 는 갤러리 모바일판(390×844 @2x, PC 화면 옆에 나란히 노출).
+  `<slug>/*.png` 는 갤러리(1280×800), `<slug>/m/*.png` 는 갤러리 모바일판(390×844 @2x, 휴대폰 테두리를 둘러 PC 화면에 살짝 겹쳐 노출).
   **운영 사이트에서 찍는다** — 로컬 dev 서버로 찍으면 Next.js 개발 버튼이 함께 찍힌다.
   Take a Seat 은 게스트 모드 localStorage(`takeaseat.local-db.v1`)에 가상 데이터를 넣어 찍는다
 - `app/layout.js` — `DESCRIPTION` 이 meta description·OG·트위터 카드에 함께 쓰인다
