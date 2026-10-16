@@ -1,6 +1,11 @@
-# pikaworks SNS 자동화 파이프라인 — 구조와 현재 상태
+# pikaworks — 구조와 현재 상태
 
 이 문서가 구조의 SSOT 다. 진행 중인 작업은 `plan.md` 를 본다.
+
+이 리포는 두 가지를 담는다.
+
+- **홈페이지** `pikaworks.kr` — 8절
+- **SNS 자동화 파이프라인** — 1~7절
 
 발행 채널은 인스타그램 `@pikaworks` 하나이고, 홍보 대상은 **ClipNote** 와
 **Take a Seat** 두 서비스다.
@@ -178,3 +183,40 @@ deny 는 어떤 allow 로도 뚫리지 않고 예외를 둘 수 없다.
 | `IG_ACCESS_TOKEN` | 예 | 발행·토큰 갱신 |
 | `SLACK_WEBHOOK_URL` | 아니오 | 알림. 없으면 Actions 요약에만 남는다 |
 | `GH_PAT_SECRETS` | 아니오 | 갱신된 토큰 자동 저장. 없으면 수동 갱신 경고만 |
+
+## 8. 홈페이지 (pikaworks.kr)
+
+Next.js 16 정적 export(`output: 'export'`). `main` 에 push 하면 `deploy.yml` 이
+`out/` 을 GitHub Pages 로 배포한다. 도메인은 `public/CNAME`.
+
+### 라우트
+
+| 경로 | 파일 | 내용 |
+|---|---|---|
+| `/` | `app/page.js` | 히어로 → 제품(`#products`) → 무료 부동산 계산기(`#calculators`) → 블로그 최신 글 |
+| `/products/<slug>` | `app/products/[slug]/page.js` | 제품 상세. `PRODUCTS` 마다 하나씩 정적 생성 |
+| `/sitemap.xml` | `app/sitemap.js` | 홈 + 제품 상세 |
+| `/robots.txt` | `app/robots.js` | 전체 허용 + 사이트맵 |
+
+### 데이터와 컴포넌트
+
+- `app/data/products.js` — 제품 3개(`clipnote`·`takeaseat`·`blog`)의 소개·기능·FAQ·스크린샷.
+  홈 카드와 상세 페이지가 모두 여기서 읽는다. 서비스 저장소의 사본이라 뒤처질 수 있다
+- `app/layout.js` — `DESCRIPTION` 이 meta description·OG·트위터 카드에 함께 쓰인다
+- `app/page.js` 의 `CALCULATORS` — 홈에 고정 노출하는 대표 계산기 6개.
+  **자동으로 늘지 않는다.** 전체 목록은 블로그 `/calculators/` 가 슬러그(`-calculation`)로
+  자동으로 모으고, 홈은 «계산기 전체 보기» 로 거기에 연결한다
+- `app/components/`
+  - `SiteHeader` — 메뉴 `제품 · 계산기 · 블로그`
+  - `SiteFooter` — 제품 링크 + 부동산 계산기
+  - `ProductCard` — 홈 제품 카드
+  - `LatestPosts` — **클라이언트에서** `blog.pikaworks.kr/feed.xml` 을 받아 최신 글 3개를 그린다.
+    서버 HTML 에는 비어 있는 게 정상이다
+  - `Reveal` — 스크롤 등장 효과
+
+### 블로그와의 관계
+
+블로그는 별도 리포(`mjkang0987/blog`, Jekyll)이고 `blog.pikaworks.kr` 에서 따로 배포된다.
+이 리포는 링크와 피드만 쓴다. 블로그 성격(부동산 계산기, 월·수·금 발행)이 바뀌면
+`products.js` 의 blog 항목, 홈 최신 글 부제, `DESCRIPTION` 을 함께 고친다.
+
