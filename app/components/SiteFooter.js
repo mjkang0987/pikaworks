@@ -17,6 +17,14 @@ export default function SiteFooter() {
                 {p.name}
               </Link>
             ))}
+            <a
+              href="https://blog.pikaworks.kr/calculators/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm font-medium text-muted transition-colors hover:text-brand"
+            >
+              부동산 계산기
+            </a>
           </nav>
         </div>
 

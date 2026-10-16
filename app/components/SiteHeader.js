@@ -17,6 +17,14 @@ export default function SiteHeader() {
           </Link>
           <a
             className="transition-colors hover:text-white"
+            href="https://blog.pikaworks.kr/calculators/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            계산기
+          </a>
+          <a
+            className="transition-colors hover:text-white"
             href="https://blog.pikaworks.kr"
             target="_blank"
             rel="noopener noreferrer"
