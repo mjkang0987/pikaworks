@@ -51,10 +51,16 @@
 
 1. [x] 8/27 `takeaseat-1` · 8/28 `clipnote-1` 자동 발행 완료.
    `pipeline/history.md` 발행 완료 표에도 자동으로 들어갔다
-2. **큐 보충** — 대기 3건(`clipnote-3`, `takeaseat-3`, 그리고 `takeaseat-2` 는
-   재작성 완료)이 캐러셀 이전 구성이라 다시 만들어야 한다.
-   장수를 맞추는 작업이 아니다 — 내용이 몇 장을 필요로 하는지가 정한다
-   (`sns-designer/SKILL.md` 2-1절)
+2. [x] 9/1~9/4 `takeaseat-2`·`takeaseat-3`·`clipnote-2`·`clipnote-4` 발행 완료.
+   `clipnote-3` 은 반려(`history.md`). **2026-10-16 기준 큐가 비어 있다**
+3. [x] `sns-designer/SKILL.md` 를 `ig.mjs`·발행 이미지 기준으로 동기화 (2026-10-16) —
+   1절이 ClipNote 흰 테마만 적고 있어 TAS 블랙 테마와 어긋났고, `source`·`clips`
+   템플릿이 빠져 있었다
+4. [x] **takeaseat-4** 「공방·연습실·세차도 되는 예약 관리」 — 캡션(QA 2회·윤문)·이미지 7장
+   (업종별 실제 화면 촬영) 승인, **2026-10-20(화) 발행 배정**. 브랜치 `feat/takeaseat-4` 가
+   그 전에 `main` 에 머지돼야 발행기와 Pages 가 집어간다
+5. **큐 보충** — takeaseat-4 이후 대기 0건. ClipNote 는 10/19(월)·10/23(금) 슬롯이 빈다
+6. TAS 쪽 문구 버그 3건 발견 (`assets/shots/SOURCE.md` 하단) — tas 저장소 이슈로 넘길 것
 
 ## 아직 안 정한 것
 
