@@ -54,8 +54,8 @@ export default function Home() {
             delay={160}
             className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-white/65 sm:text-lg"
           >
-            흩어진 링크, 예약, 기록을 가볍고 단정하게 —<br className="hidden sm:block" />
-            PIKAWORKS가 만드는 세 가지 제품을 소개합니다.
+            흩어진 링크, 예약, 영상, 기록을 가볍고 단정하게 —<br className="hidden sm:block" />
+            PIKAWORKS가 만드는 네 가지 제품을 소개합니다.
           </Reveal>
           <Reveal delay={240} className="mt-9">
             <a

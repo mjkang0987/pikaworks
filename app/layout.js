@@ -2,7 +2,7 @@ import './globals.css';
 
 const SITE_URL = 'https://pikaworks.kr';
 const DESCRIPTION =
-  'PIKAWORKS는 링크 카드 앱 ClipNote, 무료 예약·고객 관리 Take a Seat, 부동산 계산기 블로그를 만듭니다.';
+  'PIKAWORKS는 링크 카드 앱 ClipNote, 무료 예약·고객 관리 Take a Seat, 광고 없는 동영상 플레이어 Pika Player, 부동산 계산기 블로그를 만듭니다.';
 
 export const metadata = {
   metadataBase: new URL(SITE_URL),
@@ -20,6 +20,9 @@ export const metadata = {
     'takeaseat',
     '테이크어시트',
     '예약 관리',
+    'Pika Player',
+    '피카 플레이어',
+    '동영상 플레이어',
     '북마크',
     '링크 공유',
     'pikaworks blog',
